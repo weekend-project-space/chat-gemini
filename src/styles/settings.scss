@@ -1,0 +1,18 @@
+/**
+ * src/styles/settings.scss
+ *
+ * Configures SASS variables and Vuetify overwrites
+ */
+
+// https://vuetifyjs.com/features/sass-variables/`
+// @use 'vuetify/settings' with (
+//   $color-pack: false
+// );
+.v-card--variant-elevated,
+.v-card--variant-flat {
+    background-color: rgb(var(--v-theme-background));
+}
+
+html{
+    overflow-y: auto;
+}
