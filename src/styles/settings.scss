@@ -13,6 +13,23 @@
     background-color: rgb(var(--v-theme-background));
 }
 
-html{
+html {
     overflow-y: auto;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.warp {
+    margin: 0 auto;
+    max-width: 960px;
+    position: relative;
+}
+
+.warp-sm {
+    margin: 0 auto;
+    max-width: 640px;
+    position: relative;
+    background: rgb(var(--v-theme-surface));
 }

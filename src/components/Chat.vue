@@ -219,13 +219,8 @@ function multiTurn() {
 }
 </script>
 <style lang="less" scoped>
-.warp {
-  margin: 0 auto;
-  max-width: 960px;
-  position: relative;
-}
 .chat-warp {
-  height: calc(100vh - 120px);
+  height: calc(100vh - 65px);
   overflow: auto;
   padding: 0 1rem 5rem;
 }

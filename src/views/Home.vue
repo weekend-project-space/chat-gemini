@@ -10,16 +10,38 @@
       <v-btn icon @click="dialog = !dialog">
         <v-icon>mdi-dots-vertical</v-icon>
       </v-btn>
-
-      <template v-slot:extension>
-        <v-tabs v-model="tab">
-          <v-tab v-for="item in items" :key="item.name" :value="item.name">
-            {{ item.name }}
-          </v-tab>
-        </v-tabs>
-      </template>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer">
+    <v-navigation-drawer expand-on-hover rail>
+      <v-list>
+        <v-list-item
+          prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
+          title="Sandra Adams"
+          subtitle="sandra_a88@gmailcom"
+        ></v-list-item>
+      </v-list>
+
+      <v-divider></v-divider>
+
+      <v-list density="compact" nav>
+        <v-list-item
+          prepend-icon="mdi-folder"
+          title="My Files"
+          value="myfiles"
+        ></v-list-item>
+        <v-list-item
+          prepend-icon="mdi-account-multiple"
+          title="Shared with me"
+          value="shared"
+        ></v-list-item>
+        <v-list-item
+          prepend-icon="mdi-star"
+          title="Starred"
+          value="starred"
+        ></v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+
+    <v-navigation-drawer expand-on-hover rail v-model="drawer">
       <v-list density="compact" nav>
         <v-list-subheader>好友</v-list-subheader>
         <v-list-item
@@ -48,6 +70,24 @@
         </v-window-item>
       </v-window>
     </v-main>
+    <v-bottom-navigation grow>
+      <v-btn value="recent">
+        <v-icon>mdi-message-outline</v-icon>
+        <span>Chats</span>
+      </v-btn>
+
+      <v-btn value="favorites">
+        <v-icon>mdi-contacts-outline</v-icon>
+
+        <span>Contacts</span>
+      </v-btn>
+
+      <v-btn value="nearby">
+        <v-icon>mdi-compass-outline</v-icon>
+
+        <span>Discover</span>
+      </v-btn>
+    </v-bottom-navigation>
     <v-dialog v-model="dialog" max-width="640">
       <v-card>
         <v-card-title class="text-h5"> 设置 </v-card-title>
