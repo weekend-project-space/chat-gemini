@@ -11,6 +11,14 @@ export async function save(item) {
   }
 }
 
+export async function batchAdd(items) {
+  const time = new Date().getTime()
+  return await chatItems.bulkAdd(items.map(o => {
+    o.time = time;
+    return o
+  }))
+}
+
 export async function listChatItem(contactId) {
   return await chatItems.where('contactId').equals(contactId).toArray()
 }

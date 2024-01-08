@@ -14,7 +14,7 @@
   </template>
   <template v-else>
     <v-navigation-drawer rail>
-      <v-list>
+      <v-list title="guest">
         <v-list-item
           prepend-icon=" mdi-account-circle-outline"
           title="Me"
@@ -35,23 +35,22 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-navigation-drawer width="300" v-model="drawer">
+    <v-navigation-drawer width="300">
       <component :is="comp" />
     </v-navigation-drawer>
   </template>
 </template>
 <script setup>
-import { ref, computed } from "vue";
+import { computed } from "vue";
 import { useDisplay } from "vuetify";
 defineProps(["comp"]);
 import { useRoute } from "vue-router";
 const route = useRoute();
 const showBtn = computed(() => route.meta.index);
-const drawer = ref(true);
 const { mobile } = useDisplay();
 const bars = [
-  { icon: "mdi-message-outline", name: "Chats", value: "chats" },
-  { icon: "mdi-contacts-outline", name: "Contacts", value: "contacts" },
-  { icon: "mdi-compass-outline", name: "Discover", value: "discover" },
+  { icon: "mdi-message-outline", name: "Chats", value: "/chats" },
+  { icon: "mdi-contacts-outline", name: "Contacts", value: "/contacts" },
+  { icon: "mdi-compass-outline", name: "Discover", value: "/discover" },
 ];
 </script>

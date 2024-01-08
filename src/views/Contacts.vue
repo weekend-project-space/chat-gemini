@@ -25,19 +25,15 @@
   </v-list>
 </template>
 <script setup>
-import { ref } from "vue";
-import { useAppStore } from "@/store/app";
 import { useRouter } from "vue-router";
-import { liveQuery } from "dexie";
-import { useObservable } from "@vueuse/rxjs";
+import { useList } from "@/compose/useQuery";
 import { listAll } from "@/repo/contactRepository";
-const value = ref("");
-const contacts = useObservable(liveQuery(() => listAll(value.value)));
-const { setContact } = useAppStore();
+const { value, data: contacts } = useList(listAll);
+
 const router = useRouter();
+
 function click(item) {
-  setContact(item);
-  router.push("/contact");
+  router.push("/contacts/" + item.id);
 }
 </script>
 <style lang="less" scoped>

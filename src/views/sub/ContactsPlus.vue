@@ -1,5 +1,5 @@
 <template>
-  <div class="warp mt-5">
+  <div class="warp-sm mt-5">
     <v-card flat>
       <v-card-title>{{ index > -1 ? "修改" : "添加" }}</v-card-title>
       <v-card-text>

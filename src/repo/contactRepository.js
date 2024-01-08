@@ -11,7 +11,7 @@ export async function save(item) {
 }
 
 export async function listAll(name) {
-  return await contacts.filter(o => o.name.indexOf(name) > -1).toArray()
+  return await contacts.filter(o => !name || o.name.indexOf(name) > -1).toArray()
 }
 
 export async function del(id) {

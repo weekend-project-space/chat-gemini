@@ -14,8 +14,8 @@ const routes = [{
     path: '/chats',
     meta: {
       barBtns: [{
-        icon: 'mdi-plus',
-        to: '/setup'
+        icon: 'mdi-cog-outline',
+        to: '/settings'
       }],
       index: true
     },
@@ -34,17 +34,24 @@ const routes = [{
     path: '/discover',
     component: () => import('@/views/Discover.vue'),
     meta: {
+      barBtns: [{
+        icon: 'mdi-github',
+        to: '/setup'
+      }],
       index: true
     }
   }, {
     path: '/setup',
-    component: () => import('@/views/ContactsPlus.vue')
+    component: () => import('@/views/sub/ContactsPlus.vue')
   }, {
-    path: '/chat',
-    component: () => import('@/views/store/Chats.vue')
+    path: '/chats/:id',
+    component: () => import('@/views/sub/Chats.vue')
   }, {
-    path: '/contact',
+    path: '/contacts/:id',
     component: () => import('@/views/sub/Contact.vue')
+  }, {
+    path: '/settings',
+    component: () => import('@/views/sub/Setting.vue')
   }]
 
 }]
@@ -60,6 +67,11 @@ router.beforeEach((to) => {
   } = useAppStore();
   if (to.meta.barBtns) {
     setBarBtns(to.meta.barBtns)
+  } else {
+    setBarBtns([{
+      icon: 'mdi-cog-outline',
+      to: '/settings'
+    }])
   }
   return true
 })
