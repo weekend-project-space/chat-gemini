@@ -43,14 +43,24 @@
         </div>
       </v-card-subtitle>
       <v-card-actions>
-        <v-btn icon="mdi-chat-outline" @click="click(contact)"></v-btn>
+        <v-btn
+          icon="mdi-chat-outline"
+          title="chat"
+          @click="click(contact)"
+        ></v-btn>
+        <v-spacer></v-spacer>
+        <v-btn
+          icon="mdi-delete-outline"
+          title="delete"
+          @click="del0(contact)"
+        ></v-btn>
       </v-card-actions>
     </v-card>
   </div>
 </template>
 <script setup>
 import { useRouter, useRoute } from "vue-router";
-import { get, save } from "@/repo/contactRepository";
+import { get, save, del } from "@/repo/contactRepository";
 import { newChat } from "@/service/chatService";
 import { onMounted, reactive, ref, watch, computed } from "vue";
 import { useActiveElement } from "@vueuse/core";
@@ -81,6 +91,11 @@ watch(key, async () => {
   }
 });
 
+async function del0(item) {
+  await del(item.id);
+  router.go(-1);
+}
+
 async function click(item) {
   await newChat([
     {
@@ -92,13 +107,10 @@ async function click(item) {
     {
       contactId: item.id,
       role: "model",
-      content: "我是" + item.name,
+      content: "好的",
     },
   ]);
-  router.push("/chats");
-  setTimeout(() => {
-    router.push("/chats/" + item.id);
-  }, 30);
+  router.push("/chats?id=" + item.id);
 }
 </script>
 <style lang="less" scoped>

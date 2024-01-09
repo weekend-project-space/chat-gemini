@@ -52,6 +52,9 @@ const routes = [{
   }, {
     path: '/settings',
     component: () => import('@/views/sub/Setting.vue')
+  }, {
+    path: '/discover/:id',
+    component: () => import('@/views/sub/Discover.vue')
   }]
 
 }]

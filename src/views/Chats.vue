@@ -29,14 +29,24 @@
 import { format } from "@/utils/dateUtils";
 import { useList } from "@/compose/useQuery";
 import { listAll } from "@/repo/chatRepository";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
+import { onMounted, watch } from "vue";
 const { value, data: chats } = useList(listAll);
 const datestr = (time) => format(new Date(time), "yyyy-MM-dd HH:mm");
-
+const route = useRoute();
 const router = useRouter();
 function click(item) {
   router.push("/chats/" + item.contactId);
 }
+
+function goChat() {
+  if (route.query.id) {
+    router.push("/chats/" + route.query.id);
+  }
+}
+
+onMounted(goChat);
+watch(route, goChat);
 </script>
 <style lang="less" scoped>
 small {

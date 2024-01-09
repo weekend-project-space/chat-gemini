@@ -1,7 +1,7 @@
 <template>
   <div class="warp-sm mt-5">
     <v-card flat>
-      <v-card-title class="text-h5"> 设置 </v-card-title>
+      <v-card-subtitle class="mt-3">Settings</v-card-subtitle>
       <v-card-text>
         <v-text-field label="geminiApi" v-model="geminiApi"></v-text-field>
         <v-text-field label="geminiKey" v-model="geminiKey"></v-text-field>
@@ -11,7 +11,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn variant="text" @click="ok"> 确定 </v-btn>
+        <v-btn variant="text" @click="ok"> Submit </v-btn>
       </v-card-actions>
     </v-card>
   </div>

@@ -36,7 +36,7 @@
   <div class="warp">
     <div class="input-warp">
       <div>
-        <template v-if="imgdatas.length">
+        <!-- <template v-if="imgdatas.length">
           <div v-for="(img, i) in imgdatas" :key="i" class="thum-warp">
             <img
               :src="
@@ -63,6 +63,13 @@
           variant="text"
           @click="trigerFileUpload"
           disabled
+        >
+        </v-btn> -->
+        <v-btn
+          title="delete"
+          icon="mdi-delete-outline"
+          variant="text"
+          @click="emit('del')"
         >
         </v-btn>
         <input
@@ -105,7 +112,7 @@ import { llm } from "@/service/llmAdapter";
 import micromark from "@/service/micromark";
 import { format } from "@/utils/dateUtils";
 const props = defineProps(["data", "name", "contactId"]);
-const emit = defineEmits("qa");
+const emit = defineEmits(["qa", "del"]);
 const value = ref("");
 const lockInput = ref(false);
 const tip = ref("");

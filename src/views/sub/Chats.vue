@@ -5,16 +5,18 @@
     :contact-id="qa[0].contactId"
     :data="qa"
     @qa="addChatItems"
+    @del="delChat0"
   ></Chat>
 </template>
 <script setup>
 import Chat from "@/components/Chat";
 import { listChatItem } from "@/repo/chatItemRepository";
-import { saveChatItem } from "@/service/chatService";
-import { useRoute } from "vue-router";
+import { saveChatItem, delChat } from "@/service/chatService";
+import { useRoute, useRouter } from "vue-router";
 import { computedAsync } from "@vueuse/core";
 
 const route = useRoute();
+const router = useRouter();
 
 const qa = computedAsync(
   async () => {
@@ -32,5 +34,11 @@ async function addChatItems(msgs) {
       })
   );
   qa.value = await listChatItem(Number.parseInt(route.params.id));
+}
+
+async function delChat0() {
+  await delChat(Number.parseInt(route.params.id));
+  qa.value = [];
+  router.go(-1);
 }
 </script>
