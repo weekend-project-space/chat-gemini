@@ -36,7 +36,7 @@ const routes = [{
     meta: {
       barBtns: [{
         icon: 'mdi-github',
-        to: '/setup'
+        href: 'https://github.com/weekend-project-space/vwman-chat'
       }],
       index: true
     }
