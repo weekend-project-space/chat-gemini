@@ -1,9 +1,8 @@
 <template>
   <v-main>
-    <router-view />
+    <component :is="comp" />
   </v-main>
 </template>
-
 <script setup>
-  //
+defineProps(["comp"]);
 </script>

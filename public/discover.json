@@ -1,0 +1,13 @@
+[{
+    "key": "awesome-chatgpt-prompts-zh",
+    "name": "awesome-chatgpt-prompts-zh",
+    "desc": "ChatGPT 中文调教指南。各种场景使用指南。学习怎么让它听你的话。",
+    "url": "https://raw.githubusercontent.com/PlexPt/awesome-chatgpt-prompts-zh/main/prompts-zh.json",
+    "act": "act",
+    "prompt": "prompt"
+}, {
+    "key": "sophist",
+    "name": "智者",
+    "desc": "诸子百家及更多智者",
+    "url": "/sophist.json"
+}]

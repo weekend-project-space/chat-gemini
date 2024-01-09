@@ -2,26 +2,33 @@
   <div class="chat-warp" ref="chatPanelRef">
     <div class="warp">
       <div class="chat-line" v-for="(item, i) in data" :key="i">
-        <div class="user" v-if="!item.hideReq">
+        <div class="text-center pa-1">
+          <small v-text="datestr(item.time)"></small>
+        </div>
+        <div class="user" v-if="item.role == 'user'">
           <div class="message">
-            <div v-for="(img, i) in item.imgdatas" :key="i" class="thum-warp">
-              <img
-                :src="
-                  'data:' +
-                  img.inline_data.mime_type +
-                  ';base64,' +
-                  img.inline_data.data
-                "
-                alt=""
-              />
-            </div>
-            <div v-html="item.req"></div>
+            <div v-html="item.content"></div>
           </div>
           <v-avatar color="primary">S</v-avatar>
         </div>
-        <div class="vwman">
+
+        <div class="vwman" v-else-if="item.role == 'model'">
           <v-avatar color="primary">{{ props.name.substring(0, 1) }}</v-avatar>
-          <div class="message" v-html="micromark(item.res)"></div>
+          <div class="message" v-html="micromark(item.content)"></div>
+        </div>
+      </div>
+      <!--  -->
+
+      <div class="chat-line">
+        <div class="user" v-if="sendText">
+          <div class="message">
+            <div v-html="sendText"></div>
+          </div>
+          <v-avatar color="primary">S</v-avatar>
+        </div>
+        <div class="vwman" v-if="tip">
+          <v-avatar color="primary">{{ props.name.substring(0, 1) }}</v-avatar>
+          <div class="message" v-text="tip"></div>
         </div>
       </div>
     </div>
@@ -29,7 +36,7 @@
   <div class="warp">
     <div class="input-warp">
       <div>
-        <template v-if="imgdatas.length">
+        <!-- <template v-if="imgdatas.length">
           <div v-for="(img, i) in imgdatas" :key="i" class="thum-warp">
             <img
               :src="
@@ -56,6 +63,13 @@
           variant="text"
           @click="trigerFileUpload"
           disabled
+        >
+        </v-btn> -->
+        <v-btn
+          title="delete"
+          icon="mdi-delete-outline"
+          variant="text"
+          @click="emit('del')"
         >
         </v-btn>
         <input
@@ -93,24 +107,24 @@
   </v-dialog>
 </template>
 <script setup>
-import { nextTick, onMounted, reactive, ref } from "vue";
+import { nextTick, onMounted, ref, watch } from "vue";
 import { llm } from "@/service/llmAdapter";
 import micromark from "@/service/micromark";
-const props = defineProps(["prompt", "name"]);
-const data = reactive([]);
+import { format } from "@/utils/dateUtils";
+const props = defineProps(["data", "name", "contactId"]);
+const emit = defineEmits(["qa", "del"]);
 const value = ref("");
 const lockInput = ref(false);
+const tip = ref("");
 const inputRef = ref();
 const fileRef = ref();
 const chatPanelRef = ref();
 const imgdatas = ref([]);
 const imgDialog = ref(false);
 const imgPre = ref({});
+const sendText = ref("");
 
-onMounted(() => {
-  send(props.prompt, true);
-});
-
+const datestr = (time) => format(new Date(time), "yyyy-MM-dd HH:mm");
 const scrollToBottom = () => {
   const domWrapper = chatPanelRef.value;
   const currentScroll = domWrapper.scrollTop; // 已经被卷掉的高度
@@ -122,33 +136,33 @@ const scrollToBottom = () => {
   // window.scrollTo(0, document.body.scrollHeight);
 };
 
-async function send(text, hideReq) {
+function initEl() {
+  scrollToBottom();
+  inputRef.value.focus();
+}
+
+let cloneData = [];
+async function send(text) {
+  cloneData = props.data.map((o) => ({ role: o.role, content: o.content }));
   lockInput.value = true;
   text = text || value.value;
-
-  const item = reactive({
-    req: text,
-    loading: true,
-    res: "正在思考中...",
-    imgdatas: imgdatas.value,
-    hideReq,
-  });
-  data.push(item);
+  sendText.value = text;
+  tip.value = "正在思考中...";
+  const req = { role: "user", content: text };
+  cloneData.push(req);
   value.value = "";
   imgdatas.value = [];
   nextTick(scrollToBottom);
   try {
-    item.res = await llm(multiTurn());
-    item.loading = false;
+    const res = await llm(multiTurn());
+    emit("qa", [req, { role: "model", content: res }]);
+    tip.value = "";
+    sendText.value = "";
   } catch (e) {
     console.error(e);
-    item.res = "出现点问题请稍候，或点击右上角设置";
+    tip.value = "出现点问题请稍候，或点击右上角设置";
   }
   lockInput.value = false;
-  nextTick(() => {
-    scrollToBottom();
-    inputRef.value.focus();
-  });
 }
 
 function trigerFileUpload() {
@@ -177,55 +191,42 @@ async function fileChange() {
   imgdatas.value = await Promise.all(
     [...fileRef.value.files].map(fileToGenerativePart)
   );
-  console.log(imgdatas.value);
 }
 
 function multiTurn() {
-  const contents = [];
-  data.forEach((o) => {
-    if (o.imgdatas.length) {
-      console.log(o.imgdatas);
-      contents.push({
-        role: "user",
-        parts: [
-          {
-            text: o.req,
-          },
-          ...o.imgdatas,
-        ],
-      });
-    } else {
-      contents.push({
-        role: "user",
-        parts: [
-          {
-            text: o.req,
-          },
-        ],
-      });
-    }
-    if (!o.loading) {
-      contents.push({
-        role: "model",
-        parts: [
-          {
-            text: o.res,
-          },
-        ],
-      });
-    }
-  });
-  return { contents };
+  return {
+    contents: cloneData.map((o) => ({
+      role: o.role,
+      parts: [
+        {
+          text: o.content,
+        },
+      ],
+    })),
+  };
 }
+
+onMounted(() => {
+  watch(
+    () => props.contactId,
+    () => {
+      nextTick(initEl);
+    }
+  );
+  watch(
+    () => props.data,
+    () => {
+      nextTick(initEl);
+    }
+  );
+  setTimeout(() => {
+    scrollToBottom();
+  }, 30);
+});
 </script>
 <style lang="less" scoped>
-.warp {
-  margin: 0 auto;
-  max-width: 960px;
-  position: relative;
-}
 .chat-warp {
-  height: calc(100vh - 120px);
+  height: calc(100vh - 65px);
   overflow: auto;
   padding: 0 1rem 5rem;
 }
@@ -234,13 +235,13 @@ function multiTurn() {
     display: grid;
     grid-template-columns: auto 1fr;
     grid-gap: 1rem;
-    margin-top: 2rem;
+    margin-bottom: 2rem;
   }
   .user {
     display: grid;
     grid-template-columns: 1fr auto;
     grid-gap: 1rem;
-    margin-top: 2rem;
+    margin-bottom: 2rem;
   }
   .message {
     background: rgb(var(--v-theme-surface));
