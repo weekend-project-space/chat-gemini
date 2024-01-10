@@ -137,6 +137,8 @@ const scrollToBottom = () => {
 };
 
 function initEl() {
+  tip.value = "";
+  sendText.value = "";
   scrollToBottom();
   inputRef.value.focus();
 }
@@ -163,15 +165,6 @@ async function send(text) {
     tip.value = "出现点问题请稍候，或点击右上角设置";
   }
   lockInput.value = false;
-}
-
-function trigerFileUpload() {
-  fileRef.value.click();
-}
-
-function openImgPre(item) {
-  imgDialog.value = true;
-  imgPre.value = item;
 }
 
 async function fileChange() {

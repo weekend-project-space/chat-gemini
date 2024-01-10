@@ -29,7 +29,7 @@
           :key="bar.icon"
           :prepend-icon="bar.icon"
           :title="bar.name"
-          :value="bar.icon"
+          :value="bar.value"
           :to="bar.value"
         ></v-list-item>
       </v-list>
