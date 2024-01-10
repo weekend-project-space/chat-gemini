@@ -5,7 +5,6 @@ import {
 export async function save(item) {
   item.time = new Date().getTime()
   const count = await chats.where('contactId').equals(item.contactId).count()
-  console.log(count)
   if (count) {
     return await chats.update(item.contactId, item)
   } else {

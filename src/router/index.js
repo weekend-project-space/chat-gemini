@@ -8,10 +8,10 @@ import {
 } from '../store/app'
 
 const routes = [{
-  path: '',
+  path: '/',
   component: () => import('@/layouts/default/Default.vue'),
   children: [{
-    path: '/chats',
+    path: 'chats',
     meta: {
       barBtns: [{
         icon: 'mdi-cog-outline',
@@ -21,7 +21,7 @@ const routes = [{
     },
     component: import('@/views/Chats.vue')
   }, {
-    path: '/contacts',
+    path: 'contacts',
     meta: {
       barBtns: [{
         icon: 'mdi-account-plus-outline',
@@ -31,7 +31,7 @@ const routes = [{
     },
     component: () => import('@/views/Contacts.vue')
   }, {
-    path: '/discover',
+    path: 'discover',
     component: () => import('@/views/Discover.vue'),
     meta: {
       barBtns: [{
@@ -41,19 +41,19 @@ const routes = [{
       index: true
     }
   }, {
-    path: '/setup',
+    path: 'setup',
     component: () => import('@/views/sub/ContactsPlus.vue')
   }, {
-    path: '/chats/:id',
+    path: 'chats/:id',
     component: () => import('@/views/sub/Chats.vue')
   }, {
-    path: '/contacts/:id',
+    path: 'contacts/:id',
     component: () => import('@/views/sub/Contact.vue')
   }, {
-    path: '/settings',
+    path: 'settings',
     component: () => import('@/views/sub/Setting.vue')
   }, {
-    path: '/discover/:id',
+    path: 'discover/:id',
     component: () => import('@/views/sub/Discover.vue')
   }]
 

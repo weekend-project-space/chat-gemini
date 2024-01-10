@@ -110,7 +110,7 @@ async function click(item) {
       content: "好的",
     },
   ]);
-  router.push("/chats?id=" + item.id);
+  router.push({ path: "/chats", query: { id: item.id } });
 }
 </script>
 <style lang="less" scoped>
