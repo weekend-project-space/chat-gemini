@@ -14,7 +14,8 @@
       :title="item.name"
       :value="item.name"
       :key="item.name"
-      @click="click(item)"
+      :data-id="item.id"
+      :to="'/chats/' + item.contactId"
     >
       <template v-slot:prepend>
         <v-avatar color="secondary" size="small">
@@ -29,19 +30,19 @@
 import { format } from "@/utils/dateUtils";
 import { useList } from "@/compose/useQuery";
 import { listAll } from "@/repo/chatRepository";
-import { useRouter, useRoute } from "vue-router";
+import { useRoute } from "vue-router";
 import { onMounted, watch } from "vue";
 const { value, data: chats } = useList(listAll);
 const datestr = (time) => format(new Date(time), "yyyy-MM-dd HH:mm");
 const route = useRoute();
-const router = useRouter();
-function click(item) {
-  router.push("/chats/" + item.contactId);
-}
 
 function goChat() {
+  console.log(route.query);
   if (route.query.id) {
-    router.push("/chats/" + route.query.id);
+    //   // router.push("/chats/" + route.query.id);
+    setTimeout(() => {
+      document.querySelector("a[href='/chats/" + route.query.id + "']").click();
+    }, 100);
   }
 }
 

@@ -2,7 +2,7 @@
   <div class="warp-sm mt-5" v-if="contact">
     <v-card flat>
       <v-card-title>
-        <div class="title">
+        <div class="title my-3">
           <v-avatar color="secondary">
             {{ contact.name.substring(0, 1) }}
           </v-avatar>
@@ -26,12 +26,13 @@
       </v-card-title>
       <v-card-subtitle>
         <div class="line">
-          <input
+          <textarea
             class="ml-3 editor"
             type="text"
             data-id="prompt"
             :disabled="!editable.prompt"
             v-model="contact.prompt"
+            :rows="contact.prompt.length / 35 + 2"
           />
           <v-btn
             class="btn"
@@ -78,6 +79,11 @@ const contact = computedAsync(
   null // initial state
 );
 
+watch(route, () => {
+  editable.name = false;
+  editable.prompt = false;
+});
+
 watch(key, async () => {
   if (!key.value) {
     editable.name = false;
@@ -105,7 +111,7 @@ async function click(item) {
       content: "好的",
     },
   ]);
-  router.push({ path: "/chats", query: { id: item.id } });
+  router.push("/chats?id=" + item.id);
 }
 </script>
 <style lang="less" scoped>

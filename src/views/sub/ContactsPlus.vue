@@ -33,7 +33,13 @@ function initItem() {
   }
 }
 async function submit() {
-  await save(Object.assign({}, item.value));
-  router.push("/contacts");
+  if (item.value.name && item.value.prompt) {
+    await save(Object.assign({}, item.value));
+    item.value = {
+      name: undefined,
+      prompt: undefined,
+    };
+    router.push("/contacts");
+  }
 }
 </script>

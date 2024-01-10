@@ -8,7 +8,7 @@ import {
 } from '../store/app'
 
 const routes = [{
-  path: '/',
+  path: '',
   component: () => import('@/layouts/default/Default.vue'),
   children: [{
     path: 'chats',
@@ -19,7 +19,7 @@ const routes = [{
       }],
       index: true
     },
-    component: import('@/views/Chats.vue')
+    component: () => import('@/views/Chats.vue')
   }, {
     path: 'contacts',
     meta: {
