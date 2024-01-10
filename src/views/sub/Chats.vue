@@ -20,7 +20,9 @@ const router = useRouter();
 
 const qa = computedAsync(
   async () => {
-    return await listChatItem(Number.parseInt(route.params.id));
+    return (
+      route.params.id && (await listChatItem(Number.parseInt(route.params.id)))
+    );
   },
   null // initial state
 );

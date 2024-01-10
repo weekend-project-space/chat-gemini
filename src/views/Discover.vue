@@ -18,7 +18,7 @@
       :to="'/discover/' + item.key"
     >
       <template v-slot:prepend>
-        <v-avatar color="primary" size="small">
+        <v-avatar color="secondary" size="small">
           {{ item.name.substring(0, 1) }}
         </v-avatar>
       </template>

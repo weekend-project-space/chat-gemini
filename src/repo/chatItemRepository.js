@@ -20,6 +20,7 @@ export async function batchAdd(items) {
 }
 
 export async function listChatItem(contactId) {
+  console.log('listChatItem', contactId)
   return await chatItems.where('contactId').equals(contactId).toArray()
 }
 

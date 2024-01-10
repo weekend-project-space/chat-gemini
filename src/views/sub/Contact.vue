@@ -1,9 +1,9 @@
 <template>
-  <div class="warp-sm mt-5" v-if="contact.id">
+  <div class="warp-sm mt-5" v-if="contact">
     <v-card flat>
       <v-card-title>
         <div class="title">
-          <v-avatar color="primary">
+          <v-avatar color="secondary">
             {{ contact.name.substring(0, 1) }}
           </v-avatar>
           <div class="line">
@@ -62,26 +62,21 @@
 import { useRouter, useRoute } from "vue-router";
 import { get, save, del } from "@/repo/contactRepository";
 import { newChat } from "@/service/chatService";
-import { onMounted, reactive, ref, watch, computed } from "vue";
-import { useActiveElement } from "@vueuse/core";
-
+import { reactive, watch, computed } from "vue";
+import { useActiveElement, computedAsync } from "@vueuse/core";
 const route = useRoute();
 const router = useRouter();
 const activeElement = useActiveElement();
 const key = computed(() => activeElement.value.dataset.id || null);
-const contact = ref({});
+// const contact = ref({});
 const editable = reactive({ name: false, prompt: false });
-onMounted(async () => {
-  contact.value = await get(Number.parseInt(route.params.id));
-  watch(
-    () => route.params.id,
-    async () => {
-      if (route.params.id) {
-        contact.value = await get(Number.parseInt(route.params.id));
-      }
-    }
-  );
-});
+
+const contact = computedAsync(
+  async () => {
+    return route.params.id && (await get(Number.parseInt(route.params.id)));
+  },
+  null // initial state
+);
 
 watch(key, async () => {
   if (!key.value) {

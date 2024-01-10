@@ -15,10 +15,7 @@
   <template v-else>
     <v-navigation-drawer rail>
       <v-list title="guest">
-        <v-list-item
-          prepend-icon=" mdi-account-circle-outline"
-          title="Me"
-        ></v-list-item>
+        <v-list-item prepend-icon="mdi-robot-outline" title="Me"></v-list-item>
       </v-list>
 
       <v-divider></v-divider>

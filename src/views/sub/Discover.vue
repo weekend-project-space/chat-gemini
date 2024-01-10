@@ -22,7 +22,7 @@
           :subtitle="item[promptKey]"
         >
           <template v-slot:prepend>
-            <v-avatar color="primary" size="small">
+            <v-avatar color="secondary" size="small">
               {{ item[actKey].substring(0, 1) }}
             </v-avatar>
           </template>

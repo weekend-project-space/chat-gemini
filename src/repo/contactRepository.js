@@ -19,5 +19,6 @@ export async function del(id) {
 }
 
 export async function get(id) {
+  console.log('contact', id)
   return await contacts.get(id)
 }

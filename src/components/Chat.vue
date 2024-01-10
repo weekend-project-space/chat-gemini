@@ -13,7 +13,9 @@
         </div>
 
         <div class="vwman" v-else-if="item.role == 'model'">
-          <v-avatar color="primary">{{ props.name.substring(0, 1) }}</v-avatar>
+          <v-avatar color="secondary">{{
+            props.name.substring(0, 1)
+          }}</v-avatar>
           <div class="message" v-html="micromark(item.content)"></div>
         </div>
       </div>
@@ -27,7 +29,9 @@
           <v-avatar color="primary">S</v-avatar>
         </div>
         <div class="vwman" v-if="tip">
-          <v-avatar color="primary">{{ props.name.substring(0, 1) }}</v-avatar>
+          <v-avatar color="secondary">{{
+            props.name.substring(0, 1)
+          }}</v-avatar>
           <div class="message" v-text="tip"></div>
         </div>
       </div>
@@ -213,7 +217,7 @@ onMounted(() => {
     }
   );
   setTimeout(() => {
-    scrollToBottom();
+    initEl();
   }, 30);
 });
 </script>
@@ -248,7 +252,7 @@ onMounted(() => {
 .input-warp {
   position: absolute;
   width: 100%;
-  bottom: 0;
+  bottom: 1rem;
   display: grid;
   grid-template-columns: 48px 1fr auto;
   grid-gap: 0.5rem;
@@ -256,6 +260,9 @@ onMounted(() => {
   background: rgb(var(--v-theme-surface));
   padding: 0.5rem;
   border-radius: 1rem;
+  box-shadow: 0px 3px 1px -2px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)),
+    0px 2px 2px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
+    0px 1px 5px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.12));
   input {
     outline: none;
     padding-inline-start: 1rem;
