@@ -4,9 +4,8 @@ import {
 
 export async function save(item) {
   item.time = new Date().getTime()
-  const count = await chats.where('contactId').equals(item.contactId).count()
-  if (count) {
-    return await chats.update(item.contactId, item)
+  if (item.id) {
+    return await chats.update(item.id, item)
   } else {
     return await chats.add(item)
   }
@@ -24,4 +23,9 @@ export async function del(id) {
 
 export async function get(id) {
   return await chats.get(id)
+}
+
+
+export async function getByPromptId(promptId) {
+  return await chats.where('promptId').equals(promptId).first()
 }

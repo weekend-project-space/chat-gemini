@@ -19,12 +19,11 @@ export async function batchAdd(items) {
   }))
 }
 
-export async function listChatItem(contactId) {
-  // console.log('listChatItem', contactId)
-  return await chatItems.where('contactId').equals(contactId).toArray()
+export async function listChatItem(chatId) {
+  return await chatItems.where('chatId').equals(chatId).toArray()
 }
 
-export async function del(contactId) {
-  const items = await listChatItem(contactId)
+export async function del(chatId) {
+  const items = await listChatItem(chatId)
   return await chatItems.bulkDelete(items.map(o => o.id))
 }

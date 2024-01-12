@@ -14,4 +14,7 @@
 #app .v-main .v-theme--light {
   --v-theme-background: 255, 255, 255;
 }
+:root {
+  --v-warp-widht: 760px;
+}
 </style>

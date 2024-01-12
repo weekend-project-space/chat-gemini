@@ -4,9 +4,9 @@ import vuetify, {
   transformAssetUrls
 } from 'vite-plugin-vuetify'
 import ViteFonts from 'unplugin-fonts/vite'
-// import {
-//   VitePWA
-// } from 'vite-plugin-pwa'
+import {
+  VitePWA
+} from 'vite-plugin-pwa'
 
 // Utilities
 import {
@@ -25,12 +25,19 @@ export default defineConfig({
         transformAssetUrls
       }
     }),
-    // VitePWA({
-    //   registerType: 'autoUpdate',
-    //   devOptions: {
-    //     enabled: true
-    //   }
-    // }),
+    VitePWA({
+      registerType: 'autoUpdate',
+      devOptions: {
+        enabled: true
+      },
+      includeAssets: ['favicon.ico'],
+      manifest: {
+        name: '伊娃',
+        short_name: '伊娃',
+        description: 'Eywa',
+        theme_color: '#ffffff',
+      }
+    }),
     // https://github.com/vuetifyjs/vuetify-loader/tree/master/packages/vite-plugin#readme
     vuetify({
       autoImport: true,

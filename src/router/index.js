@@ -21,7 +21,7 @@ const routes = [{
     },
     component: () => import('@/views/Chats.vue')
   }, {
-    path: 'contacts',
+    path: 'prompts',
     meta: {
       barBtns: [{
         icon: 'mdi-account-plus-outline',
@@ -29,7 +29,7 @@ const routes = [{
       }],
       index: true
     },
-    component: () => import('@/views/Contacts.vue')
+    component: () => import('@/views/Prompts.vue')
   }, {
     path: 'discover',
     component: () => import('@/views/Discover.vue'),
@@ -42,13 +42,13 @@ const routes = [{
     }
   }, {
     path: 'setup',
-    component: () => import('@/views/sub/ContactsPlus.vue')
+    component: () => import('@/views/sub/PromptsAdd.vue')
   }, {
     path: 'chats/:id',
     component: () => import('@/views/sub/Chats.vue')
   }, {
-    path: 'contacts/:id',
-    component: () => import('@/views/sub/Contact.vue')
+    path: 'prompts/:id',
+    component: () => import('@/views/sub/Prompts.vue')
   }, {
     path: 'settings',
     component: () => import('@/views/sub/Setting.vue')

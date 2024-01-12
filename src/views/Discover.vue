@@ -1,14 +1,16 @@
 <template>
-  <v-list density="compact" nav>
-    <div class="mb-3">
+  <div class="mx-3 my-2">
+    <div class="d-flex flex header">
       <v-list-subheader>Discover </v-list-subheader>
-      <input
-        class="search-input"
-        type="text"
-        placeholder="search"
-        v-model="value"
-      />
     </div>
+    <input
+      class="search-input mt-2"
+      type="text"
+      placeholder="search"
+      v-model="value"
+    />
+  </div>
+  <v-list density="compact" nav>
     <v-list-item
       v-for="item in d"
       :title="item.name"
@@ -43,9 +45,12 @@ const d = computed(() =>
 .search-input {
   width: 100%;
   border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
-  border-radius: 1rem;
-  height: 2rem;
-  line-height: 2rem;
+  border-radius: 1.2rem;
+  height: 2.5rem;
+  line-height: 2.5rem;
   padding-inline-start: 1rem;
+}
+.header {
+  min-height: 48px;
 }
 </style>

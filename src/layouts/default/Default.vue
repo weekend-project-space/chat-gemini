@@ -1,21 +1,18 @@
 <template>
   <v-app>
-    <default-bar :barBtns="store.barBtns" />
-    <default-view :comp="mainComp" />
-    <AppSideBar :comp="sideComp" />
+    <!-- <default-bar :barBtns="store.barBtns" /> -->
+    <app-side-bar :comp="sideComp" />
+    <app-view :comp="mainComp" />
   </v-app>
 </template>
 
 <script setup>
-import DefaultBar from "./AppBar.vue";
-import DefaultView from "./View.vue";
+import appView from "./AppView.vue";
 import AppSideBar from "./AppSideBar.vue";
 import { useRoute } from "vue-router";
-import { computed } from "vue";
-import { useAppStore } from "@/store/app";
+import { computed, watch } from "vue";
 import { useDisplay } from "vuetify";
 const route = useRoute();
-const store = useAppStore();
 const { mobile } = useDisplay();
 
 let sideCom = undefined;
@@ -38,4 +35,6 @@ const mainComp = computed(() => {
   mainCom = comp ? comp : mainCom;
   return mainCom;
 });
+
+watch(sideCom, () => (mainCom = undefined));
 </script>

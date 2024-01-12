@@ -45,15 +45,9 @@
       </v-card-subtitle>
       <v-card-actions>
         <v-btn
-          icon="mdi-chat-outline"
+          icon="mdi-message-outline"
           title="chat"
           @click="click(contact)"
-        ></v-btn>
-        <v-spacer></v-spacer>
-        <v-btn
-          icon="mdi-delete-outline"
-          title="delete"
-          @click="del0(contact)"
         ></v-btn>
       </v-card-actions>
     </v-card>
@@ -61,8 +55,8 @@
 </template>
 <script setup>
 import { useRouter, useRoute } from "vue-router";
-import { get, save, del } from "@/repo/contactRepository";
-import { newChat } from "@/service/chatService";
+import { get, save } from "@/repo/promptRepository";
+import { createChat } from "@/service/chatService";
 import { reactive, watch, computed } from "vue";
 import { useActiveElement, computedAsync } from "@vueuse/core";
 const route = useRoute();
@@ -92,26 +86,20 @@ watch(key, async () => {
   }
 });
 
-async function del0(item) {
-  await del(item.id);
-  router.go(-1);
-}
-
 async function click(item) {
-  await newChat([
+  await createChat([
     {
-      contactId: item.id,
-      contactName: item.name,
+      promptId: item.id,
+      name: item.name,
       role: "user",
       content: item.prompt,
     },
     {
-      contactId: item.id,
       role: "model",
       content: "好的",
     },
   ]);
-  router.push("/chats?id=" + item.id);
+  router.push("/chats?promptid=" + item.id);
 }
 </script>
 <style lang="less" scoped>

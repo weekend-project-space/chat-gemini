@@ -1,13 +1,8 @@
 <template>
   <div class="mx-3 my-2">
     <div class="d-flex flex">
-      <v-list-subheader>Chats </v-list-subheader>
-      <v-btn
-        variant="text"
-        icon="mdi-message-plus-outline"
-        color="secondary"
-        @click="newChat0"
-      >
+      <v-list-subheader>Prompts </v-list-subheader>
+      <v-btn variant="text" icon="mdi-plus" color="secondary" to="/setup">
       </v-btn>
     </div>
     <input
@@ -20,13 +15,11 @@
   <div class="list">
     <v-list density="compact" nav>
       <v-list-item
-        v-for="item in chats"
+        v-for="item in contacts"
         :title="item.name"
-        :value="item.id"
-        :key="item.id"
-        :data-id="item.id"
-        :to="'/chats/' + item.id"
-        :subtitle="formatData(item.time)"
+        :value="item.name"
+        :key="item.name"
+        :to="'/prompts/' + item.id"
       >
         <template v-slot:prepend>
           <v-avatar color="secondary" size="small">
@@ -39,7 +32,7 @@
               size="small"
               variant="text"
               icon="mdi-delete-outline"
-              @click="delChat(item.id)"
+              @click="del(item.id)"
             ></v-btn>
           </div>
         </template>
@@ -49,41 +42,10 @@
 </template>
 <script setup>
 import { useList } from "@/compose/useQuery";
-import { listAll, getByPromptId } from "@/repo/chatRepository";
-import { delChat, newChat } from "@/service/chatService";
-import { useRoute, useRouter } from "vue-router";
-import { onMounted, watch } from "vue";
-import { format } from "@/utils/dateUtils";
-const { value, data: chats } = useList(listAll);
-const route = useRoute();
-const router = useRouter();
-async function goChat() {
-  if (route.query.promptid) {
-    const chatId = (await getByPromptId(Number.parseInt(route.query.promptid)))
-      .id;
-    router.push("/chats/" + chatId);
-  }
-}
-
-async function newChat0() {
-  const chatId = await newChat("新会话");
-  setTimeout(() => {
-    router.push("/chats/" + chatId);
-  }, 100);
-}
-
-function formatData(time) {
-  return format(new Date(time), "yyyy-MM-dd");
-}
-
-onMounted(goChat);
-watch(route, goChat);
+import { listAll, del } from "@/repo/promptRepository";
+const { value, data: contacts } = useList(listAll);
 </script>
 <style lang="less" scoped>
-small {
-  font-size: 0.75rem;
-  color: rgba(var(--v-theme-on-background), 0.6);
-}
 .list .v-list {
   .v-btn--icon.v-btn--density-default {
     width: 30px;

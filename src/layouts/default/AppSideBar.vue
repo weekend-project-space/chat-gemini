@@ -14,9 +14,13 @@
   </template>
   <template v-else>
     <v-navigation-drawer rail>
-      <v-list title="guest">
-        <v-list-item prepend-icon="mdi-robot-outline" title="Me"></v-list-item>
-      </v-list>
+      <v-tooltip text="伊娃">
+        <template v-slot:activator="{ props }">
+          <v-list v-bind="props" nav>
+            <v-avatar icon="mdi-link" color="secondary"></v-avatar>
+          </v-list>
+        </template>
+      </v-tooltip>
 
       <v-divider></v-divider>
 
@@ -47,7 +51,7 @@ const showBtn = computed(() => route.meta.index);
 const { mobile } = useDisplay();
 const bars = [
   { icon: "mdi-message-outline", name: "Chats", value: "/chats" },
-  { icon: "mdi-contacts-outline", name: "Contacts", value: "/contacts" },
+  { icon: "mdi-star-box-outline", name: "Prompts", value: "/prompts" },
   { icon: "mdi-compass-outline", name: "Discover", value: "/discover" },
 ];
 </script>

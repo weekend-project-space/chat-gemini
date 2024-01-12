@@ -70,9 +70,9 @@ function toUrl(item) {
 .search-input {
   width: 100%;
   border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
-  border-radius: 1rem;
-  height: 2rem;
-  line-height: 2rem;
+  border-radius: 1.2rem;
+  height: 2.5rem;
+  line-height: 2.5rem;
   padding-inline-start: 1rem;
 }
 .justify-between {

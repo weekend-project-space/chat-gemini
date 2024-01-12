@@ -1,46 +1,54 @@
 <template>
   <Chat
-    v-if="qa && qa.length > 0"
-    :name="qa[0].contactName"
-    :contact-id="qa[0].contactId"
+    v-if="chat && chat.id"
+    :chat-id="chat.id"
     :data="qa"
+    :prompts="prompts"
     @qa="addChatItems"
-    @del="delChat0"
+    @replaceAllChatItems="replaceAllChatItems"
   ></Chat>
 </template>
 <script setup>
 import Chat from "@/components/Chat";
-import { listChatItem } from "@/repo/chatItemRepository";
-import { saveChatItem, delChat } from "@/service/chatService";
-import { useRoute, useRouter } from "vue-router";
+import { listChatItem, del } from "@/repo/chatItemRepository";
+import { listAll } from "@/repo/promptRepository";
+import { get, save } from "@/repo/chatRepository";
+import { saveChatItems } from "@/service/chatService";
 import { computedAsync } from "@vueuse/core";
+const props = defineProps(["id"]);
 
-const route = useRoute();
-const router = useRouter();
+const chat = computedAsync(async () => {
+  return props.id && (await get(Number.parseInt(props.id)));
+}, {});
 
 const qa = computedAsync(
   async () => {
-    return (
-      route.params.id && (await listChatItem(Number.parseInt(route.params.id)))
-    );
+    return props.id && (await listChatItem(Number.parseInt(props.id)));
   },
-  null // initial state
+  [] // initial state
 );
 
-async function addChatItems(msgs) {
-  msgs.map(
-    async (msg) =>
-      await saveChatItem({
-        contactId: Number.parseInt(route.params.id),
-        ...msg,
-      })
+const prompts = computedAsync(async () => listAll());
+
+async function addChatItems(items) {
+  // 更新会话名称
+  if (qa.value.length == 0) {
+    const o = Object.assign({}, chat.value, { name: items[0].content });
+    await save(o);
+    chat.value = o;
+  }
+  await saveChatItems(
+    items.map((msg) => ({
+      chatId: Number.parseInt(msg.chatId),
+      role: msg.role,
+      content: msg.content,
+    }))
   );
-  qa.value = await listChatItem(Number.parseInt(route.params.id));
+  qa.value = await listChatItem(Number.parseInt(props.id));
 }
 
-async function delChat0() {
-  await delChat(Number.parseInt(route.params.id));
-  qa.value = [];
-  router.go(-1);
+async function replaceAllChatItems(items) {
+  del(Number.parseInt(items[0].chatId));
+  addChatItems(items);
 }
 </script>
