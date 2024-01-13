@@ -294,8 +294,11 @@ async function gen() {
     }
   } catch (e) {
     console.error(e);
-    if (e.toString().indexOf("The user aborted a request")) {
+    const eText = e.toString();
+    if (eText.includes("The user aborted a request")) {
       alert({ text: "取消成功" });
+    } else if (eText.includes("API key not valid")) {
+      alert({ text: "点击左下角设置您的key", type: "warn" });
     } else {
       alert({ text: "出现点问题请稍候，或点击左下角设置", type: "warn" });
     }
