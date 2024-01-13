@@ -13,8 +13,8 @@
     </v-bottom-navigation>
   </template>
   <template v-else>
-    <v-navigation-drawer rail>
-      <v-tooltip text="伊娃">
+    <v-navigation-drawer theme="dark" rail>
+      <!-- <v-tooltip text="伊娃">
         <template v-slot:activator="{ props }">
           <v-list v-bind="props" nav>
             <v-avatar icon="mdi-link" color="secondary"></v-avatar>
@@ -22,7 +22,7 @@
         </template>
       </v-tooltip>
 
-      <v-divider></v-divider>
+      <v-divider></v-divider> -->
 
       <v-list density="compact" nav>
         <v-list-item
@@ -34,9 +34,20 @@
           :to="bar.value"
         ></v-list-item>
       </v-list>
+      <div class="bar-footer">
+        <v-divider></v-divider>
+        <v-list density="compact" nav>
+          <v-list-item
+            prepend-icon="mdi-cog-outline"
+            title="settings"
+            value="settings"
+            to="/settings"
+          ></v-list-item>
+        </v-list>
+      </div>
     </v-navigation-drawer>
 
-    <v-navigation-drawer width="300">
+    <v-navigation-drawer theme="dark" width="260">
       <component :is="comp" />
     </v-navigation-drawer>
   </template>
@@ -51,7 +62,14 @@ const showBtn = computed(() => route.meta.index);
 const { mobile } = useDisplay();
 const bars = [
   { icon: "mdi-message-outline", name: "Chats", value: "/chats" },
-  { icon: "mdi-star-box-outline", name: "Prompts", value: "/prompts" },
+  { icon: "mdi-pound-box-outline", name: "Prompts", value: "/prompts" },
   { icon: "mdi-compass-outline", name: "Discover", value: "/discover" },
 ];
 </script>
+<style lang="less" scoped>
+.bar-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+</style>

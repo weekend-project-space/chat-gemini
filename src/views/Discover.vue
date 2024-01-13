@@ -2,6 +2,14 @@
   <div class="mx-3 my-2">
     <div class="d-flex flex header">
       <v-list-subheader>Discover </v-list-subheader>
+      <v-btn
+        prepend-icon=" mdi-github"
+        size="small"
+        color="primary"
+        href="https://github.com/weekend-project-space/vwman-chat"
+      >
+        源码
+      </v-btn>
     </div>
     <input
       class="search-input mt-2"
@@ -10,7 +18,7 @@
       v-model="value"
     />
   </div>
-  <v-list density="compact" nav>
+  <v-list nav>
     <v-list-item
       v-for="item in d"
       :title="item.name"
@@ -19,11 +27,6 @@
       :key="item.key"
       :to="'/discover/' + item.key"
     >
-      <template v-slot:prepend>
-        <v-avatar color="secondary" size="small">
-          {{ item.name.substring(0, 1) }}
-        </v-avatar>
-      </template>
     </v-list-item>
   </v-list>
 </template>
@@ -51,6 +54,11 @@ const d = computed(() =>
   padding-inline-start: 1rem;
 }
 .header {
-  min-height: 48px;
+  min-height: 40px;
+}
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

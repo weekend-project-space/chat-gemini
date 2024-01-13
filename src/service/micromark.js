@@ -10,6 +10,8 @@ import {
   mathHtml
 } from 'micromark-extension-math'
 const markOption = {
+  allowDangerousHtml: true,
+  allowDangerousProtocol: true,
   extensions: [gfm(), math()],
   htmlExtensions: [gfmHtml(), mathHtml({
     strict: false

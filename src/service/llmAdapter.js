@@ -22,6 +22,7 @@ export async function* llm(text, signal = controller.signal, type = 'gemi') {
         for (let i = start; i <= end; i++) {
           str += line.charAt(i)
         }
+        // console.log(str)
         // 存在bug 已修复
         // console.log(line.substr(start, end))
         yield JSON.parse(str).candidates[0].content.parts[0].text

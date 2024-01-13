@@ -27,15 +27,24 @@ export default defineConfig({
     }),
     VitePWA({
       registerType: 'autoUpdate',
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+      },
+      injectRegister: 'auto',
       devOptions: {
         enabled: true
       },
       includeAssets: ['favicon.ico'],
       manifest: {
-        name: '伊娃',
-        short_name: '伊娃',
+        name: 'Eywa',
+        short_name: 'Eywa',
         description: 'Eywa',
         theme_color: '#ffffff',
+        icons: [{
+          src: 'logo.png',
+          sizes: '192x192',
+          type: 'image/png',
+        }]
       }
     }),
     // https://github.com/vuetifyjs/vuetify-loader/tree/master/packages/vite-plugin#readme

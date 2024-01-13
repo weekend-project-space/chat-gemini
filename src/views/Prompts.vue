@@ -2,7 +2,8 @@
   <div class="mx-3 my-2">
     <div class="d-flex flex">
       <v-list-subheader>Prompts </v-list-subheader>
-      <v-btn variant="text" icon="mdi-plus" color="secondary" to="/setup">
+      <v-btn prepend-icon="mdi-plus" size="small" color="primary" to="/setup">
+        新建提示
       </v-btn>
     </div>
     <input
@@ -13,7 +14,7 @@
     />
   </div>
   <div class="list">
-    <v-list density="compact" nav>
+    <v-list nav>
       <v-list-item
         v-for="item in contacts"
         :title="item.name"
@@ -21,11 +22,6 @@
         :key="item.name"
         :to="'/prompts/' + item.id"
       >
-        <template v-slot:prepend>
-          <v-avatar color="secondary" size="small">
-            {{ item.name.substring(0, 1) }}
-          </v-avatar>
-        </template>
         <template #append>
           <div class="actions">
             <v-btn
@@ -71,5 +67,6 @@ const { value, data: contacts } = useList(listAll);
 .flex {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 </style>

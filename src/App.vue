@@ -11,9 +11,7 @@
   max-width: 640px;
   position: relative;
 }
-#app .v-main .v-theme--light {
-  --v-theme-background: 255, 255, 255;
-}
+
 :root {
   --v-warp-widht: 760px;
 }

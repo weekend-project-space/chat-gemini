@@ -28,10 +28,21 @@
                   <template v-slot:activator="{ props }">
                     <v-btn
                       v-bind="props"
-                      icon="mdi-pencil"
+                      icon="mdi-pencil-outline"
                       variant="text"
                       size="small"
                       @click="edit(item.content, i)"
+                    ></v-btn>
+                  </template>
+                </v-tooltip>
+                <v-tooltip text="新建提示" location="bottom">
+                  <template v-slot:activator="{ props }">
+                    <v-btn
+                      v-bind="props"
+                      icon="mdi-pound-box-outline"
+                      variant="text"
+                      size="small"
+                      :to="'/setup?prompt=' + item.content"
                     ></v-btn>
                   </template>
                 </v-tooltip>
@@ -46,11 +57,16 @@
           <div>
             <div class="name">Eywa</div>
             <div class="message">
-              <span v-html="micromark(item.content)"></span>
-              <span
-                v-if="i == cloneData.length - 1 && generating"
-                class="generating"
-              ></span>
+              <div
+                v-html="
+                  micromark(
+                    item.content +
+                      (i == cloneData.length - 1 && generating
+                        ? '<span class=generating></span>'
+                        : '')
+                  )
+                "
+              ></div>
             </div>
             <div class="message-actions">
               <div class="actions-warp" v-if="!generating">
@@ -98,11 +114,11 @@
           </div>
         </div>
       </div>
-      <div v-if="cloneData.length == 0" class="empty">
-        <v-avatar color="secondary" size="64">
-          <v-icon icon="mdi-link" size="36"></v-icon>
+      <div v-if="cloneData && cloneData.length == 0" class="empty">
+        <v-avatar color="secondary" size="80">
+          <v-icon icon="mdi-link" size="60"></v-icon>
         </v-avatar>
-        <div class="mt-5">需要我做点什么</div>
+        <div class="mt-5">需要我做点什么？</div>
       </div>
     </div>
   </div>
@@ -263,8 +279,8 @@ async function gen() {
     controller = new AbortController();
     for await (const line of llm(reqData, controller.signal)) {
       for (let chat of line) {
+        i += 20;
         setTimeout(() => {
-          i += 10;
           content += chat;
           resItem.content = content;
           cloneData.value.splice(
@@ -281,9 +297,8 @@ async function gen() {
     if (e.toString().indexOf("The user aborted a request")) {
       alert({ text: "取消成功" });
     } else {
-      alert({ text: "出现点问题请稍候，或点击右上角设置", type: "warn" });
+      alert({ text: "出现点问题请稍候，或点击左下角设置", type: "warn" });
     }
-
     return new Promise((_, rej) => {
       generating.value = false;
       rej(e.toString());
@@ -293,7 +308,7 @@ async function gen() {
     setTimeout(() => {
       generating.value = false;
       resolve(content);
-    }, i);
+    }, i + 300);
   });
 }
 
@@ -375,12 +390,13 @@ onMounted(() => {
   }
   .message {
     line-height: 2rem;
-    overflow: auto;
+    overflow: hidden;
   }
   .message-actions {
     display: flex;
     justify-content: flex-start;
     min-height: 28px;
+    // margin-top: 0.5rem;
   }
 }
 .input-warp {
@@ -393,10 +409,11 @@ onMounted(() => {
   align-items: center;
   background: rgb(var(--v-theme-surface));
   padding: 0.5rem;
-  border-radius: 1rem;
-  box-shadow: 0px 3px 1px -2px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)),
-    0px 2px 2px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
-    0px 1px 5px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.12));
+  border-radius: 1.5rem;
+  border: 3px solid rgb(var(--v-theme-code));
+  // box-shadow: 0px 3px 1px -2px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)),
+  //   0px 2px 2px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
+  //   0px 1px 3px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.12));
   input {
     outline: none;
     padding-inline-start: 1rem;
@@ -404,6 +421,7 @@ onMounted(() => {
 }
 .name {
   font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 .empty {
   text-align: center;
@@ -428,16 +446,21 @@ onMounted(() => {
       display: block;
     }
   }
-
   .actions {
-    text-align: center;
     margin: 0 auto;
     .v-btn {
-      margin: 0 1rem;
+      margin: 0 0.5rem;
+    }
+  }
+
+  .actions-warp {
+    .v-btn {
+      margin-right: 0.5rem;
     }
   }
 }
 .textarea {
+  display: block;
   resize: none;
   width: 100%;
   outline: none;
@@ -447,7 +470,24 @@ onMounted(() => {
 .textarea:disabled {
   color: rgba(var(--v-theme-on-background), var(--v-high-emphasis-opacity));
 }
-@keyframes likes {
+</style>
+<style lang="less">
+.message ol,
+.message ul {
+  margin-inline-start: 1rem;
+}
+.message pre {
+  max-width: calc(var(--v-warp-widht) - 32px - 1rem);
+  overflow: auto;
+  background: rgb(var(--v-theme-code));
+  color: rgb(var(--v-theme-on-code));
+  padding: 1rem;
+  border-radius: 0.5rem;
+  code {
+    max-width: calc(var(--v-warp-widht) - 32px - 1rem);
+  }
+}
+@keyframes scale {
   0% {
     transform: scale(1);
   }
@@ -465,34 +505,20 @@ onMounted(() => {
   }
 }
 .generating {
-  margin: 0.5rem;
-  background: #333;
-  display: block;
+  background: rgba(
+    var(--v-theme-on-background),
+    var(--v-high-emphasis-opacity)
+  );
+  display: inline-block;
+  margin: 0 0.5rem;
   width: 16px;
   height: 16px;
   border-radius: 8px;
-  animation-name: likes; // 动画名称
+  animation-name: scale; // 动画名称
   animation-direction: alternate; // 动画在奇数次（1、3、5...）正向播放，在偶数次（2、4、6...）反向播放。
   animation-timing-function: linear;
   animation-delay: 0s; // 动画延迟时间
   animation-iteration-count: infinite; //  动画播放次数，infinite：一直播放
   animation-duration: 1s; // 动画完成时间
-}
-</style>
-<style lang="less">
-.message ol,
-.message ul {
-  margin-inline-start: 1rem;
-}
-.message pre {
-  max-width: calc(var(--v-warp-widht) - 32px - 1rem);
-  overflow: auto;
-  background: rgb(var(--v-theme-code));
-  color: rgb(var(--v-theme-on-code));
-  padding: 1.5rem;
-  border-radius: 0.5rem;
-  code {
-    max-width: calc(var(--v-warp-widht) - 32px - 1rem);
-  }
 }
 </style>

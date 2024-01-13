@@ -1,8 +1,8 @@
 <template>
   <v-app>
     <!-- <default-bar :barBtns="store.barBtns" /> -->
-    <app-side-bar :comp="sideComp" />
-    <app-view :comp="mainComp" />
+    <app-side-bar :comp="sideComp" v-if="showSidebar" />
+    <app-view :comp="mainComp" v-model:sidebar="showSidebar" />
   </v-app>
 </template>
 
@@ -10,10 +10,12 @@
 import appView from "./AppView.vue";
 import AppSideBar from "./AppSideBar.vue";
 import { useRoute } from "vue-router";
-import { computed, watch } from "vue";
+import { computed, watch, ref } from "vue";
 import { useDisplay } from "vuetify";
 const route = useRoute();
 const { mobile } = useDisplay();
+
+const showSidebar = ref(true);
 
 let sideCom = undefined;
 

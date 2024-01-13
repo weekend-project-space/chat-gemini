@@ -10,6 +10,7 @@ import {
 const routes = [{
   path: '',
   component: () => import('@/layouts/default/Default.vue'),
+  redirect: '/chats',
   children: [{
     path: 'chats',
     meta: {

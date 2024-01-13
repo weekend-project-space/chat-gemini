@@ -3,11 +3,12 @@
     <div class="d-flex flex">
       <v-list-subheader>Chats </v-list-subheader>
       <v-btn
-        variant="text"
-        icon="mdi-message-plus-outline"
-        color="secondary"
+        prepend-icon=" mdi-file-edit-outline"
+        size="small"
+        color="primary"
         @click="newChat0"
       >
+        新建对话
       </v-btn>
     </div>
     <input
@@ -18,9 +19,9 @@
     />
   </div>
   <div class="list">
-    <v-list density="compact" nav>
+    <v-list nav>
       <v-list-item
-        v-for="item in chats"
+        v-for="item in chatList"
         :title="item.name"
         :value="item.id"
         :key="item.id"
@@ -28,11 +29,6 @@
         :to="'/chats/' + item.id"
         :subtitle="formatData(item.time)"
       >
-        <template v-slot:prepend>
-          <v-avatar color="secondary" size="small">
-            {{ item.name.substring(0, 1) }}
-          </v-avatar>
-        </template>
         <template #append>
           <div class="actions">
             <v-btn
@@ -52,21 +48,40 @@ import { useList } from "@/compose/useQuery";
 import { listAll, getByPromptId } from "@/repo/chatRepository";
 import { delChat, newChat } from "@/service/chatService";
 import { useRoute, useRouter } from "vue-router";
-import { onMounted, watch } from "vue";
+import { computed, onMounted, watch } from "vue";
+import { useDisplay } from "vuetify";
 import { format } from "@/utils/dateUtils";
 const { value, data: chats } = useList(listAll);
+const defaultChatText = "新对话";
 const route = useRoute();
 const router = useRouter();
+const { mobile } = useDisplay();
+const chatList = computed(
+  () => chats.value && chats.value.filter((o) => o.name != defaultChatText)
+);
 async function goChat() {
   if (route.query.promptid) {
     const chatId = (await getByPromptId(Number.parseInt(route.query.promptid)))
       .id;
     router.push("/chats/" + chatId);
+  } else if (!route.path.includes("/chats/") && !mobile.value) {
+    setTimeout(newChat0, 300);
   }
 }
 
 async function newChat0() {
-  const chatId = await newChat("新会话");
+  if (route.fullPath.includes("/chats")) {
+    const newchats = chats.value.filter((o) => o.name == defaultChatText);
+    if (newchats.length) {
+      router.push("/chats/" + newchats[0].id);
+    } else {
+      createChat();
+    }
+  }
+}
+
+async function createChat() {
+  const chatId = await newChat(defaultChatText);
   setTimeout(() => {
     router.push("/chats/" + chatId);
   }, 100);
@@ -109,5 +124,6 @@ small {
 .flex {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 </style>
