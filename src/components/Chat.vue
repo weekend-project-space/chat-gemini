@@ -301,6 +301,7 @@ async function gen() {
     }
     return new Promise((_, rej) => {
       generating.value = false;
+      inputRef.value.focus();
       rej(e.toString());
     });
   }
