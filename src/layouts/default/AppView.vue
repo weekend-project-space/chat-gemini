@@ -7,15 +7,13 @@
         </div>
       </template>
     </v-tooltip>
-    <component :is="comp" v-bind="route.params" />
+    <slot></slot>
   </v-main>
 </template>
 <script setup>
-import { useRoute } from "vue-router";
 import { useDisplay } from "vuetify";
 const props = defineProps(["comp", "sidebar"]);
 const emit = defineEmits(["update:sidebar"]);
-const route = useRoute();
 const { mobile } = useDisplay();
 
 function toggleSideBar() {

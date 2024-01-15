@@ -13,51 +13,40 @@ const routes = [{
   redirect: '/chats',
   children: [{
     path: 'chats',
-    meta: {
-      barBtns: [{
-        icon: 'mdi-cog-outline',
-        to: '/settings'
-      }],
-      index: true
-    },
-    component: () => import('@/views/Chats.vue')
+    component: () => import('@/views/Chats.vue'),
+    children: [{
+      path: ':id',
+      props: true,
+      component: () => import('@/views/sub/Chat.vue')
+    }]
   }, {
     path: 'prompts',
-    meta: {
-      barBtns: [{
-        icon: 'mdi-account-plus-outline',
-        to: '/setup'
-      }],
-      index: true
-    },
-    component: () => import('@/views/Prompts.vue')
+    component: () => import('@/views/Prompts.vue'),
+    children: [{
+      path: 'setup',
+      component: () => import('@/views/sub/PromptsAdd.vue')
+    }, {
+      path: ':id',
+      props: true,
+      component: () => import('@/views/sub/Prompts.vue')
+    }, ]
   }, {
     path: 'discover',
     component: () => import('@/views/Discover.vue'),
-    meta: {
-      barBtns: [{
-        icon: 'mdi-github',
-        href: 'https://github.com/weekend-project-space/vwman-chat'
-      }],
-      index: true
-    }
-  }, {
-    path: 'setup',
-    component: () => import('@/views/sub/PromptsAdd.vue')
-  }, {
-    path: 'chats/:id',
-    component: () => import('@/views/sub/Chats.vue')
-  }, {
-    path: 'prompts/:id',
-    component: () => import('@/views/sub/Prompts.vue')
+    children: [{
+      path: ':id',
+      component: () => import('@/views/sub/Discover.vue')
+    }]
   }, {
     path: 'settings',
-    component: () => import('@/views/sub/Setting.vue')
-  }, {
-    path: 'discover/:id',
-    component: () => import('@/views/sub/Discover.vue')
-  }]
+    component: () => import('@/views/Settings.vue'),
+    children: [{
+        path: '',
+        component: () => import('@/views/sub/Setting.vue')
+      }
 
+    ]
+  }]
 }]
 
 const router = createRouter({

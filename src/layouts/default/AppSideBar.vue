@@ -1,6 +1,7 @@
 <template>
   <template v-if="mobile">
-    <v-bottom-navigation v-if="showBtn" grow>
+    <slot></slot>
+    <v-bottom-navigation v-if="route.matched.length < 3" grow>
       <v-btn
         v-for="bar in bars"
         :value="bar.icon"
@@ -9,6 +10,10 @@
       >
         <v-icon :icon="bar.icon"></v-icon>
         <span v-text="bar.name"></span>
+      </v-btn>
+      <v-btn value="setting" to="/settings">
+        <v-icon icon="mdi-cog-outline"></v-icon>
+        <span> settings </span>
       </v-btn>
     </v-bottom-navigation>
   </template>
@@ -46,19 +51,15 @@
         </v-list>
       </div>
     </v-navigation-drawer>
-
     <v-navigation-drawer theme="dark" width="260">
-      <component :is="comp" />
+      <slot></slot>
     </v-navigation-drawer>
   </template>
 </template>
 <script setup>
-import { computed } from "vue";
 import { useDisplay } from "vuetify";
-defineProps(["comp"]);
 import { useRoute } from "vue-router";
 const route = useRoute();
-const showBtn = computed(() => route.meta.index);
 const { mobile } = useDisplay();
 const bars = [
   { icon: "mdi-message-outline", name: "Chats", value: "/chats" },

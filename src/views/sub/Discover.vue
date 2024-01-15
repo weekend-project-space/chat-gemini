@@ -1,5 +1,5 @@
 <template>
-  <div class="warp-sm mt-5">
+  <div class="warp-sm">
     <v-card flat>
       <v-list density="compact" nav>
         <div class="mb-3">
@@ -63,7 +63,9 @@ const d = computed(() => {
   return r.slice(0, r.length > 60 ? 60 : r.length);
 });
 function toUrl(item) {
-  return `/setup?name=${item[actKey.value]}&prompt=${item[promptKey.value]}`;
+  return `/prompts/setup?name=${item[actKey.value]}&prompt=${
+    item[promptKey.value]
+  }`;
 }
 </script>
 <style lang="less" scoped>

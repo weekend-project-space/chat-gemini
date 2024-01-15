@@ -1,5 +1,5 @@
 <template>
-  <div class="warp-sm mt-5" v-if="contact">
+  <div class="warp-sm" v-if="contact">
     <v-card flat>
       <v-card-title>
         <div class="title my-3">
@@ -32,7 +32,7 @@
             data-id="prompt"
             :disabled="!editable.prompt"
             v-model="contact.prompt"
-            :rows="contact.prompt.length / 35 + 2"
+            :style="{ height: lineSize(contact.prompt) * 1.5 + 'rem' }"
           />
           <v-btn
             class="btn"
@@ -59,6 +59,7 @@ import { get, save } from "@/repo/promptRepository";
 import { createChat } from "@/service/chatService";
 import { reactive, watch, computed } from "vue";
 import { useActiveElement, computedAsync } from "@vueuse/core";
+const props = defineProps(["id"]);
 const route = useRoute();
 const router = useRouter();
 const activeElement = useActiveElement();
@@ -68,7 +69,7 @@ const editable = reactive({ name: false, prompt: false });
 
 const contact = computedAsync(
   async () => {
-    return route.params.id && (await get(Number.parseInt(route.params.id)));
+    return props.id && (await get(Number.parseInt(props.id)));
   },
   null // initial state
 );
@@ -86,8 +87,15 @@ watch(key, async () => {
   }
 });
 
+function lineSize(content, widht = 512) {
+  let n = content.pxWidth() / widht;
+  let line =
+    n > Number.parseInt(n) ? Number.parseInt(n) + 1 : Number.parseInt(n);
+  return (line < 1 ? 1 : line) + content.split("\n").length - 1;
+}
+
 async function click(item) {
-  await createChat([
+  const chatId = await createChat([
     {
       promptId: item.id,
       name: item.name,
@@ -99,16 +107,19 @@ async function click(item) {
       content: "好的",
     },
   ]);
-  router.push("/chats?promptid=" + item.id);
+  router.push("/chats/" + chatId);
 }
 </script>
 <style lang="less" scoped>
 .editor {
+  resize: none;
+  overflow: hidden;
   padding: 0;
   outline: none;
   width: calc(100% - 6rem);
   border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
   padding: 0 0.2rem;
+  line-height: 1.5rem;
 }
 .editor[disabled] {
   border: none;

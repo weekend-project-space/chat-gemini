@@ -15,7 +15,8 @@ export async function createChat(chatItems) {
   const chat = await chatReposiotry.getByPromptId(chatItem.promptId)
   if (chat) {
     chat.time = new Date().getTime()
-    return await chatReposiotry.save(chat)
+    await chatReposiotry.save(chat)
+    return chat.id
   } else {
     const id = await chatReposiotry.save({
       promptId: chatItem.promptId,
@@ -25,7 +26,8 @@ export async function createChat(chatItems) {
     chatItems.forEach(item => {
       item.chatId = id
     });
-    return await chatItemReposiotry.batchAdd(chatItems)
+    await chatItemReposiotry.batchAdd(chatItems)
+    return id;
   }
 }
 

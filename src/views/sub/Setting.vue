@@ -1,5 +1,5 @@
 <template>
-  <div class="warp-sm mt-5">
+  <div class="warp-sm">
     <v-card flat>
       <v-card-subtitle class="mt-3">Settings</v-card-subtitle>
       <v-card-text>
