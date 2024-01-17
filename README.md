@@ -2,15 +2,18 @@
 
 > 基于 llm，chat next ui
 
+
+[大模型应用层爱好者群](https://zhidayingxiao.cn/to/06g6xX)
+
 ## 功能
 
-- [x] chat gui (send rep)
+- [x] chat gui (send rep) support mobile
 
-- [x] friend gui (add update del list)
+- [x] prompts gui (add update del list)
 
 - [x] xxx%sxxx 的提示语言
 
-- [x] xxx 内置的一些提示语 + bind friend
+- [x] xxx 内置的一些提示语 + bind prompts
 
 - [x] pwa
 
@@ -21,6 +24,10 @@
 - [] inter
 
 - [x] prompts expore
+
+- [ ] more LLM API
+
+- [ ] plugins (GPTs)
 
 ## 界面
 
