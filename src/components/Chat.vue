@@ -6,16 +6,18 @@
           <v-avatar color="secondary" size="small">Y</v-avatar>
           <div>
             <div class="name">你</div>
-            <div class="message">
-              <textarea
-                class="textarea"
-                :disabled="i != editIndex"
-                v-model="item.content"
-                :style="{
-                  height: lineSize(item.content) * 2 + 'rem',
-                }"
-              />
-            </div>
+            <textarea
+              class="textarea"
+              :disabled="i != editIndex"
+              v-model="item.content"
+              ref="textAreaRefs"
+              :style="{
+                height: item.content
+                  ? textAreaRefs.length > Number.parseInt(i / 2) &&
+                    textAreaRefs[Number.parseInt(i / 2)].scrollHeight + 'px'
+                  : '2rem',
+              }"
+            />
             <div class="message-actions">
               <div class="actions" v-if="i == editIndex">
                 <v-btn size="small" color="secondary" @click="applyEdit(item)">
@@ -129,7 +131,6 @@
           <template v-slot:activator="{ props: menu }">
             <v-btn
               id="extBtn"
-              :disabled="generating"
               icon="mdi-square-rounded-badge-outline"
               v-bind="menu"
               variant="text"
@@ -151,10 +152,9 @@
         class="textarea"
         placeholder="请输入问题或#获取快捷指令"
         v-model="value"
-        @keydown.enter="send()"
-        :disabled="generating"
+        @keyup.enter="quickEnter"
         :style="{
-          height: lineSize(value, 630) * 2 + 'rem',
+          height: value ? inputRef.scrollHeight + 'px' : '2rem',
         }"
         ref="inputRef"
       />
@@ -183,6 +183,7 @@ const chatPanelRef = ref();
 const cloneData = ref([]);
 const editIndex = ref(-1);
 let controller = new AbortController();
+const textAreaRefs = ref([]);
 
 const scrollToBottom = () => {
   const domWrapper = chatPanelRef.value;
@@ -216,16 +217,10 @@ async function applyEdit() {
   emit("replaceAllChatItems", unref(cloneData));
 }
 
-function lineSize(content, widht = 710) {
-  let n = content.pxWidth() / widht;
-  let line =
-    n > Number.parseInt(n) ? Number.parseInt(n) + 1 : Number.parseInt(n);
-  return (line < 1 ? 1 : line) + content.split("\n").length - 1;
-}
-
 function clickBtn() {
   if (generating.value) {
     controller.abort();
+    generating.value = false;
   } else {
     send();
   }
@@ -239,6 +234,13 @@ function initEl() {
   nextTick(() => {
     scrollToBottom();
   });
+
+  const buttons = document.querySelectorAll("pre");
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      copy(e.target.innerText);
+    });
+  });
 }
 
 async function regenerate() {
@@ -250,12 +252,19 @@ async function regenerate() {
   emit("replaceAllChatItems", unref(cloneData));
 }
 
+function quickEnter(e) {
+  if (e.keyCode == 13 && !e.shiftKey && !generating.value) {
+    send();
+  }
+}
+
 async function send(text) {
   cloneData.value = props.data.map((o) => ({
     role: o.role,
     content: o.content,
   }));
   text = text || value.value;
+  text = text.trim();
   const req = { role: "user", content: text, chatId: props.chatId };
   cloneData.value.push(req);
   value.value = "";
@@ -279,17 +288,21 @@ async function gen() {
     controller = new AbortController();
     for await (const line of llm(reqData, controller.signal)) {
       for (let chat of line) {
-        i += 20;
-        setTimeout(() => {
-          content += chat;
-          resItem.content = content;
-          cloneData.value.splice(
-            cloneData.value.length - 1,
-            cloneData.value.length - 1,
-            Object.assign({}, resItem)
-          );
-          nextTick(scrollToBottom);
-        }, i);
+        if (generating.value) {
+          i += 20;
+          setTimeout(() => {
+            if (generating.value) {
+              content += chat;
+              resItem.content = content;
+              cloneData.value.splice(
+                cloneData.value.length - 1,
+                cloneData.value.length - 1,
+                Object.assign({}, resItem)
+              );
+              nextTick(scrollToBottom);
+            }
+          }, i);
+        }
       }
     }
   } catch (e) {
@@ -303,14 +316,19 @@ async function gen() {
       alert({ text: "出现点问题请稍候，或点击左下角设置", type: "warn" });
     }
     return new Promise((_, rej) => {
-      generating.value = false;
-      inputRef.value.focus();
+      setTimeout(() => {
+        generating.value = false;
+        inputRef.value.focus();
+      }, 500);
+
       rej(e.toString());
     });
   }
   return new Promise((resolve) => {
     setTimeout(() => {
-      generating.value = false;
+      setTimeout(() => {
+        generating.value = false;
+      }, 500);
       resolve(content);
     }, i + 300);
   });
@@ -381,9 +399,18 @@ onMounted(() => {
 </script>
 <style lang="less" scoped>
 .chat-warp {
-  height: 100vh;
+  height: calc(100vh - 70px - 1rem);
   overflow: auto;
-  padding: 2rem 1rem 5rem;
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 20px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(var(--v-theme-on-background), 0.3);
+  }
+  .warp {
+    padding: 2rem 1.5rem 5rem;
+  }
 }
 .chat-line {
   .eva {
@@ -406,7 +433,7 @@ onMounted(() => {
 .input-warp {
   position: absolute;
   width: 100%;
-  bottom: 1rem;
+  bottom: -70px;
   display: grid;
   grid-template-columns: 48px 1fr auto;
   grid-gap: 0.5rem;
@@ -414,13 +441,23 @@ onMounted(() => {
   background: rgb(var(--v-theme-surface));
   padding: 0.5rem;
   border-radius: 1.5rem;
-  border: 3px solid rgb(var(--v-theme-code));
-  // box-shadow: 0px 3px 1px -2px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)),
-  //   0px 2px 2px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
-  //   0px 1px 3px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.12));
-  input {
+  border: 1px solid rgb(var(--v-theme-code));
+  box-shadow: 0px 3px 1px -2px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)),
+    0px 2px 2px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
+    0px 1px 3px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.12));
+  .textarea {
     outline: none;
     padding-inline-start: 1rem;
+    height: 2rem;
+    max-height: 12rem;
+    overflow: auto;
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 20px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(var(--v-theme-on-background), 0.3);
+    }
   }
 }
 .name {
@@ -470,6 +507,7 @@ onMounted(() => {
   outline: none;
   overflow-y: hidden;
   line-height: 2rem;
+  height: 2rem;
 }
 .textarea:disabled {
   color: rgba(var(--v-theme-on-background), var(--v-high-emphasis-opacity));
@@ -481,12 +519,25 @@ onMounted(() => {
   margin-inline-start: 1rem;
 }
 .message pre {
+  position: relative;
   max-width: calc(var(--v-warp-widht) - 32px - 1rem);
   overflow: auto;
-  background: rgb(var(--v-theme-code));
-  color: rgb(var(--v-theme-on-code));
+  background: rgba(var(--v-theme-on-code), 0.8);
+  color: rgb(var(--v-theme-code));
   padding: 1rem;
   border-radius: 0.5rem;
+  pointer-events: none;
+  &::before {
+    position: absolute;
+    content: "复制";
+    background: rgba(var(--v-theme-on-code), 0.8);
+    top: 0rem;
+    right: 0rem;
+    padding: 0.3rem 1rem;
+    border-top-right-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+    pointer-events: all;
+  }
   code {
     max-width: calc(var(--v-warp-widht) - 32px - 1rem);
   }
