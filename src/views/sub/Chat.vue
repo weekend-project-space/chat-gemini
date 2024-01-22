@@ -1,17 +1,23 @@
 <template>
-  <Chat
-    v-if="chat && chat.id"
-    :chat-id="chat.id"
-    :data="qa"
-    :prompts="prompts"
-    @qa="addChatItems"
-    @replaceAllChatItems="replaceAllChatItems"
-  ></Chat>
+  <template v-if="chat && chat.id">
+    <ChatGc
+      v-if="qa && qa.length && qa[0].content.indexOf('(') == 0"
+      :name="qa[0].name"
+      :prompt="qa[0].content"
+    />
+    <Chat
+      v-else
+      :chat-id="chat.id"
+      :data="qa"
+      @qa="addChatItems"
+      @replaceAllChatItems="replaceAllChatItems"
+    ></Chat>
+  </template>
 </template>
 <script setup>
 import Chat from "@/components/Chat";
+import ChatGc from "@/components/ChatGc";
 import { listChatItem, del } from "@/repo/chatItemRepository";
-import { listAll } from "@/repo/promptRepository";
 import { get, save } from "@/repo/chatRepository";
 import { saveChatItems } from "@/service/chatService";
 import { computedAsync } from "@vueuse/core";
@@ -27,8 +33,6 @@ const qa = computedAsync(
   },
   [] // initial state
 );
-
-const prompts = computedAsync(async () => listAll());
 
 async function addChatItems(items) {
   // 更新会话名称

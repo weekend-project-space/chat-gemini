@@ -2,7 +2,12 @@
   <div class="mx-3 my-2">
     <div class="d-flex flex">
       <v-list-subheader>Prompts </v-list-subheader>
-      <v-btn prepend-icon="mdi-plus" size="small" color="primary" to="/setup">
+      <v-btn
+        prepend-icon="mdi-plus"
+        size="small"
+        color="primary"
+        to="/prompts/setup"
+      >
         新建提示
       </v-btn>
     </div>

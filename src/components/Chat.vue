@@ -170,7 +170,7 @@
   </div>
 </template>
 <script setup>
-import { nextTick, onMounted, ref, watch, unref } from "vue";
+import { nextTick, onMounted, ref, watch, unref, onUnmounted } from "vue";
 import { llm } from "@/service/llmAdapter";
 import micromark from "@/service/micromark";
 import alert from "@/compose/useAlert";
@@ -229,7 +229,7 @@ function clickBtn() {
 function initEl() {
   generating.value = false;
   cloneData.value = props.data;
-  inputRef.value.focus();
+  inputRef.value && inputRef.value.focus();
 
   nextTick(() => {
     scrollToBottom();
@@ -367,6 +367,8 @@ function changePrompt(prompt) {
   }, 100);
 }
 
+let initFun = null;
+
 onMounted(() => {
   watch(
     () => props.chatId,
@@ -392,9 +394,13 @@ onMounted(() => {
       extShow = true;
     }
   });
-  setTimeout(() => {
+  initFun = setTimeout(() => {
     initEl();
   }, 30);
+});
+
+onUnmounted(() => {
+  clearTimeout(initFun);
 });
 </script>
 <style lang="less" scoped>

@@ -1,18 +1,36 @@
 import {
-  ref
+  ref,
+  watch,
+  computed
 } from 'vue'
+import {
+  flatPrompt2Instr
+} from '@/service/promptInstr'
 
-export default function (instrs) {
+export function useInter(props) {
+  const r = ref(interpreter(flatPrompt2Instr(props.prompt)))
+  watch(props, () => {
+    const instrs = flatPrompt2Instr(props.prompt)
+    r.value = interpreter(instrs)
+  })
+  return r
+}
+
+export function interpreter(instrs) {
   let _data = {}
-  const compoents = [];
+  const components = [];
   // init
   for (let instr of instrs) {
-    _data[instr.name] = undefined
-    compoents.push({
-      name: instr.name,
-      type: instr.type,
-      value: instr.value,
-    })
+
+    if (instr.type != 'instr') {
+      _data[instr.name] = instr.type == 'radio' || instr.type == 'select' ? instr.value[0] : undefined
+      components.push({
+        name: instr.name,
+        type: instr.type,
+        value: instr.value,
+      })
+    }
+
   }
 
   const data = ref(_data)
@@ -20,25 +38,40 @@ export default function (instrs) {
   function rest() {
     _data = {}
     for (let instr of instrs) {
-      _data[instr.name] = undefined
+      _data[instr.name] = instr.type == 'radio' || instr.type == 'select' ? instr.value[0] : undefined
     }
     data.value = _data
   }
 
   function inter() {
-    const instr = instrs[instrs.lenght - 1]
+    const instr = instrs[instrs.length - 1]
     if (instr.type == 'instr') {
       return replace(instr.value, data.value)
     } else {
       throw "instr value error"
     }
   }
+  const hasAllValue = ref(false)
+  watch(data, () => {
+    let array = []
+    for (let key in data.value) {
+      let v = data.value[key]
+      if (v) {
+        array.push(v)
+      }
+    }
+    hasAllValue.value = array.length == Object.keys(data.value).length
+  }, {
+    deep: true
+  })
+
 
   return {
     data,
-    compoents,
+    components,
     rest,
-    inter
+    inter,
+    hasAllValue
   }
 }
 
@@ -48,7 +81,8 @@ function replace(exp, env) {
   let end = exp.indexOf("}")
   if (index > -1 && end > 0) {
     let key = exp.substring(index + 2, end)
-    return replace(exp.substring(0, index) + env[key] + exp.substring(end + 1), env)
+    const v = env[key];
+    return replace(exp.substring(0, index) + (v ? v : '') + exp.substring(end + 1), env)
   } else {
     return exp
   }

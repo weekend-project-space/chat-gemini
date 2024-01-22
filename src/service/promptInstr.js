@@ -22,10 +22,10 @@ function parseComp(instr) {
 }
 
 // p div input textarea checkbox select 
-// {{p a = 12356465789}}
-// {{input a = [1,2,3,4,5,6,7]}}
-// {{input b = }}
-// {{123456${a}sdfdsf${b}}}
+// (p a = 12356465789)
+// (input a = [1,2,3,4,5,6,7])
+// (input b = )
+// (123456${a}sdfdsf${b})
 // filename 
 
 /**
@@ -35,8 +35,11 @@ function parseComp(instr) {
  * @returns {array} 识别到的内容数组
  */
 const identifyCurlyBraces = (input) => {
-  // 使用正则表达式识别{{}}中的内容
-  const regex = /\{\{(.+?)\}\}/g;
+  if (!input) {
+    return []
+  }
+  // 使用正则表达式识别()中的内容
+  const regex = /\((.+?)\)/g;
 
   // 匹配所有符合正则表达式的子字符串
   const matches = input.match(regex);
@@ -47,5 +50,5 @@ const identifyCurlyBraces = (input) => {
   }
 
   // 提取匹配项中的内容并返回
-  return matches.map((match) => match.slice(2, -2));
+  return matches.map((match) => match.slice(1, -1));
 };

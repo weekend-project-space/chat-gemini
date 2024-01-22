@@ -6,6 +6,11 @@
     "act": "act",
     "prompt": "prompt"
 }, {
+    "key": "x-prompts",
+    "name": "x-prompts",
+    "desc": "prompt 扩展",
+    "url": "https://raw.githubusercontent.com/weekend-project-space/vwman-chat/main/public/x-prompts.json"
+}, {
     "key": "sophist",
     "name": "智者",
     "desc": "诸子百家及更多智者",
