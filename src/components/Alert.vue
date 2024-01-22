@@ -28,7 +28,7 @@ defineProps(["text", "type"]);
   box-shadow: 0px 3px 1px -2px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)),
     0px 2px 2px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
     0px 1px 5px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.12));
-  animation: down 3s infinite;
+  animation: down 5s infinite;
 }
 .alert.success {
   border-left: 5px solid rgb(var(--v-theme-secondary));

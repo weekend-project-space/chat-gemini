@@ -21,5 +21,5 @@ export default ({
   clearTimeout(timer)
   timer = setTimeout(() => {
     render(null, div)
-  }, 3000)
+  }, 5000)
 }
