@@ -140,7 +140,7 @@
             <v-list-item
               v-for="(item, index) in prompts"
               :key="index"
-              @click="changePrompt(item.prompt)"
+              @click="clickPrompt(item)"
             >
               <v-list-item-title>{{ item.name }}</v-list-item-title>
             </v-list-item>
@@ -171,11 +171,14 @@
 </template>
 <script setup>
 import { nextTick, onMounted, ref, watch, unref, onUnmounted } from "vue";
+import { useRouter } from "vue-router";
 import { llm } from "@/service/llmAdapter";
 import micromark from "@/service/micromark";
 import alert from "@/compose/useAlert";
+import { createChat } from "@/service/chatService";
 const props = defineProps(["data", "chatId", "prompts"]);
 const emit = defineEmits(["qa", "replaceAllChatItems"]);
+const router = useRouter();
 const value = ref("");
 const generating = ref(false);
 const inputRef = ref();
@@ -356,15 +359,31 @@ function copy(text) {
   alert({ text: "复制成功" });
 }
 
-function changePrompt(prompt) {
-  value.value = prompt;
-  setTimeout(() => {
-    if (extShow) {
-      document.getElementById("extBtn").click();
-      extShow = false;
-    }
-    inputRef.value.focus();
-  }, 100);
+function clickPrompt(item) {
+  if (item.x) {
+    toChat(item);
+  } else {
+    value.value = item.prompt;
+    setTimeout(() => {
+      if (extShow) {
+        document.getElementById("extBtn").click();
+        extShow = false;
+      }
+      inputRef.value.focus();
+    }, 100);
+  }
+}
+
+async function toChat(item) {
+  const chatId = await createChat([
+    {
+      promptId: item.id,
+      name: item.name,
+      role: "user",
+      content: item.prompt,
+    },
+  ]);
+  router.push("/chats/" + chatId);
 }
 
 let initFun = null;
@@ -390,7 +409,7 @@ onMounted(() => {
       document.getElementById("extBtn").click();
       setTimeout(() => {
         document.getElementsByClassName("extmenu")[0].focus();
-      }, 100);
+      }, 300);
       extShow = true;
     }
   });

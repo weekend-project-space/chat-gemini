@@ -9,6 +9,7 @@
       v-else
       :chat-id="chat.id"
       :data="qa"
+      :prompts="prompts"
       @qa="addChatItems"
       @replaceAllChatItems="replaceAllChatItems"
     ></Chat>
@@ -18,6 +19,7 @@
 import Chat from "@/components/Chat";
 import ChatGc from "@/components/ChatGc";
 import { listChatItem, del } from "@/repo/chatItemRepository";
+import { listAll } from "@/repo/promptRepository";
 import { get, save } from "@/repo/chatRepository";
 import { saveChatItems } from "@/service/chatService";
 import { computedAsync } from "@vueuse/core";
@@ -32,6 +34,13 @@ const qa = computedAsync(
     return props.id && (await listChatItem(Number.parseInt(props.id)));
   },
   [] // initial state
+);
+
+const prompts = computedAsync(async () =>
+  (await listAll()).map((o) => {
+    o.x = o.prompt.indexOf("(") == 0;
+    return o;
+  })
 );
 
 async function addChatItems(items) {
