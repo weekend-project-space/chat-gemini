@@ -21,6 +21,8 @@
 import { onMounted, ref, watch } from "vue";
 import { save } from "@/repo/promptRepository";
 import { useRoute, useRouter } from "vue-router";
+import { createChat } from "@/service/chatService";
+import confirm from "@/compose/useConfirm";
 import alert from "@/compose/useAlert";
 const route = useRoute();
 const router = useRouter();
@@ -38,18 +40,39 @@ function initItem() {
 async function submit() {
   if (item.value.name && item.value.prompt) {
     try {
-      await save(Object.assign({}, item.value));
+      const data = Object.assign({}, item.value);
+      const id = await save(data);
       item.value = {
         name: undefined,
         prompt: undefined,
       };
-      alert({ text: "保存成功" });
-      router.push("/prompts");
+
+      await confirm({ text: "保存成功, 立刻开始对话?" });
+      goChat(
+        Object.assign(
+          {
+            promptId: id,
+          },
+          data
+        )
+      );
     } catch (e) {
       alert({ text: e.message, type: "warn" });
     }
   } else {
     alert({ text: "请填写", type: "warn" });
   }
+}
+
+async function goChat(item) {
+  const chatId = await createChat([
+    {
+      promptId: item.id,
+      name: item.name,
+      role: "user",
+      content: item.prompt,
+    },
+  ]);
+  router.push("/chats/" + chatId);
 }
 </script>
