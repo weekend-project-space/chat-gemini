@@ -1,5 +1,5 @@
 <template>
-  <div class="warp-sm">
+  <div class="warp">
     <v-card flat>
       <v-list density="compact" nav>
         <div class="mb-3">

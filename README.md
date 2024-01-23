@@ -9,27 +9,18 @@
 
 - [x] chat gui (send rep) support mobile
 
-- [x] prompts gui (add update del list)
-
-- [x] xxx%sxxx 的提示语言
-
-- [x] xxx 内置的一些提示语 + bind prompts
-
 - [x] pwa
 
-- [x] llm adapter
-
-- [] net
-
-- [] inter
+- [x] x-prompts support prompt gui
 
 - [x] prompts expore
 
-- [ ] more LLM API
-
-- [ ] plugins (GPTs)
+- [x] more LLM API
 
 ## 界面
+![mobile](./data/mobile.png)
+
+![x-prompts](./data/x-prompts.png)
 
 ![chat](./data/chat.png)
 

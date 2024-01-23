@@ -41,27 +41,41 @@
     <v-btn
       block
       icon="mdi-send-outline"
-      rounded="0"
+      rounded="lg"
       :disabled="!d.hasAllValue"
       color="secondary"
       @click="send"
     >
     </v-btn>
-    <div
-      class="message ma-5"
-      v-if="res"
-      v-html="
-        micromark(
-          res.content + (generating ? '<span class=generating></span>' : '')
-        )
-      "
-    ></div>
+    <div class="message my-5" v-if="res">
+      <div
+        v-html="
+          micromark(
+            res.content + (generating ? '<span class=generating></span>' : '')
+          )
+        "
+      ></div>
+      <div class="actions-warp mt-3" v-if="!generating">
+        <v-tooltip text="复制" location="bottom">
+          <template v-slot:activator="{ props }">
+            <v-btn
+              v-bind="props"
+              icon="mdi-content-copy"
+              variant="text"
+              size="small"
+              @click="copy(micromark(res.content).replace(/<[^>]*>/g, ''))"
+            ></v-btn>
+          </template>
+        </v-tooltip>
+      </div>
+    </div>
   </div>
 </template>
 <script setup>
 import { ref, nextTick, computed, watch } from "vue";
 import { useInter } from "@/compose/promptInter";
 import { llm } from "@/service/llmAdapter";
+import alert from "@/compose/useAlert";
 import micromark from "@/service/micromark";
 const props = defineProps(["prompt", "name"]);
 const d = useInter(props);
@@ -169,7 +183,28 @@ function multiTurn() {
     })),
   };
 }
+
+function copy(text) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text);
+  }
+  alert({ text: "复制成功" });
+}
 </script>
+<style lang="less" scoped>
+.message {
+  background: rgba(var(--v-theme-code), 0.5);
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgb(var(--v-theme-code));
+  .actions-warp {
+    .v-btn--icon.v-btn--density-default {
+      width: calc(var(--v-btn-height));
+      height: calc(var(--v-btn-height));
+    }
+  }
+}
+</style>
 <style lang="less">
 .message ol,
 .message ul {

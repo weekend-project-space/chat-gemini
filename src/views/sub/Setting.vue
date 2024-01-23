@@ -1,5 +1,5 @@
 <template>
-  <div class="warp-sm">
+  <div class="warp">
     <v-card flat>
       <v-card-subtitle class="mt-3">Settings</v-card-subtitle>
       <v-card-text>
@@ -18,14 +18,18 @@
 </template>
 <script setup>
 import { ref } from "vue";
-
+import { useRouter } from "vue-router";
+import confirm from "@/compose/useConfirm";
+const router = useRouter();
 const geminiKey = ref(localStorage.getItem("geminiKey"));
 const geminiApi = ref(
   localStorage.getItem("geminiApi") ||
     "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key="
 );
-function ok() {
+async function ok() {
   localStorage.setItem("geminiKey", geminiKey.value);
   localStorage.setItem("geminiApi", geminiApi.value);
+  await confirm({ text: "保存成功, 立刻开始对话?" });
+  router.push("/chats");
 }
 </script>

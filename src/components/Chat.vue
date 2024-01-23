@@ -134,6 +134,7 @@
               icon="mdi-square-rounded-badge-outline"
               v-bind="menu"
               variant="text"
+              size="small"
             ></v-btn>
           </template>
           <v-list density="compact" nav class="extmenu">
@@ -163,6 +164,7 @@
           generating ? 'mdi-stop-circle-outline' : 'mdi-apple-keyboard-caps'
         "
         variant="text"
+        size="small"
         :disabled="!value && !generating"
         @click="clickBtn()"
       ></v-btn>
@@ -424,7 +426,7 @@ onUnmounted(() => {
 </script>
 <style lang="less" scoped>
 .chat-warp {
-  height: calc(100vh - 70px - 1rem);
+  height: calc(100vh - 70px - 1rem - 56px);
   overflow: auto;
   &::-webkit-scrollbar {
     width: 8px;
@@ -457,22 +459,22 @@ onUnmounted(() => {
 }
 .input-warp {
   position: absolute;
-  width: 100%;
+  width: calc(100% - 2rem);
   bottom: -70px;
   display: grid;
-  grid-template-columns: 48px 1fr auto;
+  grid-template-columns: 40px 1fr 40px;
   grid-gap: 0.5rem;
   align-items: center;
   background: rgb(var(--v-theme-surface));
   padding: 0.5rem;
-  border-radius: 1.5rem;
+  border-radius: 1.2rem;
   border: 1px solid rgb(var(--v-theme-code));
   box-shadow: 0px 3px 1px -2px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)),
     0px 2px 2px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
     0px 1px 3px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.12));
   .textarea {
     outline: none;
-    padding-inline-start: 1rem;
+    // padding-inline-start: 1rem;
     height: 2rem;
     max-height: 12rem;
     overflow: auto;

@@ -1,5 +1,5 @@
 <template>
-  <div class="warp-sm" v-if="contact">
+  <div class="warp" v-if="contact">
     <v-card flat>
       <v-card-title>
         <div class="title my-3">
@@ -27,12 +27,11 @@
       <v-card-subtitle>
         <div class="line">
           <textarea
-            class="ml-3 editor"
+            class="ml-3 editor textarea"
             type="text"
             data-id="prompt"
             :disabled="!editable.prompt"
             v-model="contact.prompt"
-            :style="{ height: lineSize(contact.prompt) * 1.5 + 'rem' }"
           />
           <v-btn
             class="btn"
@@ -54,11 +53,12 @@
   </div>
 </template>
 <script setup>
+import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { get, save } from "@/repo/promptRepository";
 import { createChat } from "@/service/chatService";
 import { reactive, watch, computed } from "vue";
-import { useActiveElement, computedAsync } from "@vueuse/core";
+import { useActiveElement } from "@vueuse/core";
 const props = defineProps(["id"]);
 const route = useRoute();
 const router = useRouter();
@@ -67,11 +67,21 @@ const key = computed(() => activeElement.value.dataset.id || null);
 // const contact = ref({});
 const editable = reactive({ name: false, prompt: false });
 
-const contact = computedAsync(
+// const contact = computedAsync(
+//   async () => {
+//     return props.id && (await get(Number.parseInt(props.id)));
+//   },
+//   null // initial state
+// );
+
+const contact = ref({ name: " ", prompt: undefined });
+
+watch(
+  () => props.id,
   async () => {
-    return props.id && (await get(Number.parseInt(props.id)));
+    contact.value = await get(Number.parseInt(props.id));
   },
-  null // initial state
+  { immediate: true }
 );
 
 watch(route, () => {
@@ -86,13 +96,6 @@ watch(key, async () => {
     await save(contact.value);
   }
 });
-
-function lineSize(content, widht = 512) {
-  let n = content.pxWidth() / widht;
-  let line =
-    n > Number.parseInt(n) ? Number.parseInt(n) + 1 : Number.parseInt(n);
-  return (line < 1 ? 1 : line) + content.split("\n").length - 1;
-}
 
 async function click(item) {
   const chatId = await createChat([
@@ -113,16 +116,28 @@ async function click(item) {
 <style lang="less" scoped>
 .editor {
   resize: none;
-  overflow: hidden;
   padding: 0;
   outline: none;
   width: calc(100% - 6rem);
   border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
   padding: 0 0.2rem;
-  line-height: 1.5rem;
+  line-height: 2rem;
 }
 .editor[disabled] {
   border: none;
+}
+.textarea {
+  outline: none;
+  // padding-inline-start: 1rem;
+  height: 8rem;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 20px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(var(--v-theme-on-background), 0.3);
+  }
 }
 .line {
   display: flex;

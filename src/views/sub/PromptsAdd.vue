@@ -1,5 +1,5 @@
 <template>
-  <div class="warp-sm">
+  <div class="warp">
     <v-card-title class="mb-3">{{
       index > -1 ? "Prompts Edit" : "Prompts Add"
     }}</v-card-title>

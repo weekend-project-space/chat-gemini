@@ -1,5 +1,5 @@
 import {
-  req
+  reqGemini
 } from '@/api'
 
 const controller = new AbortController();
@@ -7,8 +7,9 @@ const controller = new AbortController();
 export const abort = controller.abort
 
 export async function* llm(text, signal = controller.signal, type = 'gemi') {
-  if (type == 'gemi') {
-    for await (const line of (await req(typeof text === 'string' ? {
+  type = localStorage.getItem("llm-model") || "Gemini Pro"
+  if (type == 'Gemini Pro') {
+    for await (const line of (await reqGemini(typeof text === 'string' ? {
       "contents": [{
         "parts": [{
           "text": text

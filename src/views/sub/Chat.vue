@@ -1,4 +1,23 @@
 <template>
+  <v-app-bar :elevation="0" height="56">
+    <template v-slot:prepend>
+      <div class="llm-select-warp">
+        <div class="select">
+          <v-select
+            variant="flat"
+            density="compact"
+            hide-details
+            label="model"
+            v-model="model"
+            :items="['Gemini Pro']"
+          ></v-select>
+        </div>
+      </div>
+    </template>
+
+    <!-- <v-app-bar-title>Application Bar</v-app-bar-title> -->
+  </v-app-bar>
+
   <template v-if="chat && chat.id">
     <ChatGc
       v-if="qa && qa.length && qa[0].content.indexOf('(') == 0"
@@ -16,6 +35,7 @@
   </template>
 </template>
 <script setup>
+import { ref, watch } from "vue";
 import Chat from "@/components/Chat";
 import ChatGc from "@/components/ChatGc";
 import { listChatItem, del } from "@/repo/chatItemRepository";
@@ -24,6 +44,10 @@ import { get, save } from "@/repo/chatRepository";
 import { saveChatItems } from "@/service/chatService";
 import { computedAsync } from "@vueuse/core";
 const props = defineProps(["id"]);
+const model = ref(localStorage.getItem("llm-model") || "Gemini Pro");
+watch(model, (v) => {
+  localStorage.setItem("llm-model", v);
+});
 
 const chat = computedAsync(async () => {
   return props.id && (await get(Number.parseInt(props.id)));
@@ -65,3 +89,16 @@ async function replaceAllChatItems(items) {
   addChatItems(items);
 }
 </script>
+<style lang="less" scoped>
+.llm-select-warp {
+  ::v-deep(.select) {
+    width: 150px;
+    .v-field__input {
+      --v-field-input-padding-top: 0;
+      --v-field-input-padding-bottom: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
+}
+</style>

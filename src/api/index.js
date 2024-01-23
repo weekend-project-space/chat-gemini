@@ -70,7 +70,7 @@
 //   signal
 // } = controller;
 
-export async function* req(data, signal) {
+export async function* reqGemini(data, signal) {
   const API_BASE = localStorage.getItem('geminiApi') || 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:streamGenerateContent?key='
   const API = API_BASE + localStorage.getItem('geminiKey')
   const rb = await fetch(API, {
