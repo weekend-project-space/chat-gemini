@@ -5,7 +5,7 @@ export async function discover(api) {
 }
 
 export async function discoverList() {
-  return await (await fetch('https://raw.githubusercontent.com/weekend-project-space/vwman-chat/main/public/discover.json', {
+  return await (await fetch('https://raw.githubusercontent.com/weekend-project-space/eywa-chat/main/public/discover.json', {
     method: 'GET'
   })).json()
 }
