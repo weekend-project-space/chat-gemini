@@ -12,9 +12,11 @@ export async function newChat(name) {
 
 export async function createChat(chatItems) {
   const chatItem = chatItems[0]
-  const chat = await chatReposiotry.getByPromptId(chatItem.promptId)
+  let chat = await chatReposiotry.getByPromptId(chatItem.promptId)
+  chat = chat ? chat : await chatReposiotry.getByName(chatItem.name)
   if (chat) {
     chat.time = new Date().getTime()
+    chat.promptId = chatItem.promptId
     await chatReposiotry.save(chat)
     return chat.id
   } else {

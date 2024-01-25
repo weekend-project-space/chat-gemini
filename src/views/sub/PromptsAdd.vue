@@ -1,7 +1,7 @@
 <template>
   <div class="warp">
     <v-card-title class="mb-3">{{
-      index > -1 ? "Prompts Edit" : "Prompts Add"
+      index > -1 ? "收藏编辑" : "收藏新增"
     }}</v-card-title>
     <v-card-text>
       <v-text-field label="简称" v-model="item.name"></v-text-field>

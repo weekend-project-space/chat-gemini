@@ -8,13 +8,14 @@
             <div class="name">你</div>
             <textarea
               class="textarea"
+              :key="i"
               :disabled="i != editIndex"
               v-model="item.content"
               ref="textAreaRefs"
               :style="{
                 height: item.content
-                  ? textAreaRefs.length > Number.parseInt(i / 2) &&
-                    textAreaRefs[Number.parseInt(i / 2)].scrollHeight + 'px'
+                  ? textAreaRefs.length > i &&
+                    textAreaRefs[i].scrollHeight + 'px'
                   : '2rem',
               }"
             />
@@ -37,7 +38,7 @@
                     ></v-btn>
                   </template>
                 </v-tooltip>
-                <v-tooltip text="新建提示" location="bottom">
+                <v-tooltip text="新建收藏" location="bottom">
                   <template v-slot:activator="{ props }">
                     <v-btn
                       v-bind="props"
@@ -60,6 +61,7 @@
             <div class="name">Eywa</div>
             <div class="message">
               <div
+                ref="textAreaRefs"
                 v-html="
                   micromark(
                     item.content +
@@ -151,7 +153,7 @@
 
       <textarea
         class="textarea"
-        placeholder="请输入问题或#获取快捷指令"
+        placeholder="请输入问题或#获取收藏"
         v-model="value"
         @keyup.enter="quickEnter"
         :style="{
@@ -340,15 +342,27 @@ async function gen() {
 }
 
 function multiTurn() {
+  let key = "";
+  let array = [];
+  for (let item of cloneData.value) {
+    if (item.role == key) {
+      array[array.length - 1].parts.push({
+        text: item.content,
+      });
+    } else {
+      array.push({
+        role: item.role,
+        parts: [
+          {
+            text: item.content,
+          },
+        ],
+      });
+    }
+    key = item.role;
+  }
   return {
-    contents: cloneData.value.map((o) => ({
-      role: o.role,
-      parts: [
-        {
-          text: o.content,
-        },
-      ],
-    })),
+    contents: array,
   };
 }
 
@@ -426,7 +440,7 @@ onUnmounted(() => {
 </script>
 <style lang="less" scoped>
 .chat-warp {
-  height: calc(100vh - 70px - 1rem - 56px);
+  height: calc(100vh - 70px - 1rem);
   overflow: auto;
   &::-webkit-scrollbar {
     width: 8px;

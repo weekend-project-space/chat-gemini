@@ -45,7 +45,7 @@
       <v-card-actions>
         <v-btn
           icon="mdi-message-outline"
-          title="chat"
+          title="开始对话"
           @click="click(contact)"
         ></v-btn>
       </v-card-actions>

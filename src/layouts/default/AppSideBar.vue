@@ -11,14 +11,14 @@
         <v-icon :icon="bar.icon"></v-icon>
         <span v-text="bar.name"></span>
       </v-btn>
-      <v-btn value="setting" to="/settings">
+      <!-- <v-btn value="setting" to="/settings">
         <v-icon icon="mdi-cog-outline"></v-icon>
         <span> settings </span>
-      </v-btn>
+      </v-btn> -->
     </v-bottom-navigation>
   </template>
   <template v-else>
-    <v-navigation-drawer theme="dark" rail>
+    <v-navigation-drawer theme="dark" width="130">
       <!-- <v-tooltip text="伊娃">
         <template v-slot:activator="{ props }">
           <v-list v-bind="props" nav>
@@ -39,7 +39,7 @@
           :to="bar.value"
         ></v-list-item>
       </v-list>
-      <div class="bar-footer">
+      <!-- <div class="bar-footer">
         <v-divider></v-divider>
         <v-list density="compact" nav>
           <v-list-item
@@ -49,7 +49,7 @@
             to="/settings"
           ></v-list-item>
         </v-list>
-      </div>
+      </div> -->
     </v-navigation-drawer>
     <v-navigation-drawer theme="dark" width="260">
       <slot></slot>
@@ -62,9 +62,9 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 const { mobile } = useDisplay();
 const bars = [
-  { icon: "mdi-message-outline", name: "Chats", value: "/chats" },
-  { icon: "mdi-pound-box-outline", name: "Prompts", value: "/prompts" },
-  { icon: "mdi-compass-outline", name: "Discover", value: "/discover" },
+  { icon: "mdi-message-outline", name: "对话", value: "/chats" },
+  { icon: "mdi-pound-box-outline", name: "收藏", value: "/prompts" },
+  { icon: "mdi-compass-outline", name: "发现", value: "/discover" },
 ];
 </script>
 <style lang="less" scoped>

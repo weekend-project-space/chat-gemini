@@ -1,0 +1,55 @@
+[{
+    "name": "计算器",
+    "desc": "输入数学表达方式",
+    "classify": "文章写作",
+    "content": "请输出计算结果：[PROMPT]",
+    "hint": "例如：43*22"
+}, {
+    "name": "人名中英翻译",
+    "desc": "将人名翻译成英文",
+    "classify": "文章写作",
+    "content": "使用人名翻译规则，把中文名字[PROMPT] 翻译成英文名字",
+    "hint": "请输入姓名"
+}, {
+    "name": "专业名词翻译",
+    "desc": "输入需要翻译的专业名词或者术语",
+    "classify": "文章写作",
+    "content": "使用专业名词翻译规则，把中文专业名词[PROMPT]翻译成英文",
+    "hint": "输入需要翻译的专业名词或者术语"
+}, {
+    "name": "域名生成器",
+    "desc": "根据你的公司或业务生成备选域名列表",
+    "classify": "文章写作",
+    "content": "我希望您充当智能域名生成器。我会告诉你我的公司或想法是做什么的，你会根据我的提示回复我一个域名备选列表。您只会回复域列表，而不会回复其他任何内容。域名最长不超过10个字母，应该简短但独特，可以是朗朗上口的词或不存在的词。我的想法是：[PROMPT]",
+    "hint": "输入你的公司名称或者主营业务"
+}, {
+    "name": "语言检测器",
+    "desc": "任何语言输入句子，检测是哪种语言写的",
+    "classify": "文章写作",
+    "content": "我希望你充当语言检测器。我会用任何语言输入一个句子，你会回答我，我写的句子在你是用哪种语言写的。不要写任何解释或其他文字，只需回复语言名称即可。我的第一句话是“[PROMPT]”",
+    "hint": "输入内容"
+}, {
+    "name": "圣经转译器",
+    "desc": "将输入文本用圣经中的字词替换，并保持圣经的书写风格。",
+    "classify": "文章写作",
+    "content": "I want you to act as an biblical translator. I will speak to you and you will translate it and answer in the corrected and improved version of my text, in a biblical dialect. I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, biblical words and sentences. Keep the meaning same. I want you to only reply the correction, the improvements and nothing else, do not write explanations. My first sentence is [PROMPT]",
+    "hint": "请输入需要转换的话"
+}, {
+    "name": "密码生成器",
+    "desc": "输入位数，生成比较安全的密码",
+    "classify": "文章写作",
+    "content": "请帮我生成一组密码，要求包含大写字目、小写字母和特殊符号，长度位[PROMPT]位",
+    "hint": "输入密码长度"
+}, {
+    "name": "年化利率计算器",
+    "desc": "年化收益计算器",
+    "classify": "文章写作",
+    "content": "你将作为一个年化利率计算器，将[PROMPT]通过年化利率计算出他的值",
+    "hint": "填写你的本金，存款天数，利息"
+}, {
+    "name": "摩斯电码翻译",
+    "desc": "摩尔斯电码翻译员",
+    "classify": "文章写作",
+    "content": "我想让你充当摩尔斯电码翻译器。我会给你用摩斯电码写的信息，你会把它们翻译成英文文本。您的回复应仅包含翻译后的文本，不应包含任何额外的解释或说明。您应为非摩尔斯电码的消息提供详细翻译。你的第一条消息是[PROMPT]",
+    "hint": "请输入摩斯电码，例如：… .- …-"
+}]
