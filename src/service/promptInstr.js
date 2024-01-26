@@ -6,11 +6,12 @@ export function flatPrompt2Instr(prompt) {
 function parseComp(instr) {
   if (instr.includes(' = ')) {
     const a = instr.trim().split(' = ')
-    const left = a[0].split(' ').map(str => str.trim())
+    const index = a[0].indexOf(' ');
+    const left = instr.substr(0, index)
     const value = eval(a[1].trim())
     return {
-      type: left[0],
-      name: left[1],
+      type: left,
+      name: a[0].substr(index + 1),
       value
     }
   } else {
