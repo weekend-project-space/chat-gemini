@@ -45,7 +45,11 @@
                       icon="mdi-pound-box-outline"
                       variant="text"
                       size="small"
-                      :to="'/setup?prompt=' + item.content"
+                      :to="
+                        '/prompts/setup?prompt=' +
+                        item.content +
+                        (item.name ? '&name=' + item.name : '')
+                      "
                     ></v-btn>
                   </template>
                 </v-tooltip>
