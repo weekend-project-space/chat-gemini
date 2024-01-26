@@ -255,8 +255,10 @@ function copy(text) {
   margin-inline-start: 1rem;
 }
 .message {
-  img {
+  img,
+  * {
     max-width: 100%;
+    overflow-y: auto;
   }
 }
 .message pre {
