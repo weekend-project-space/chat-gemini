@@ -83,6 +83,17 @@
             ></v-btn>
           </template>
         </v-tooltip>
+        <v-tooltip text="开始对话" location="bottom">
+          <template v-slot:activator="{ props }">
+            <v-btn
+              v-bind="props"
+              icon="mdi-message-outline"
+              variant="text"
+              size="small"
+              @click="goChat"
+            ></v-btn>
+          </template>
+        </v-tooltip>
       </div>
     </div>
   </div>
@@ -91,9 +102,12 @@
 import { ref, nextTick, computed, watch } from "vue";
 import { useInter } from "@/compose/promptInter";
 import { llm } from "@/service/llmAdapter";
+import { createChat } from "@/service/chatService";
+import { useRouter } from "vue-router";
 import alert from "@/compose/useAlert";
 import micromark from "@/service/micromark";
 const props = defineProps(["prompt", "name"]);
+const router = useRouter();
 const d = useInter(props);
 const generating = ref(false);
 const cloneData = ref([]);
@@ -200,6 +214,17 @@ function multiTurn() {
   };
 }
 
+async function goChat() {
+  const items = cloneData.value.map((item) => ({
+    promptId: item.content,
+    name: item.content,
+    role: item.role,
+    content: item.content,
+  }));
+  const chatId = await createChat(items);
+  router.push("/chats/" + chatId);
+}
+
 function copy(text) {
   if (navigator.clipboard) {
     navigator.clipboard.writeText(text);
@@ -217,6 +242,9 @@ function copy(text) {
     .v-btn--icon.v-btn--density-default {
       width: calc(var(--v-btn-height));
       height: calc(var(--v-btn-height));
+    }
+    .v-btn {
+      margin: 0 0.5rem;
     }
   }
 }
