@@ -109,4 +109,7 @@ async function goChat(item) {
   line-height: 1.375rem;
   margin: 0.5rem 0.2rem;
 }
+.warp .v-list--nav {
+  padding-inline: 0;
+}
 </style>
