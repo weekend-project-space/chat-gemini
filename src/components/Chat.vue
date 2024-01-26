@@ -564,6 +564,13 @@ onUnmounted(() => {
 }
 </style>
 <style lang="less">
+.message {
+  img,
+  * {
+    max-width: 100%;
+    overflow-y: auto;
+  }
+}
 .message ol,
 .message ul {
   margin-inline-start: 1rem;
