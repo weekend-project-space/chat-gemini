@@ -1,10 +1,4 @@
 [{
-    "name": "周边旅游推荐",
-    "desc": "根据你的位置，推荐周边参观地点。",
-    "classify": "文章写作",
-    "content": "I want you to act as a travel guide and respond in Chinese. I will write you my location and you will suggest a place to visit near my location. In some cases, I will also give you the type of places I will visit. You will also suggest me places of similar type that are close to my first location. My first suggestion request is [PROMPT]",
-    "hint": "请输入所在地点"
-}, {
     "name": "撰写论文",
     "desc": "根据要求帮你写论文",
     "classify": "文章写作",

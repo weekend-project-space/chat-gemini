@@ -122,7 +122,10 @@
         <v-avatar color="secondary" size="80">
           <v-icon icon="mdi-link" size="60"></v-icon>
         </v-avatar>
-        <div class="mt-5">需要我做点什么？</div>
+        <div class="mt-5 bold">需要我做点什么？</div>
+        <div class="mt-5">
+          <router-link to="/discover">👀看看大家在用什么</router-link>
+        </div>
       </div>
     </div>
   </div>
@@ -507,8 +510,10 @@ onUnmounted(() => {
 }
 .empty {
   text-align: center;
-  font-weight: bold;
   margin-top: 30vh;
+  .bold {
+    font-weight: bold;
+  }
 }
 .chat-line {
   .message-actions .actions-warp {

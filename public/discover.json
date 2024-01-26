@@ -1,10 +1,11 @@
 [{
-    "key": "awesome-chatgpt-prompts-zh",
-    "name": "演员",
-    "desc": "中文调教指南。各种场景使用指南。学习怎么让它听你的话。",
-    "url": "https://raw.githubusercontent.com/PlexPt/awesome-chatgpt-prompts-zh/main/prompts-zh.json",
-    "act": "act",
-    "prompt": "prompt"
+    "key": "x-social",
+    "name": "社交媒体",
+    "desc": "社交媒体",
+    "url": "/0.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
 }, {
     "key": "x-lunwen",
     "name": "论文工具",
@@ -45,6 +46,69 @@
     "act": "name",
     "prompt": "desc",
     "hint": true
+}, {
+    "key": "x-stu-copilot",
+    "name": "学习辅导",
+    "desc": "学习辅导",
+    "url": "/6.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-game",
+    "name": "休闲娱乐",
+    "desc": "休闲娱乐",
+    "url": "/7.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-app-use",
+    "name": "软件使用",
+    "desc": "软件使用",
+    "url": "/8.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-baike",
+    "name": "百科",
+    "desc": "百科",
+    "url": "/9.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-wenshu",
+    "name": "商业文书",
+    "desc": "撰写商业文书",
+    "url": "/10.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-code-copilot",
+    "name": "编码助手",
+    "desc": "编码助手",
+    "url": "/11.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-doc-copilot",
+    "name": "文章写作",
+    "desc": "助力文章写作",
+    "url": "/12.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "awesome-chatgpt-prompts-zh",
+    "name": "角色扮演",
+    "desc": "中文调教指南。各种场景使用指南。学习怎么让它听你的话。",
+    "url": "https://raw.githubusercontent.com/PlexPt/awesome-chatgpt-prompts-zh/main/prompts-zh.json",
+    "act": "act",
+    "prompt": "prompt"
 }, {
     "key": "sophist",
     "name": "智者",
