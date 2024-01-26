@@ -29,3 +29,7 @@ export async function get(id) {
 export async function getByPromptId(promptId) {
   return await chats.where('promptId').equals(promptId).first()
 }
+
+export async function getByName(name) {
+  return await chats.where('name').equals(name).first()
+}

@@ -1,18 +1,53 @@
 [{
     "key": "awesome-chatgpt-prompts-zh",
-    "name": "awesome-chatgpt-prompts-zh",
-    "desc": "ChatGPT 中文调教指南。各种场景使用指南。学习怎么让它听你的话。",
+    "name": "演员",
+    "desc": "中文调教指南。各种场景使用指南。学习怎么让它听你的话。",
     "url": "https://raw.githubusercontent.com/PlexPt/awesome-chatgpt-prompts-zh/main/prompts-zh.json",
     "act": "act",
     "prompt": "prompt"
 }, {
-    "key": "x-prompts",
-    "name": "x-prompts",
-    "desc": "prompt 扩展",
-    "url": "https://raw.githubusercontent.com/weekend-project-space/eywa-chat/main/public/x-prompts.json"
+    "key": "x-lunwen",
+    "name": "论文工具",
+    "desc": "论文工具",
+    "url": "/1.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-other",
+    "name": "应用",
+    "desc": "应用",
+    "url": "/2.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-base",
+    "name": "实用工具",
+    "desc": "实用工具",
+    "url": "/3.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-star",
+    "name": "占星问卜",
+    "desc": "占星问卜",
+    "url": "/4.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-health",
+    "name": "医疗健康",
+    "desc": "医疗健康",
+    "url": "/5.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
 }, {
     "key": "sophist",
     "name": "智者",
     "desc": "诸子百家及更多智者",
-    "url": "https://raw.githubusercontent.com/weekend-project-space/eywa-chat/main/public/sophist.json"
+    "url": "/sophist.json"
 }]

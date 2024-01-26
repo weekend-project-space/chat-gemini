@@ -1,15 +1,15 @@
 <template>
   <div class="mx-3 my-2">
     <div class="d-flex flex header">
-      <v-list-subheader>Discover </v-list-subheader>
-      <v-btn
+      <v-list-subheader>发现 </v-list-subheader>
+      <!-- <v-btn
         prepend-icon=" mdi-github"
         size="small"
         color="primary"
         href="https://github.com/weekend-project-space/vwman-chat"
       >
         源码
-      </v-btn>
+      </v-btn> -->
     </div>
     <input
       class="search-input mt-2"

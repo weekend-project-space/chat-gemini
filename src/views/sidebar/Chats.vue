@@ -1,7 +1,7 @@
 <template>
   <div class="mx-3 my-2">
     <div class="d-flex flex">
-      <v-list-subheader>Chats </v-list-subheader>
+      <v-list-subheader> 对话</v-list-subheader>
       <v-btn
         prepend-icon=" mdi-file-edit-outline"
         size="small"

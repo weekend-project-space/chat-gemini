@@ -1,6 +1,21 @@
 <template>
   <div class="warp">
-    <h2 class="my-5" v-text="name"></h2>
+    <div class="d-flex align-center">
+      <h2 class="my-5" v-text="name"></h2>
+
+      <v-tooltip text="新建收藏" location="bottom">
+        <template v-slot:activator="{ props }">
+          <v-btn
+            v-bind="props"
+            icon="mdi-pound-box-outline"
+            variant="text"
+            size="small"
+            :to="'/prompts/setup?prompt=' + prompt + '&name=' + name"
+            class="mx-3"
+          ></v-btn>
+        </template>
+      </v-tooltip>
+    </div>
     <template v-for="item in d.components">
       <v-text-field
         :key="item.name + 'input'"
@@ -38,6 +53,7 @@
         item.value
       }}</component>
     </template>
+
     <v-btn
       block
       icon="mdi-send-outline"
@@ -209,6 +225,11 @@ function copy(text) {
 .message ol,
 .message ul {
   margin-inline-start: 1rem;
+}
+.message {
+  img {
+    max-width: 100%;
+  }
 }
 .message pre {
   position: relative;
