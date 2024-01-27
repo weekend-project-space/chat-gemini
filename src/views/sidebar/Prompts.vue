@@ -33,7 +33,7 @@
               size="small"
               variant="text"
               icon="mdi-delete-outline"
-              @click="del(item.id)"
+              @click.prevent="del(item.id)"
             ></v-btn>
           </div>
         </template>
