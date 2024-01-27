@@ -18,7 +18,7 @@
     </v-bottom-navigation>
   </template>
   <template v-else>
-    <v-navigation-drawer theme="dark" width="130">
+    <v-navigation-drawer class="drawer" theme="dark" width="130">
       <!-- <v-tooltip text="伊娃">
         <template v-slot:activator="{ props }">
           <v-list v-bind="props" nav>
@@ -51,7 +51,7 @@
         </v-list>
       </div> -->
     </v-navigation-drawer>
-    <v-navigation-drawer theme="dark" width="260">
+    <v-navigation-drawer class="drawer" theme="dark" width="260">
       <slot></slot>
     </v-navigation-drawer>
   </template>
@@ -72,5 +72,16 @@ const bars = [
   position: absolute;
   bottom: 0;
   width: 100%;
+}
+</style>
+<style lang="less">
+.drawer .v-navigation-drawer__content {
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 20px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(var(--v-theme-on-background), 0.3);
+  }
 }
 </style>
