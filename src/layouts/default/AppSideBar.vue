@@ -11,10 +11,13 @@
         <v-icon :icon="bar.icon"></v-icon>
         <span v-text="bar.name"></span>
       </v-btn>
-      <!-- <v-btn value="setting" to="/settings">
-        <v-icon icon="mdi-cog-outline"></v-icon>
-        <span> settings </span>
-      </v-btn> -->
+      <v-btn
+        value="group"
+        href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=6fc5B9qUuEANrhxu_NoFxYf0E7GRv00D&authKey=usE9I3Rs9Dca8Q3aC%2BpbUyI4WjF0Eahjku8psS5%2FyJ6axVKCTJuqqFEw8vLAGv6S&noverify=0&group_code=574528625"
+      >
+        <v-icon icon="mdi-qqchat"></v-icon>
+        <span> QQ群 </span>
+      </v-btn>
     </v-bottom-navigation>
   </template>
   <template v-else>
@@ -39,17 +42,18 @@
           :to="bar.value"
         ></v-list-item>
       </v-list>
-      <!-- <div class="bar-footer">
+      <div class="bar-footer">
         <v-divider></v-divider>
         <v-list density="compact" nav>
           <v-list-item
-            prepend-icon="mdi-cog-outline"
-            title="settings"
-            value="settings"
-            to="/settings"
+            prepend-icon="mdi-qqchat"
+            title="QQ群"
+            value="group"
+            target="_blank"
+            href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=6fc5B9qUuEANrhxu_NoFxYf0E7GRv00D&authKey=usE9I3Rs9Dca8Q3aC%2BpbUyI4WjF0Eahjku8psS5%2FyJ6axVKCTJuqqFEw8vLAGv6S&noverify=0&group_code=574528625"
           ></v-list-item>
         </v-list>
-      </div> -->
+      </div>
     </v-navigation-drawer>
     <v-navigation-drawer class="drawer" theme="dark" width="260">
       <slot></slot>
