@@ -154,6 +154,9 @@
             >
               <v-list-item-title>{{ item.name }}</v-list-item-title>
             </v-list-item>
+            <div v-if="prompts.length == 0" class="mx-5 my-2">
+              <small>暂无收藏 </small>
+            </div>
           </v-list>
         </v-menu>
       </div>
@@ -231,10 +234,13 @@ async function applyEdit() {
   emit("replaceAllChatItems", unref(cloneData));
 }
 
+let genFuns = [];
+
 function clickBtn() {
   if (generating.value) {
     controller.abort();
     generating.value = false;
+    genFuns.forEach(clearTimeout);
   } else {
     send();
   }
@@ -247,13 +253,14 @@ function initEl() {
 
   nextTick(() => {
     scrollToBottom();
-  });
-
-  const buttons = document.querySelectorAll("pre");
-  buttons.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      copy(e.target.innerText);
-    });
+    setTimeout(() => {
+      const buttons = document.querySelectorAll("pre");
+      buttons.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          copy(e.target.innerText);
+        });
+      });
+    }, 1000);
   });
 }
 
@@ -288,6 +295,7 @@ async function send(text) {
 }
 
 async function gen() {
+  genFuns = [];
   if (generating.value) {
     alert({ text: "请等回复完后再重试" });
     return;
@@ -304,7 +312,7 @@ async function gen() {
       for (let chat of line) {
         if (generating.value) {
           i += 20;
-          setTimeout(() => {
+          const g = () => {
             if (generating.value) {
               content += chat;
               resItem.content = content;
@@ -315,7 +323,8 @@ async function gen() {
               );
               nextTick(scrollToBottom);
             }
-          }, i);
+          };
+          genFuns.push(setTimeout(g, i));
         }
       }
     }
@@ -597,6 +606,9 @@ onUnmounted(() => {
   }
   code {
     max-width: calc(var(--v-warp-widht) - 32px - 1rem);
+    .generating {
+      display: none;
+    }
   }
 }
 @keyframes scale {
