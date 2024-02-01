@@ -128,7 +128,22 @@
         </v-avatar>
         <div class="mt-5 bold">需要我做点什么？</div>
         <div class="mt-5">
-          <router-link to="/discover">👀看看大家在用什么</router-link>
+          <v-menu transition="scale-transition">
+            <template v-slot:activator="{ props }">
+              <v-btn color="primary" v-bind="props"
+                >支付宝领红包🧧 不领白不领
+              </v-btn>
+              <div class="mt-3">
+                <small>收藏网站 每天领一次</small>
+              </div>
+            </template>
+            <div class="py-3 text-align">
+              <img src="/hongbao.png" alt="" />
+            </div>
+          </v-menu>
+        </div>
+        <div class="mt-5">
+          <v-btn color="primary" to="/discover"> 👀看看大家在用什么 </v-btn>
         </div>
       </div>
     </div>
@@ -455,6 +470,9 @@ onUnmounted(() => {
 });
 </script>
 <style lang="less" scoped>
+.text-align {
+  text-align: center;
+}
 .chat-warp {
   height: calc(100vh - 70px - 1rem);
   overflow: auto;
