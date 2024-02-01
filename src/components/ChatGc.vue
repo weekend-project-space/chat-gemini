@@ -56,11 +56,11 @@
 
     <v-btn
       block
-      icon="mdi-send-outline"
+      :icon="generating ? 'mdi-stop-circle-outline' : 'mdi-send-outline'"
       rounded="lg"
       :disabled="!d.hasAllValue"
       color="secondary"
-      @click="send"
+      @click="clickBtn"
     >
     </v-btn>
     <div class="message my-5" v-if="res">
@@ -130,6 +130,20 @@ const scrollToBottom = () => {
   window.scrollTo(0, document.body.scrollHeight);
 };
 
+let genFuns = [];
+
+let controller = new AbortController();
+
+function clickBtn() {
+  if (generating.value) {
+    generating.value = false;
+    controller.abort();
+    genFuns.forEach(clearTimeout);
+  } else {
+    send();
+  }
+}
+
 async function send(text) {
   cloneData.value = [];
   text = d.value.inter();
@@ -142,6 +156,7 @@ async function send(text) {
 }
 
 async function gen() {
+  genFuns = [];
   if (generating.value) {
     alert({ text: "请等回复完后再重试" });
     return;
@@ -153,12 +168,12 @@ async function gen() {
     const reqData = multiTurn();
     const resItem = { role: "model", content: "", chatId: props.chatId };
     cloneData.value.push(resItem);
-    const controller = new AbortController();
+    controller = new AbortController();
     for await (const line of llm(reqData, controller.signal)) {
       for (let chat of line) {
         if (generating.value) {
           i += 20;
-          setTimeout(() => {
+          const g = () => {
             if (generating.value) {
               content += chat;
               resItem.content = content;
@@ -169,14 +184,17 @@ async function gen() {
               );
               nextTick(scrollToBottom);
             }
-          }, i);
+          };
+          if (generating.value) {
+            genFuns.push(setTimeout(g, i));
+          }
         }
       }
     }
   } catch (e) {
     console.error(e);
     const eText = e.toString();
-    if (eText.includes("The user aborted a request")) {
+    if (eText.includes("aborted")) {
       alert({ text: "取消成功" });
     } else if (eText.includes("API key not valid")) {
       alert({ text: "点击左下角设置您的key", type: "warn" });
