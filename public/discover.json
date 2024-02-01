@@ -103,6 +103,38 @@
     "prompt": "desc",
     "hint": true
 }, {
+    "key": "x-copywriting-copilot",
+    "name": "文案策划",
+    "desc": "助力文案策划",
+    "url": "/13.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-teacher-copilot",
+    "name": "教学辅助",
+    "desc": "助力教学辅助",
+    "url": "/14.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-work-copilot",
+    "name": "工作助手",
+    "desc": "工作助手",
+    "url": "/15.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-legal-copilot",
+    "name": "法律服务",
+    "desc": "法律服务",
+    "url": "/16.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
     "key": "awesome-chatgpt-prompts-zh",
     "name": "角色扮演",
     "desc": "中文调教指南。各种场景使用指南。学习怎么让它听你的话。",
