@@ -146,7 +146,7 @@
           </v-menu>
         </div>
         <div class="mt-5">
-          <v-btn color="secondary" to="/discover"> 👀查看更多功能 </v-btn>
+          <v-btn variant="text" to="/discover"> 👀查看更多功能 </v-btn>
         </div>
       </div>
     </div>
@@ -659,7 +659,7 @@ onUnmounted(() => {
     padding: 0.5rem 1rem;
     border-radius: 0.8rem;
     small {
-      opacity: 0.8;
+      opacity: 0.5;
     }
     &:hover {
       background: rgb(var(--v-theme-code));
