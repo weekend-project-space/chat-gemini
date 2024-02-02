@@ -135,6 +135,21 @@ let genFuns = [];
 
 let controller = new AbortController();
 
+function initEl() {
+  nextTick(() => {
+    scrollToBottom();
+    setTimeout(() => {
+      const buttons = document.querySelectorAll("pre");
+      console.log(buttons);
+      buttons.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          copy(e.target.innerText);
+        });
+      });
+    }, 1000);
+  });
+}
+
 function clickBtn() {
   if (generating.value) {
     generating.value = false;
@@ -202,6 +217,7 @@ async function gen() {
     } else {
       alert({ text: "出现点问题请稍候重试，或换个方式提问", type: "warn" });
     }
+    initEl();
     return new Promise((_, rej) => {
       setTimeout(() => {
         generating.value = false;
@@ -210,11 +226,13 @@ async function gen() {
       rej(e.toString());
     });
   }
+
   return new Promise((resolve) => {
     setTimeout(() => {
       setTimeout(() => {
         generating.value = false;
       }, 500);
+      initEl();
       resolve(content);
     }, i + 300);
   });
