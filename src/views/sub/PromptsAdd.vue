@@ -12,7 +12,7 @@
         class="mx-4"
         :disabled="!(item.name && item.prompt)"
         @click="submit"
-        color="secondary"
+        color="primary"
       >
         确定
       </v-btn>

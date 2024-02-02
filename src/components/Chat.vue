@@ -1,24 +1,28 @@
 <template>
   <div class="chat-warp" ref="chatPanelRef">
     <div class="warp">
-      <div class="chat-line" v-for="(item, i) in cloneData" :key="i">
+      <div
+        class="chat-line"
+        v-for="(item, i) in cloneData"
+        :key="chatId + '@' + i"
+      >
         <div class="eva" v-if="item.role == 'user'">
           <v-avatar color="primary" size="small">Y</v-avatar>
           <div>
             <div class="name">你</div>
             <textarea
+              v-if="i == editIndex"
               class="textarea"
               :key="i"
-              :disabled="i != editIndex"
               v-model="item.content"
-              ref="textAreaRefs"
+              ref="textAreaRef"
               :style="{
                 height: item.content
-                  ? textAreaRefs.length > i &&
-                    textAreaRefs[i].scrollHeight + 'px'
+                  ? textAreaRef && textAreaRef.scrollHeight + 'px'
                   : '2rem',
               }"
             />
+            <div class="textarea" v-else v-text="item.content"></div>
             <div class="message-actions">
               <div class="actions" v-if="i == editIndex">
                 <v-btn size="small" color="primary" @click="applyEdit(item)">
@@ -65,7 +69,6 @@
             <div class="name">Eywa</div>
             <div class="message">
               <div
-                ref="textAreaRefs"
                 v-html="
                   micromark(
                     item.content +
@@ -122,7 +125,7 @@
           </div>
         </div>
       </div>
-      <div v-if="cloneData && cloneData.length == 0" class="empty">
+      <div v-if="!loading && cloneData && cloneData.length == 0" class="empty">
         <v-avatar color="primary" size="80">
           <v-icon icon="mdi-link" size="60"></v-icon>
         </v-avatar>
@@ -205,7 +208,7 @@ import { llm } from "@/service/llmAdapter";
 import micromark from "@/service/micromark";
 import alert from "@/compose/useAlert";
 import { createChat } from "@/service/chatService";
-const props = defineProps(["data", "chatId", "prompts"]);
+const props = defineProps(["data", "chatId", "prompts", "loading"]);
 const emit = defineEmits(["qa", "replaceAllChatItems"]);
 const router = useRouter();
 const value = ref("");
@@ -215,7 +218,7 @@ const chatPanelRef = ref();
 const cloneData = ref([]);
 const editIndex = ref(-1);
 let controller = new AbortController();
-const textAreaRefs = ref([]);
+const textAreaRef = ref();
 
 const scrollToBottom = () => {
   const domWrapper = chatPanelRef.value;
@@ -565,9 +568,9 @@ onUnmounted(() => {
     }
   }
   .actions {
-    margin: 0 auto;
+    // margin: 0 auto;
     .v-btn {
-      margin: 0 0.5rem;
+      margin-right: 1rem;
     }
   }
 
