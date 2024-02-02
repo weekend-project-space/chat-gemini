@@ -3,7 +3,7 @@
     <v-card flat>
       <v-card-title>
         <div class="title my-3">
-          <v-avatar color="secondary">
+          <v-avatar color="primary">
             {{ contact.name.substring(0, 1) }}
           </v-avatar>
           <div class="line">

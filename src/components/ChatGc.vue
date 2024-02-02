@@ -59,7 +59,7 @@
       :icon="generating ? 'mdi-stop-circle-outline' : 'mdi-send-outline'"
       rounded="lg"
       :disabled="!d.hasAllValue"
-      color="secondary"
+      color="primary"
       @click="clickBtn"
     >
     </v-btn>
