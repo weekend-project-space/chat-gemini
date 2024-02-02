@@ -129,7 +129,7 @@
         <v-avatar color="primary" size="80">
           <v-icon icon="mdi-link" size="60"></v-icon>
         </v-avatar>
-        <div class="mt-5 bold">需要我做点什么？</div>
+        <div class="mt-5 bold">我今天能帮你做什么？</div>
         <div class="mt-5">
           <v-menu transition="scale-transition">
             <template v-slot:activator="{ props }">
@@ -151,7 +151,25 @@
       </div>
     </div>
   </div>
+
   <div class="warp">
+    <div
+      v-if="!loading && cloneData && cloneData.length == 0"
+      class="explore-warp"
+    >
+      <div
+        v-for="item in explore"
+        :key="item.act || item.name"
+        class="explore"
+        @click="goChat(item, router)"
+      >
+        <div>
+          <p>{{ item.act || item.name }}</p>
+          <small>{{ item.desc }}</small>
+        </div>
+        <v-icon color="icon" size="sm">mdi-apple-keyboard-caps</v-icon>
+      </div>
+    </div>
     <div class="input-warp">
       <div>
         <v-menu>
@@ -199,16 +217,26 @@
         @click="clickBtn()"
       ></v-btn>
     </div>
+    <div class="text-center tip">
+      <small
+        >Eywa可能会犯错误。请考虑核实重要信息。
+        如发现站点功能异常，加群截图反馈<a
+          href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=6fc5B9qUuEANrhxu_NoFxYf0E7GRv00D&authKey=usE9I3Rs9Dca8Q3aC%2BpbUyI4WjF0Eahjku8psS5%2FyJ6axVKCTJuqqFEw8vLAGv6S&noverify=0&group_code=574528625"
+          >574528625</a
+        ></small
+      >
+    </div>
   </div>
 </template>
 <script setup>
 import { nextTick, onMounted, ref, watch, unref, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { llm } from "@/service/llmAdapter";
+import { goChat } from "@/utils/chatSupport";
 import micromark from "@/service/micromark";
 import alert from "@/compose/useAlert";
 import { createChat } from "@/service/chatService";
-const props = defineProps(["data", "chatId", "prompts", "loading"]);
+const props = defineProps(["data", "chatId", "prompts", "loading", "explore"]);
 const emit = defineEmits(["qa", "replaceAllChatItems"]);
 const router = useRouter();
 const value = ref("");
@@ -477,7 +505,7 @@ onUnmounted(() => {
   text-align: center;
 }
 .chat-warp {
-  height: calc(100vh - 70px - 1rem);
+  height: calc(100vh - 70px - 1.2rem);
   overflow: auto;
   &::-webkit-scrollbar {
     width: 8px;
@@ -487,7 +515,7 @@ onUnmounted(() => {
     background: rgba(var(--v-theme-on-background), 0.3);
   }
   .warp {
-    padding: 2rem 1.5rem 5rem;
+    padding: 2rem 1.5rem;
   }
 }
 .chat-line {
@@ -509,8 +537,8 @@ onUnmounted(() => {
   }
 }
 .input-warp {
-  position: absolute;
-  width: calc(100% - 2rem);
+  // position: absolute;
+  // width: calc(100% - 2rem);
   bottom: -70px;
   display: grid;
   grid-template-columns: 40px 1fr 40px;
@@ -544,9 +572,10 @@ onUnmounted(() => {
 }
 .empty {
   text-align: center;
-  margin-top: 30vh;
+  margin-top: 20vh;
   .bold {
-    font-weight: bold;
+    font-weight: 500;
+    font-size: 1.5rem;
   }
 }
 .chat-line {
@@ -591,6 +620,58 @@ onUnmounted(() => {
 }
 .textarea:disabled {
   color: rgba(var(--v-theme-on-background), var(--v-high-emphasis-opacity));
+}
+.text-center {
+  text-align: center;
+}
+.tip {
+  opacity: 0.5;
+}
+@keyframes up {
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.3;
+    top: -80px;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    top: -80px;
+  }
+}
+.explore-warp {
+  position: absolute;
+  top: -80px;
+  width: calc(100% - 2rem);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 0.5rem;
+  animation: up 3s;
+  > * {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid rgb(var(--v-theme-code));
+    padding: 0.5rem 1rem;
+    border-radius: 0.8rem;
+    small {
+      opacity: 0.8;
+    }
+    &:hover {
+      background: rgb(var(--v-theme-code));
+      cursor: pointer;
+      .v-icon {
+        display: block;
+      }
+    }
+    .v-icon {
+      display: none;
+    }
+  }
 }
 </style>
 <style lang="less">
