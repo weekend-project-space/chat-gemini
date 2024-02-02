@@ -9,6 +9,7 @@
       v-else
       :chat-id="chat.id"
       :data="qa"
+      :loading="loading"
       :prompts="prompts"
       @qa="addChatItems"
       @replaceAllChatItems="replaceAllChatItems"
@@ -34,9 +35,16 @@ const chat = computedAsync(async () => {
   return props.id && (await get(Number.parseInt(props.id)));
 }, {});
 
+const loading = ref(false);
+
 const qa = computedAsync(
   async () => {
-    return props.id && (await listChatItem(Number.parseInt(props.id)));
+    loading.value = true;
+    const r = props.id && (await listChatItem(Number.parseInt(props.id)));
+    setTimeout(() => {
+      loading.value = false;
+    }, 200);
+    return r;
   },
   [] // initial state
 );
