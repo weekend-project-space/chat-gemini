@@ -1,5 +1,9 @@
 <template>
-  <div class="chat-warp" ref="chatPanelRef">
+  <div
+    class="chat-warp warp"
+    :class="{ hiddenoverflow: !loading && cloneData && cloneData.length == 0 }"
+    ref="chatPanelRef"
+  >
     <div class="warp">
       <div
         class="chat-line"
@@ -125,11 +129,14 @@
           </div>
         </div>
       </div>
-      <div v-if="!loading && cloneData && cloneData.length == 0" class="empty">
+    </div>
+    <template v-if="!loading && cloneData && cloneData.length == 0">
+      <div class="empty">
         <v-avatar color="primary" size="80">
           <v-icon icon="mdi-link" size="60"></v-icon>
         </v-avatar>
         <div class="mt-5 bold">我今天能帮你做什么？</div>
+
         <div class="mt-5">
           <v-menu transition="scale-transition">
             <template v-slot:activator="{ props }">
@@ -137,7 +144,7 @@
                 >支付宝领红包🧧 不领白不领
               </v-btn>
               <div class="mt-3">
-                <small>收藏网站 每天领一次</small>
+                <small class="tip">收藏网站 每天领一次</small>
               </div>
             </template>
             <div class="py-3 text-align">
@@ -149,27 +156,27 @@
           <v-btn variant="text" to="/discover"> 👀查看更多功能 </v-btn>
         </div>
       </div>
-    </div>
+
+      <div class="explore-warp">
+        <div
+          v-for="item in explore"
+          :key="item.act || item.name"
+          class="explore"
+          @click="goChat(item, router)"
+        >
+          <div>
+            <p>{{ item.act || item.name }}</p>
+            <small>{{ item.desc }}</small>
+          </div>
+          <div class="icon">
+            <v-icon size="sm">mdi-apple-keyboard-caps</v-icon>
+          </div>
+        </div>
+      </div>
+    </template>
   </div>
 
   <div class="warp">
-    <div
-      v-if="!loading && cloneData && cloneData.length == 0"
-      class="explore-warp"
-    >
-      <div
-        v-for="item in explore"
-        :key="item.act || item.name"
-        class="explore"
-        @click="goChat(item, router)"
-      >
-        <div>
-          <p>{{ item.act || item.name }}</p>
-          <small>{{ item.desc }}</small>
-        </div>
-        <v-icon color="icon" size="sm">mdi-apple-keyboard-caps</v-icon>
-      </div>
-    </div>
     <div class="input-warp">
       <div>
         <v-menu>
@@ -220,7 +227,7 @@
     <div class="text-center tip">
       <small
         >Eywa可能会犯错误。请考虑核实重要信息。
-        如发现站点功能异常，加群截图反馈<a
+        如发现站点功能异常，加QQ群截图反馈<a
           href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=6fc5B9qUuEANrhxu_NoFxYf0E7GRv00D&authKey=usE9I3Rs9Dca8Q3aC%2BpbUyI4WjF0Eahjku8psS5%2FyJ6axVKCTJuqqFEw8vLAGv6S&noverify=0&group_code=574528625"
           >574528625</a
         ></small
@@ -233,6 +240,7 @@ import { nextTick, onMounted, ref, watch, unref, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { llm } from "@/service/llmAdapter";
 import { goChat } from "@/utils/chatSupport";
+import { copy as copy0 } from "@/utils/copySupport";
 import micromark from "@/service/micromark";
 import alert from "@/compose/useAlert";
 import { createChat } from "@/service/chatService";
@@ -431,9 +439,7 @@ function multiTurn() {
 let extShow = false;
 
 function copy(text) {
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(text);
-  }
+  copy0(text);
   alert({ text: "复制成功" });
 }
 
@@ -505,6 +511,7 @@ onUnmounted(() => {
   text-align: center;
 }
 .chat-warp {
+  position: relative;
   height: calc(100vh - 70px - 1.2rem);
   overflow: auto;
   &::-webkit-scrollbar {
@@ -539,6 +546,7 @@ onUnmounted(() => {
 .input-warp {
   // position: absolute;
   // width: calc(100% - 2rem);
+
   bottom: -70px;
   display: grid;
   grid-template-columns: 40px 1fr 40px;
@@ -629,31 +637,32 @@ onUnmounted(() => {
 }
 @keyframes up {
   0% {
-    top: 0;
+    transform: translateY(3rem);
     opacity: 0;
   }
   10% {
+    transform: translateY(0);
     opacity: 0.3;
-    top: -80px;
   }
   20% {
     opacity: 1;
+    bottom: 1rem;
   }
   100% {
-    top: -80px;
+    bottom: 1rem;
   }
 }
 .explore-warp {
   position: absolute;
-  top: -80px;
-  width: calc(100% - 2rem);
+  bottom: 1rem;
   display: grid;
+  width: calc(100% - 2rem);
   grid-template-columns: 1fr 1fr;
   grid-gap: 0.5rem;
   animation: up 3s;
   > * {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1rem;
     align-items: center;
     border: 1px solid rgb(var(--v-theme-code));
     padding: 0.5rem 1rem;
@@ -675,6 +684,9 @@ onUnmounted(() => {
 }
 </style>
 <style lang="less">
+.hiddenoverflow {
+  overflow: hidden !important;
+}
 .message {
   img,
   * {

@@ -102,6 +102,7 @@
 import { ref, nextTick, computed, watch } from "vue";
 import { useInter } from "@/compose/promptInter";
 import { llm } from "@/service/llmAdapter";
+import { copy as copy0 } from "@/utils/copySupport";
 import { createChat } from "@/service/chatService";
 import { useRouter } from "vue-router";
 import alert from "@/compose/useAlert";
@@ -199,7 +200,7 @@ async function gen() {
     } else if (eText.includes("API key not valid")) {
       alert({ text: "点击左下角设置您的key", type: "warn" });
     } else {
-      alert({ text: "出现点问题请稍候，或点击左下角设置", type: "warn" });
+      alert({ text: "出现点问题请稍候重试，或换个方式提问", type: "warn" });
     }
     return new Promise((_, rej) => {
       setTimeout(() => {
@@ -244,9 +245,7 @@ async function goChat() {
 }
 
 function copy(text) {
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(text);
-  }
+  copy0(text);
   alert({ text: "复制成功" });
 }
 </script>
