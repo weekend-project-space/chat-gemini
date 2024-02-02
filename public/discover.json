@@ -7,6 +7,11 @@
     "prompt": "desc",
     "hint": true
 }, {
+    "key": "commons",
+    "name": "常用功能",
+    "desc": "常用功能",
+    "url": "/x-prompts.json"
+}, {
     "key": "x-lunwen",
     "name": "论文工具",
     "desc": "论文工具",

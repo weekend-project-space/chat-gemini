@@ -10,11 +10,11 @@ defineProps(["text", "type"]);
   0% {
     top: 0;
   }
-  10% {
-    top: 10vh;
+  3% {
+    top: 5vh;
   }
   100% {
-    top: 10vh;
+    top: 5vh;
   }
 }
 .alert {
@@ -31,7 +31,7 @@ defineProps(["text", "type"]);
   animation: down 5s infinite;
 }
 .alert.success {
-  border-left: 5px solid rgb(var(--v-theme-secondary));
+  border-left: 5px solid rgb(var(--v-theme-primary));
 }
 .alert.warn {
   border-left: 5px solid rgb(var(--v-theme-warning));
