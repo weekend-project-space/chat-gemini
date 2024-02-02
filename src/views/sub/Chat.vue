@@ -11,6 +11,7 @@
       :data="qa"
       :loading="loading"
       :prompts="prompts"
+      :explore="morePrompts"
       @qa="addChatItems"
       @replaceAllChatItems="replaceAllChatItems"
     ></Chat>
@@ -25,10 +26,18 @@ import { listAll } from "@/repo/promptRepository";
 import { get, save } from "@/repo/chatRepository";
 import { saveChatItems } from "@/service/chatService";
 import { computedAsync } from "@vueuse/core";
+import { discover } from "@/api/discover";
 const props = defineProps(["id"]);
 const model = ref(localStorage.getItem("llm-model") || "Gemini Pro");
 watch(model, (v) => {
   localStorage.setItem("llm-model", v);
+});
+
+const morePrompts = computedAsync(async () => {
+  const randomNumber = Math.floor(Math.random() * 17);
+  const data = await discover(`/${randomNumber}.json`);
+  const index = Math.floor(Math.random() * data.length - 3);
+  return data.slice(index, index + 2);
 });
 
 const chat = computedAsync(async () => {
