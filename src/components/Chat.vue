@@ -3,7 +3,7 @@
     <div class="warp">
       <div class="chat-line" v-for="(item, i) in cloneData" :key="i">
         <div class="eva" v-if="item.role == 'user'">
-          <v-avatar color="secondary" size="small">Y</v-avatar>
+          <v-avatar color="primary" size="small">Y</v-avatar>
           <div>
             <div class="name">你</div>
             <textarea
@@ -21,7 +21,7 @@
             />
             <div class="message-actions">
               <div class="actions" v-if="i == editIndex">
-                <v-btn size="small" color="secondary" @click="applyEdit(item)">
+                <v-btn size="small" color="primary" @click="applyEdit(item)">
                   确认
                 </v-btn>
                 <v-btn size="small" @click="cancleEdit(item)"> 取消 </v-btn>
@@ -58,7 +58,7 @@
           </div>
         </div>
         <div class="eva" v-else-if="item.role == 'model'">
-          <v-avatar color="secondary" size="small"
+          <v-avatar color="primary" size="small"
             ><v-icon icon="mdi-link"></v-icon
           ></v-avatar>
           <div>
@@ -123,14 +123,14 @@
         </div>
       </div>
       <div v-if="cloneData && cloneData.length == 0" class="empty">
-        <v-avatar color="secondary" size="80">
+        <v-avatar color="primary" size="80">
           <v-icon icon="mdi-link" size="60"></v-icon>
         </v-avatar>
         <div class="mt-5 bold">需要我做点什么？</div>
         <div class="mt-5">
           <v-menu transition="scale-transition">
             <template v-slot:activator="{ props }">
-              <v-btn color="primary" v-bind="props"
+              <v-btn color="secondary" v-bind="props"
                 >支付宝领红包🧧 不领白不领
               </v-btn>
               <div class="mt-3">
@@ -143,7 +143,7 @@
           </v-menu>
         </div>
         <div class="mt-5">
-          <v-btn color="primary" to="/discover"> 👀看看大家在用什么 </v-btn>
+          <v-btn color="secondary" to="/discover"> 👀查看更多功能 </v-btn>
         </div>
       </div>
     </div>
