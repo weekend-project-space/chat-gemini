@@ -36,7 +36,8 @@ watch(model, (v) => {
 const morePrompts = computedAsync(async () => {
   const randomNumber = Math.floor(Math.random() * 17);
   const data = await discover(`/${randomNumber}.json`);
-  const index = Math.floor(Math.random() * data.length - 5);
+  let index = Math.floor(Math.random() * data.length - 5);
+  index = index < 0 ? 0 : index;
   return data.slice(index, index + 4);
 });
 

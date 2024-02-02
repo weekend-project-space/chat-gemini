@@ -4,7 +4,7 @@
     :class="{ hiddenoverflow: !loading && cloneData && cloneData.length == 0 }"
     ref="chatPanelRef"
   >
-    <div class="">
+    <div class="warp">
       <div
         class="chat-line"
         v-for="(item, i) in cloneData"
@@ -240,6 +240,7 @@ import { nextTick, onMounted, ref, watch, unref, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { llm } from "@/service/llmAdapter";
 import { goChat } from "@/utils/chatSupport";
+import { copy as copy0 } from "@/utils/copySupport";
 import micromark from "@/service/micromark";
 import alert from "@/compose/useAlert";
 import { createChat } from "@/service/chatService";
@@ -438,9 +439,7 @@ function multiTurn() {
 let extShow = false;
 
 function copy(text) {
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(text);
-  }
+  copy0(text);
   alert({ text: "复制成功" });
 }
 
