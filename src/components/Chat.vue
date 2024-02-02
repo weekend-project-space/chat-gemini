@@ -578,12 +578,18 @@ onUnmounted(() => {
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
+
 .empty {
   text-align: center;
   margin-top: 20vh;
   .bold {
     font-weight: 500;
     font-size: 1.5rem;
+  }
+}
+@media screen and(max-width:768px) {
+  .empty {
+    margin-top: 3vh;
   }
 }
 .chat-line {
