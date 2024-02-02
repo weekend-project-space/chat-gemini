@@ -27,13 +27,67 @@
 
   </script>
   <style>
-    @keyframes r{0%{transform:rotateX(0deg);}30%{transform:rotateZ(0deg);}36%{transform:rotateZ(180deg);}60%{transform:rotateZ(360deg);}100%{transform:rotateZ(360deg);}}@keyframes r-text{0%{opacity:.1;}30%{opacity:.5;}36%{opacity:1;}50%{opacity:1;}80%{opacity:.5;}100%{opacity:.1;}}.loading-logo{animation:r 2s infinite;}.loding-text{animation:r-text 3s infinite;}
+    @keyframes r {
+      0% {
+        transform: rotateX(0deg);
+      }
+
+      30% {
+        transform: rotateZ(0deg);
+      }
+
+      36% {
+        transform: rotateZ(180deg);
+      }
+
+      60% {
+        transform: rotateZ(360deg);
+      }
+
+      100% {
+        transform: rotateZ(360deg);
+      }
+    }
+
+    @keyframes r-text {
+      0% {
+        opacity: .1;
+      }
+
+      30% {
+        opacity: .5;
+      }
+
+      36% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 1;
+      }
+
+      80% {
+        opacity: .5;
+      }
+
+      100% {
+        opacity: .1;
+      }
+    }
+
+    .loading-logo {
+      animation: r 2s infinite;
+    }
+
+    .loding-text {
+      animation: r-text 3s infinite;
+    }
   </style>
 </head>
 
 <body>
   <div id="app"></div>
-  <div style="text-align: center; margin-top: 30vh;">
+  <div id="loading" style="text-align: center; margin-top: 30vh;">
     <img class="loading-logo" style="width: 5rem;" src="/logo.png" alt="">
     <p class="loding-text">加载中....</p>
   </div>

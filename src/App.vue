@@ -3,7 +3,10 @@
 </template>
 
 <script setup>
-//
+import { onMounted } from "vue";
+onMounted(() => {
+  document.body.removeChild(document.getElementById("loading"));
+});
 </script>
 <style lang="less">
 .warp-sm {
