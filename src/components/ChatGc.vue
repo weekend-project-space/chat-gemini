@@ -29,6 +29,13 @@
         :label="item.name"
         v-model="d.data[item.name]"
       ></v-textarea>
+      <v-text-field
+        :key="item.name + 'number'"
+        v-else-if="item.type == 'number'"
+        :label="item.name"
+        type="number"
+        v-model="d.data[item.name]"
+      ></v-text-field>
       <v-select
         :key="item.name + 'select'"
         v-else-if="item.type == 'select'"
