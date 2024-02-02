@@ -5,8 +5,9 @@
   <meta charset="UTF-8" />
   <link rel="icon" href="/favicon.ico" />
   <title>Eywa</title>
-  <meta name="description" content="基于 llm，各位前贤为你解疑答惑，更多使用方式等你探索, chat">
-  <meta name="keywords" content="llm，chatgpt，gemin，聊天工具，孔子，老子，釋迦牟尼，杨朱，墨子，孟子">
+  <meta name="description"
+    content="免费使用,人工智能机器人可以生成文章、报告、文案、总结、短视频脚本等内容,回答你的各种问题，帮孩子辅导学习，充当翻译等几十种功能，🌸帮你提高工作效率，节省大量时间。✨✨">
+  <meta name="keywords" content="免费使用,人工智能机器人、生成文章、报告、文案、总结、短视频脚本、回答各种问题、帮孩子辅导学习、充当翻译">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <link rel="icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/logo.png" sizes="180x180">
@@ -25,10 +26,17 @@
     }
 
   </script>
+  <style>
+    @keyframes r{0%{transform:rotateX(0deg);}30%{transform:rotateZ(0deg);}36%{transform:rotateZ(180deg);}60%{transform:rotateZ(360deg);}100%{transform:rotateZ(360deg);}}@keyframes r-text{0%{opacity:.1;}30%{opacity:.5;}36%{opacity:1;}50%{opacity:1;}80%{opacity:.5;}100%{opacity:.1;}}.loading-logo{animation:r 2s infinite;}.loding-text{animation:r-text 3s infinite;}
+  </style>
 </head>
 
 <body>
   <div id="app"></div>
+  <div style="text-align: center; margin-top: 30vh;">
+    <img class="loading-logo" style="width: 5rem;" src="/logo.png" alt="">
+    <p class="loding-text">加载中....</p>
+  </div>
   <script type="module" src="/src/main.js"></script>
 </body>
 
