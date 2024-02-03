@@ -11,7 +11,9 @@
       :data="qa"
       :loading="loading"
       :prompts="prompts"
+      :userTypes="userTypes"
       :explore="morePrompts"
+      @selectedUserType="(v) => (userType = v)"
       @qa="addChatItems"
       @replaceAllChatItems="replaceAllChatItems"
     ></Chat>
@@ -33,8 +35,18 @@ watch(model, (v) => {
   localStorage.setItem("llm-model", v);
 });
 
+const userType = ref("");
+
+const userTypes = computedAsync(async () => {
+  return await discover(`/user-types.json`);
+});
+
 const morePrompts = computedAsync(async () => {
-  const randomNumber = Math.floor(Math.random() * 17);
+  const randomNumber = userType.value
+    ? userType.value.data[
+        Math.floor(Math.random() * userType.value.data.length)
+      ]
+    : Math.floor(Math.random() * 17);
   const data = await discover(`/${randomNumber}.json`);
   let index = Math.floor(Math.random() * data.length - 5);
   index = index < 0 ? 0 : index;

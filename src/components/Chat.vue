@@ -170,20 +170,35 @@
           <v-btn variant="text" to="/discover"> 👀查看更多功能 </v-btn>
         </div>
       </div>
-
       <div class="explore-warp">
-        <div
-          v-for="item in explore"
-          :key="item.act || item.name"
-          class="explore"
-          @click="goChat(item, router)"
+        <v-chip-group
+          @update:modelValue="(v) => emit('selectedUserType', v)"
+          column
         >
-          <div>
-            <p>{{ item.act || item.name }}</p>
-            <small>{{ item.desc }}</small>
-          </div>
-          <div class="icon">
-            <v-icon size="sm">mdi-apple-keyboard-caps</v-icon>
+          <v-chip
+            v-for="type in userTypes"
+            filter
+            variant="plain"
+            :key="type"
+            :value="type"
+          >
+            我是{{ type.name }}
+          </v-chip>
+        </v-chip-group>
+        <div class="explore-list">
+          <div
+            v-for="item in explore"
+            :key="item.act || item.name"
+            class="explore"
+            @click="goChat(item, router)"
+          >
+            <div>
+              <p>{{ item.act || item.name }}</p>
+              <small>{{ item.desc }}</small>
+            </div>
+            <div class="icon">
+              <v-icon size="sm">mdi-apple-keyboard-caps</v-icon>
+            </div>
           </div>
         </div>
       </div>
@@ -256,8 +271,15 @@ import { copy as copy0 } from "@/utils/copySupport";
 import micromark from "@/service/micromark";
 import alert from "@/compose/useAlert";
 import { createChat } from "@/service/chatService";
-const props = defineProps(["data", "chatId", "prompts", "loading", "explore"]);
-const emit = defineEmits(["qa", "replaceAllChatItems"]);
+const props = defineProps([
+  "data",
+  "chatId",
+  "prompts",
+  "loading",
+  "userTypes",
+  "explore",
+]);
+const emit = defineEmits(["qa", "replaceAllChatItems", "selectedUserType"]);
 const router = useRouter();
 const value = ref("");
 const generating = ref(false);
@@ -601,7 +623,7 @@ onUnmounted(() => {
 }
 @media screen and(max-width:768px) {
   .empty {
-    margin-top: 3vh;
+    margin-top: 0;
   }
 }
 .chat-line {
@@ -673,12 +695,15 @@ onUnmounted(() => {
 .explore-warp {
   position: absolute;
   bottom: 1rem;
-  display: grid;
+  animation: up 3s;
   width: calc(100% - 2rem);
+}
+.explore-list {
+  display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 0.5rem;
-  animation: up 3s;
   > * {
+    font-size: 0.8rem;
     display: grid;
     grid-template-columns: 1fr 1rem;
     align-items: center;
