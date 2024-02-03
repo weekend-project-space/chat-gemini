@@ -3,9 +3,6 @@ import {
   createRouter,
   createWebHistory
 } from 'vue-router'
-import {
-  useAppStore
-} from '../store/app'
 
 const routes = [{
   path: '',
@@ -54,19 +51,6 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to) => {
-  const {
-    setBarBtns
-  } = useAppStore();
-  if (to.meta.barBtns) {
-    setBarBtns(to.meta.barBtns)
-  } else {
-    setBarBtns([{
-      icon: 'mdi-cog-outline',
-      to: '/settings'
-    }])
-  }
-  return true
-})
+
 
 export default router

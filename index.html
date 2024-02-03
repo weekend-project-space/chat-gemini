@@ -16,6 +16,7 @@
   <script async src="https://us.umami.is/script.js" data-website-id="cab987a3-b3b4-45f9-9f8e-bdf66496f219"></script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-S9EQWW3M35"></script>
+
   <script>
     if (!window.location.host.includes('3000')) {
       window.dataLayer = window.dataLayer || [];
@@ -24,65 +25,12 @@
 
       gtag('config', 'G-S9EQWW3M35');
     }
-
   </script>
   <style>
-    @keyframes r {
-      0% {
-        transform: rotateX(0deg);
-      }
-
-      30% {
-        transform: rotateZ(0deg);
-      }
-
-      36% {
-        transform: rotateZ(180deg);
-      }
-
-      60% {
-        transform: rotateZ(360deg);
-      }
-
-      100% {
-        transform: rotateZ(360deg);
-      }
-    }
-
-    @keyframes r-text {
-      0% {
-        opacity: .1;
-      }
-
-      30% {
-        opacity: .5;
-      }
-
-      36% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: 1;
-      }
-
-      80% {
-        opacity: .5;
-      }
-
-      100% {
-        opacity: .1;
-      }
-    }
-
-    .loading-logo {
-      animation: r 2s infinite;
-    }
-
-    .loding-text {
-      animation: r-text 3s infinite;
-    }
+	@keyframes r{0%{transform:rotateX(0deg);}30%{transform:rotateZ(0deg);}36%{transform:rotateZ(180deg);}60%{transform:rotateZ(360deg);}100%{transform:rotateZ(360deg);}}@keyframes r-text{0%{opacity:.1;}30%{opacity:.5;}36%{opacity:1;}50%{opacity:1;}80%{opacity:.5;}100%{opacity:.1;}}.loading-logo{animation:r 2s infinite;}.loding-text{animation:r-text 3s infinite;}
   </style>
+  <link href="https://cdn.bootcdn.net/ajax/libs/MaterialDesign-Webfont/7.2.96/css/materialdesignicons.min.css"
+    rel="stylesheet">
 </head>
 
 <body>
@@ -92,6 +40,7 @@
     <p class="loding-text">加载中....</p>
   </div>
   <script type="module" src="/src/main.js"></script>
+
 </body>
 
 </html>

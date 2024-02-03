@@ -9,7 +9,6 @@
     "lint": "eslint . --fix --ignore-path .gitignore"
   },
   "dependencies": {
-    "@mdi/font": "7.0.96",
     "@vueuse/core": "^10.7.1",
     "@vueuse/rxjs": "^10.7.1",
     "core-js": "^3.29.0",
@@ -17,7 +16,6 @@
     "micromark": "^4.0.0",
     "micromark-extension-gfm": "^3.0.0",
     "micromark-extension-math": "^3.0.0",
-    "pinia": "^2.1.7",
     "roboto-fontface": "*",
     "rxjs": "^7.8.1",
     "vite-plugin-pwa": "^0.17.4",
