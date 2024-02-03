@@ -141,7 +141,7 @@
           <v-btn
             prepend-icon="mdi-wechat"
             color="#FF6A42"
-            href="https://zhidayingxiao.cn/to/06g6xX"
+            href="https://zhidayingxiao.cn/to/06g6y3"
             >点击进微信交流群
           </v-btn>
           <div class="mt-3">
@@ -154,7 +154,7 @@
               <v-btn
                 color="secondary"
                 v-bind="props"
-                href="https://zhidayingxiao.cn/to/06g6xX"
+                href="https://zhidayingxiao.cn/to/06g6y3"
                 >支付宝领红包🧧 不领白不领
               </v-btn>
               <div class="mt-3">
@@ -240,10 +240,9 @@
     </div>
     <div class="text-center tip">
       <small
-        >如发现站点功能异常，加QQ群截图反馈<a
-          href="https://zhidayingxiao.cn/to/06g6xX"
-          >574528625</a
-        >。Eywa可能会犯错误。请考虑核实重要信息。
+        >如发现站点功能异常，<a href="https://zhidayingxiao.cn/to/06g6y3"
+          >加微信群</a
+        >截图反馈。Eywa可能会犯错误。请考虑核实重要信息。
       </small>
     </div>
   </div>
