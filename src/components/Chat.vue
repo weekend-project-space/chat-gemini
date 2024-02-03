@@ -197,7 +197,7 @@
           <template v-slot:activator="{ props: menu }">
             <v-btn
               id="extBtn"
-              icon="mdi-square-rounded-badge-outline"
+              icon="mdi-pound-box-outline"
               v-bind="menu"
               variant="text"
               size="small"

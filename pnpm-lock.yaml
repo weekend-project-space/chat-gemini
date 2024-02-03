@@ -1,7 +1,6 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@mdi/font': 7.0.96
   '@vitejs/plugin-vue': ^4.0.0
   '@vueuse/core': ^10.7.1
   '@vueuse/rxjs': ^10.7.1
@@ -13,7 +12,6 @@ specifiers:
   micromark: ^4.0.0
   micromark-extension-gfm: ^3.0.0
   micromark-extension-math: ^3.0.0
-  pinia: ^2.1.7
   roboto-fontface: '*'
   rxjs: ^7.8.1
   sass: ^1.60.0
@@ -26,7 +24,6 @@ specifiers:
   vuetify: ^3.0.0
 
 dependencies:
-  '@mdi/font': 7.0.96
   '@vueuse/core': 10.7.1_vue@3.3.13
   '@vueuse/rxjs': 10.7.1_rxjs@7.8.1+vue@3.3.13
   core-js: 3.34.0
@@ -34,7 +31,6 @@ dependencies:
   micromark: 4.0.0
   micromark-extension-gfm: 3.0.0
   micromark-extension-math: 3.0.0
-  pinia: 2.1.7_vue@3.3.13
   roboto-fontface: 0.10.0
   rxjs: 7.8.1
   vite-plugin-pwa: 0.17.4_vite@4.5.1
@@ -1507,10 +1503,6 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
-    dev: false
-
-  /@mdi/font/7.0.96:
-    resolution: {integrity: sha512-rzlxTfR64hqY8yiBzDjmANfcd8rv+T5C0Yedv/TWk2QyAQYdc66e0kaN1ipmnYU3RukHRTRcBARHzzm+tIhL7w==}
     dev: false
 
   /@nodelib/fs.scandir/2.1.5:
@@ -3467,23 +3459,6 @@ packages:
     resolution: {integrity: sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==}
     engines: {node: '>=6'}
     optional: true
-
-  /pinia/2.1.7_vue@3.3.13:
-    resolution: {integrity: sha512-+C2AHFtcFqjPih0zpYuvof37SFxMQ7OEG2zV9jRI12i9BOy3YQVAHwdKtyyc8pDcDyIc33WCIsZaCFWU7WWxGQ==}
-    peerDependencies:
-      '@vue/composition-api': ^1.4.0
-      typescript: '>=4.4.4'
-      vue: ^2.6.14 || ^3.3.0
-    peerDependenciesMeta:
-      '@vue/composition-api':
-        optional: true
-      typescript:
-        optional: true
-    dependencies:
-      '@vue/devtools-api': 6.5.1
-      vue: 3.3.13
-      vue-demi: 0.14.6_vue@3.3.13
-    dev: false
 
   /pkg-dir/4.2.0:
     resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}

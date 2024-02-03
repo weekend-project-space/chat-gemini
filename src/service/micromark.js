@@ -5,16 +5,22 @@ import {
   gfm,
   gfmHtml
 } from 'micromark-extension-gfm'
-import {
-  math,
-  mathHtml
-} from 'micromark-extension-math'
+// import {
+//   math,
+//   mathHtml
+// } from 'micromark-extension-math'
+// const markOption = {
+//   allowDangerousHtml: true,
+//   allowDangerousProtocol: true,
+//   extensions: [gfm(), math()],
+//   htmlExtensions: [gfmHtml(), mathHtml({
+//     strict: false
+//   })]
+// }
 const markOption = {
   allowDangerousHtml: true,
   allowDangerousProtocol: true,
-  extensions: [gfm(), math()],
-  htmlExtensions: [gfmHtml(), mathHtml({
-    strict: false
-  })]
+  extensions: [gfm()],
+  htmlExtensions: [gfmHtml()]
 }
 export default (v) => micromark(v, markOption)
