@@ -11,12 +11,9 @@
         <v-icon :icon="bar.icon"></v-icon>
         <span v-text="bar.name"></span>
       </v-btn>
-      <v-btn
-        value="group"
-        href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=6fc5B9qUuEANrhxu_NoFxYf0E7GRv00D&authKey=usE9I3Rs9Dca8Q3aC%2BpbUyI4WjF0Eahjku8psS5%2FyJ6axVKCTJuqqFEw8vLAGv6S&noverify=0&group_code=574528625"
-      >
-        <v-icon icon="mdi-qqchat"></v-icon>
-        <span> QQ群 </span>
+      <v-btn value="group" href="https://zhidayingxiao.cn/to/06g6xX">
+        <v-icon icon="mdi-wechat"></v-icon>
+        <span> 微信群 </span>
       </v-btn>
     </v-bottom-navigation>
   </template>
@@ -46,10 +43,10 @@
         <v-divider></v-divider>
         <v-list density="compact" nav>
           <v-list-item
-            prepend-icon="mdi-qqchat"
-            title="QQ群"
+            prepend-icon="mdi-wechat"
+            title="微信群"
             value="group"
-            href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=6fc5B9qUuEANrhxu_NoFxYf0E7GRv00D&authKey=usE9I3Rs9Dca8Q3aC%2BpbUyI4WjF0Eahjku8psS5%2FyJ6axVKCTJuqqFEw8vLAGv6S&noverify=0&group_code=574528625"
+            href="https://zhidayingxiao.cn/to/06g6xX"
           ></v-list-item>
         </v-list>
       </div>

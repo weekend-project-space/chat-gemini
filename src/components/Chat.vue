@@ -139,14 +139,14 @@
 
         <div class="mt-5">
           <v-btn
-            prepend-icon="mdi-qqchat"
+            prepend-icon="mdi-wechat"
             color="#FF6A42"
-            href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=6fc5B9qUuEANrhxu_NoFxYf0E7GRv00D&authKey=usE9I3Rs9Dca8Q3aC%2BpbUyI4WjF0Eahjku8psS5%2FyJ6axVKCTJuqqFEw8vLAGv6S&noverify=0&group_code=574528625"
-            >点击进QQ客服群
+            href="https://zhidayingxiao.cn/to/06g6xX"
+            >点击进微信交流群
           </v-btn>
           <div class="mt-3">
             <small class="tip"
-              >机器人运行可能会遇到问题，为确保您正常使用，请加入客服群，以便后期遇到问题反馈给我们，我们会第一时间解决。</small
+              >机器人运行可能会遇到问题，为确保您正常使用，请加入微信交流群，以便后期遇到问题反馈给我们，我们会第一时间解决。</small
             >
           </div>
           <!-- <v-menu transition="scale-transition">
@@ -154,7 +154,7 @@
               <v-btn
                 color="secondary"
                 v-bind="props"
-                href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=6fc5B9qUuEANrhxu_NoFxYf0E7GRv00D&authKey=usE9I3Rs9Dca8Q3aC%2BpbUyI4WjF0Eahjku8psS5%2FyJ6axVKCTJuqqFEw8vLAGv6S&noverify=0&group_code=574528625"
+                href="https://zhidayingxiao.cn/to/06g6xX"
                 >支付宝领红包🧧 不领白不领
               </v-btn>
               <div class="mt-3">
@@ -241,7 +241,7 @@
     <div class="text-center tip">
       <small
         >如发现站点功能异常，加QQ群截图反馈<a
-          href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=6fc5B9qUuEANrhxu_NoFxYf0E7GRv00D&authKey=usE9I3Rs9Dca8Q3aC%2BpbUyI4WjF0Eahjku8psS5%2FyJ6axVKCTJuqqFEw8vLAGv6S&noverify=0&group_code=574528625"
+          href="https://zhidayingxiao.cn/to/06g6xX"
           >574528625</a
         >。Eywa可能会犯错误。请考虑核实重要信息。
       </small>

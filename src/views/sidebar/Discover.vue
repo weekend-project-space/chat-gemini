@@ -11,10 +11,10 @@
         源码
       </v-btn> -->
       <v-btn
-        prepend-icon="mdi-qqchat"
+        prepend-icon="mdi-wechat"
         size="small"
         color="primary"
-        href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=6fc5B9qUuEANrhxu_NoFxYf0E7GRv00D&authKey=usE9I3Rs9Dca8Q3aC%2BpbUyI4WjF0Eahjku8psS5%2FyJ6axVKCTJuqqFEw8vLAGv6S&noverify=0&group_code=574528625"
+        href="https://zhidayingxiao.cn/to/06g6xX"
       >
         群友妙招
       </v-btn>
