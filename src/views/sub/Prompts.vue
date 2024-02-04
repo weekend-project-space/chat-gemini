@@ -141,7 +141,7 @@ async function click(item) {
 
 function copy(text) {
   copy0(text);
-  alert({ text: "链接复制成功，请分享给好友吧" });
+  alert({ text: "链接复制成功，赶快分享给好友吧" });
 }
 </script>
 <style lang="less" scoped>
