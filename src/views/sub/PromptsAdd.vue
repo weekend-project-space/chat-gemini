@@ -2,7 +2,7 @@
   <div class="warp">
     <v-card flat>
       <v-card-title class="mb-3">{{
-        index > -1 ? "收藏编辑" : "收藏新增"
+        index > -1 ? "编辑收藏" : "新建收藏"
       }}</v-card-title>
       <v-card-text>
         <v-text-field label="简称" v-model="item.name"></v-text-field>
