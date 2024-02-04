@@ -7,11 +7,22 @@
         <template v-slot:activator="{ props }">
           <v-btn
             v-bind="props"
-            icon="mdi-pound-box-outline"
+            icon="mdi-star-outline"
             variant="text"
             size="small"
             :to="'/prompts/setup?prompt=' + prompt + '&name=' + name"
             class="mx-3"
+          ></v-btn>
+        </template>
+      </v-tooltip>
+      <v-tooltip text="分享" location="bottom">
+        <template v-slot:activator="{ props }">
+          <v-btn
+            v-bind="props"
+            icon="mdi-share-outline"
+            variant="text"
+            size="small"
+            @click="share"
           ></v-btn>
         </template>
       </v-tooltip>
@@ -110,6 +121,7 @@ import { ref, nextTick, computed, watch } from "vue";
 import { useInter } from "@/compose/promptInter";
 import { llm } from "@/service/llmAdapter";
 import { copy as copy0 } from "@/utils/copySupport";
+import { share as share0 } from "@/api/share";
 import { createChat } from "@/service/chatService";
 import { useRouter } from "vue-router";
 import alert from "@/compose/useAlert";
@@ -126,6 +138,17 @@ const res = computed(() =>
 watch(props, () => {
   cloneData.value = [];
 });
+
+async function share() {
+  const id = await share0({
+    title: props.name,
+    url: `${window.location.origin}/prompts/setup?name=${props.name}&prompt=${props.prompt}`,
+  });
+  copy0(
+    `发现了一个好用的《${props.name}》AI机器人\n免费使用，点击链接🔗立即体验吧\n${id}`
+  );
+  alert({ text: "链接复制成功，请分享给好友吧" });
+}
 
 const scrollToBottom = () => {
   //   const domWrapper = document;

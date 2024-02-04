@@ -50,7 +50,7 @@
                   <template v-slot:activator="{ props }">
                     <v-btn
                       v-bind="props"
-                      icon="mdi-pound-box-outline"
+                      icon="mdi-star-outline"
                       variant="text"
                       size="small"
                       :to="
@@ -218,7 +218,7 @@
           <template v-slot:activator="{ props: menu }">
             <v-btn
               id="extBtn"
-              icon="mdi-pound-box-outline"
+              icon="mdi-star-outline"
               v-bind="menu"
               variant="text"
               size="small"

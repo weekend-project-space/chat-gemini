@@ -63,7 +63,7 @@ const route = useRoute();
 const { mobile } = useDisplay();
 const bars = [
   { icon: "mdi-message-outline", name: "对话", value: "/chats" },
-  { icon: "mdi-pound-box-outline", name: "收藏", value: "/prompts" },
+  { icon: "mdi-star-outline", name: "收藏", value: "/prompts" },
   { icon: "mdi-compass-outline", name: "发现", value: "/discover" },
 ];
 </script>

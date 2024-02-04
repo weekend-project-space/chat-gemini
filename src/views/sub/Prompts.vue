@@ -43,16 +43,24 @@
         </div>
       </v-card-subtitle>
       <v-card-actions>
-        <v-btn
-          icon="mdi-message-outline"
-          title="开始对话"
-          @click="click(contact)"
-        ></v-btn>
-        <v-btn
-          icon="mdi-share-outline"
-          title="分享给好友"
-          @click="share(contact)"
-        ></v-btn>
+        <v-tooltip text="开始对话" location="bottom">
+          <template v-slot:activator="{ props }">
+            <v-btn
+              icon="mdi-message-outline"
+              v-bind="props"
+              @click="click(contact)"
+            ></v-btn>
+          </template>
+        </v-tooltip>
+        <v-tooltip text="分享" location="bottom">
+          <template v-slot:activator="{ props }">
+            <v-btn
+              icon="mdi-share-outline"
+              v-bind="props"
+              @click="share(contact)"
+            ></v-btn>
+          </template>
+        </v-tooltip>
       </v-card-actions>
     </v-card>
   </div>
@@ -110,7 +118,9 @@ async function share(item) {
     title: item.name,
     url: `${window.location.origin}/prompts/setup?name=${item.name}&prompt=${item.prompt}`,
   });
-  copy(id);
+  copy(
+    `发现了一个好用的《${item.name}》AI机器人\n免费使用，点击链接🔗立即体验吧\n${id}`
+  );
 }
 
 async function click(item) {
