@@ -35,8 +35,13 @@ const item = ref({
 onMounted(initItem);
 watch(route, initItem);
 function initItem() {
+  console.log(route.query);
   if (route.query.prompt) {
     item.value = Object.assign({}, route.query);
+  } else if (window.location.search.length > 5) {
+    item.value = Object.fromEntries(
+      new URLSearchParams(decodeURIComponent(window.location.search))
+    );
   }
 }
 async function submit() {

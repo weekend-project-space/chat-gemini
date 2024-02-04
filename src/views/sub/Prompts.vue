@@ -48,16 +48,24 @@
           title="开始对话"
           @click="click(contact)"
         ></v-btn>
+        <v-btn
+          icon="mdi-share-outline"
+          title="分享给好友"
+          @click="share(contact)"
+        ></v-btn>
       </v-card-actions>
     </v-card>
   </div>
 </template>
 <script setup>
-import { ref } from "vue";
+import { ref, reactive, watch, computed } from "vue";
+
 import { useRouter, useRoute } from "vue-router";
 import { get, save } from "@/repo/promptRepository";
 import { createChat } from "@/service/chatService";
-import { reactive, watch, computed } from "vue";
+import { share as share0 } from "@/api/share";
+import { copy as copy0 } from "@/utils/copySupport";
+import alert from "@/compose/useAlert";
 import { useActiveElement } from "@vueuse/core";
 const props = defineProps(["id"]);
 const route = useRoute();
@@ -97,6 +105,14 @@ watch(key, async () => {
   }
 });
 
+async function share(item) {
+  const id = await share0({
+    title: item.name,
+    url: `${window.location.origin}/prompts/setup?name=${item.name}&prompt=${item.prompt}`,
+  });
+  copy(id);
+}
+
 async function click(item) {
   const chatId = await createChat([
     {
@@ -111,6 +127,11 @@ async function click(item) {
     },
   ]);
   router.push("/chats/" + chatId);
+}
+
+function copy(text) {
+  copy0(text);
+  alert({ text: "链接复制成功，请分享给好友吧" });
 }
 </script>
 <style lang="less" scoped>

@@ -16,7 +16,7 @@
         color="primary"
         href="https://zhidayingxiao.cn/to/06g6y3"
       >
-        群友妙招
+        微信客服
       </v-btn>
     </div>
     <input
