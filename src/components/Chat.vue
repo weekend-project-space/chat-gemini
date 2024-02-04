@@ -433,7 +433,7 @@ async function gen() {
     } else if (eText.includes("API key not valid")) {
       alert({ text: "点击左下角设置您的key", type: "warn" });
     } else {
-      alert({ text: "出现点问题请稍候，或点击左下角设置", type: "warn" });
+      alert({ text: "抱歉，请重新试下或换个问法", type: "warn" });
     }
     return new Promise((_, rej) => {
       setTimeout(() => {
