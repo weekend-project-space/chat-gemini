@@ -37,6 +37,9 @@
     font-weight: 500;
     font-size: 1.5rem;
   }
+  .tip {
+    opacity: 0.5;
+  }
 }
 @media screen and(max-width:768px) {
   .empty {

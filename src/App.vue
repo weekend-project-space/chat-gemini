@@ -96,6 +96,14 @@ html {
 .hiddenoverflow {
   overflow: hidden !important;
 }
+.message-actions {
+  .v-btn {
+    opacity: 0.5;
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
 .message {
   img,
   * {

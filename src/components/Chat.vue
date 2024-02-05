@@ -330,12 +330,6 @@ onUnmounted(() => {
   }
 }
 
-.textarea:disabled {
-  color: rgba(var(--v-theme-on-background), var(--v-high-emphasis-opacity));
-}
-.text-center {
-  text-align: center;
-}
 .tip {
   opacity: 0.5;
 }
