@@ -13,6 +13,7 @@
       :prompts="prompts"
       :userTypes="userTypes"
       :explore="morePrompts"
+      :loadfun="findByName"
       @selectedUserType="(v) => (userType = v)"
       @qa="addChatItems"
       @replaceAllChatItems="replaceAllChatItems"
@@ -26,6 +27,7 @@ import ChatGc from "@/components/ChatGc";
 import { listChatItem, del } from "@/repo/chatItemRepository";
 import { listAll } from "@/repo/promptRepository";
 import { get, save } from "@/repo/chatRepository";
+import { findByName } from "@/repo/toolRepository";
 import { saveChatItems } from "@/service/chatService";
 import { computedAsync } from "@vueuse/core";
 import { discover } from "@/api/discover";

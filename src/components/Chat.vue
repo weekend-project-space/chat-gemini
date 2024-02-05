@@ -20,6 +20,15 @@
           :value="item"
           @regenerate="regenerate"
         />
+        <ChatFunContent
+          v-else-if="item.role == 'functionCall'"
+          :isLast="cloneData.length - 1 == i"
+          :generating="generating"
+          :loadfun="loadfun"
+          :value="item"
+          @regenerate="regenerate"
+          @nextgenerate="next"
+        />
       </template>
       <template v-if="!loading && cloneData && cloneData.length == 0">
         <ChatEmpty />
@@ -62,6 +71,7 @@ import { copy as copy0 } from "@/utils/copySupport";
 import alert from "@/compose/useAlert";
 import ChatReqContent from "./sub/ChatReqMsg.vue";
 import ChatResContent from "./sub/ChatResMsg.vue";
+import ChatFunContent from "./sub/ChatFunMsg.vue";
 import ChatEmpty from "./sub/ChatEmpty.vue";
 import ChatExplore from "./sub/ChatExplore.vue";
 import ChatInput from "./sub/ChatInput.vue";
@@ -73,6 +83,7 @@ const props = defineProps([
   "loading",
   "userTypes",
   "explore",
+  "loadfun",
 ]);
 const emit = defineEmits(["qa", "replaceAllChatItems", "selectedUserType"]);
 const router = useRouter();
@@ -156,8 +167,13 @@ async function send(text) {
   cloneData.value.push(req);
   value.value = "";
   nextTick(scrollToBottom);
-  const content = await gen();
-  emit("qa", [req, { role: "model", content, chatId: props.chatId }]);
+  const resItem = await gen();
+  emit("qa", [req, resItem]);
+}
+
+async function next() {
+  const resItem = await gen();
+  emit("qa", [resItem]);
 }
 
 async function gen() {
@@ -166,32 +182,38 @@ async function gen() {
     alert({ text: "请等回复完后再重试" });
     return;
   }
-  let content = "";
   let i = 0;
   generating.value = true;
+  const reqData = multiTurn();
+  const resItem = { role: "model", content: "", chatId: props.chatId };
   try {
-    const reqData = multiTurn();
-    const resItem = { role: "model", content: "", chatId: props.chatId };
     cloneData.value.push(resItem);
     controller = new AbortController();
+    let content = "";
+
     for await (const line of llm(reqData, controller.signal)) {
-      for (let chat of line) {
-        if (generating.value) {
-          i += 20;
-          const g = () => {
-            if (generating.value) {
-              content += chat;
-              resItem.content = content;
-              cloneData.value.splice(
-                cloneData.value.length - 1,
-                cloneData.value.length - 1,
-                Object.assign({}, resItem)
-              );
-              nextTick(scrollToBottom);
-            }
-          };
-          genFuns.push(setTimeout(g, i));
+      if (line.type == "text") {
+        for (let chat of line.data) {
+          if (generating.value) {
+            i += 20;
+            const g = () => {
+              if (generating.value) {
+                content += chat;
+                resItem.content = content;
+                cloneData.value.splice(
+                  cloneData.value.length - 1,
+                  cloneData.value.length - 1,
+                  Object.assign({}, resItem)
+                );
+                nextTick(scrollToBottom);
+              }
+            };
+            genFuns.push(setTimeout(g, i));
+          }
         }
+      } else {
+        resItem.role = "functionCall";
+        resItem.content = line.data;
       }
     }
   } catch (e) {
@@ -218,7 +240,7 @@ async function gen() {
       setTimeout(() => {
         generating.value = false;
       }, 500);
-      resolve(content);
+      resolve(resItem);
     }, i + 300);
   });
 }
@@ -227,6 +249,9 @@ function multiTurn() {
   let key = "";
   let array = [];
   for (let item of cloneData.value) {
+    if (item.role == "functionCall") {
+      item.role = "user";
+    }
     if (item.role == key) {
       array[array.length - 1].parts.push({
         text: item.content,
@@ -248,26 +273,9 @@ function multiTurn() {
   };
 }
 
-let extShow = false;
-
 function copy(text) {
   copy0(text);
   alert({ text: "复制成功" });
-}
-
-function clickPrompt(item) {
-  if (item.x) {
-    toChat(item);
-  } else {
-    value.value = item.prompt;
-    setTimeout(() => {
-      if (extShow) {
-        document.getElementById("extBtn").click();
-        extShow = false;
-      }
-      inputRef.value.focus();
-    }, 100);
-  }
 }
 
 async function toChat(item) {
