@@ -37,7 +37,7 @@ html {
   margin: 0 auto;
   max-width: var(--v-warp-widht);
   // position: relative;
-  // padding: 0 1rem;
+  padding: 0 1rem;
 }
 // chat begin
 .chat-item-warp {
