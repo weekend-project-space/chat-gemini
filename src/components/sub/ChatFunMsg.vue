@@ -109,9 +109,9 @@ const isDebug = ref(false);
 const icon = computed(() => {
   const n = functionCall.value.name.replace("find_", "");
   let icons = {
-    weather: "mdi-spider-outline",
+    weather: "mdi-weather-fog",
     webcrawer: "mdi-spider-outline",
-    currenttime: "mdi-spider-outline",
+    currenttime: "mdi-clock-outline",
   };
   return icons[n] || "mdi-robot-industrial-outline";
 });
