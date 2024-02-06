@@ -15,7 +15,7 @@
             : '2rem',
         }"
       />
-      <div class="textarea" v-else v-text="item.content"></div>
+      <div class="textarea0" v-else v-text="item.content"></div>
       <div class="message-actions">
         <div class="actions" v-if="editableIndex == index">
           <v-btn size="small" color="primary" @click="applyEdit()">
@@ -100,6 +100,10 @@ function changeContent(content) {
     justify-content: flex-start;
     min-height: 28px;
     // margin-top: 0.5rem;
+  }
+  .textarea0 {
+    width: 100%;
+    line-height: 2rem;
   }
   .textarea {
     display: block;
