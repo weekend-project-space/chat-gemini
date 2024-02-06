@@ -3,7 +3,7 @@ async (args, {
 }) => {
   const d = await (
     await fetch(
-      "http://localhost:3390/v1/proxy?url=" + args.url
+      "https://zhidayingxiao.cn/v1/proxy?url=" + args.url
     )
   ).text();
   if (args.summarize) {
