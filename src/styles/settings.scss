@@ -8,22 +8,3 @@
 // @use 'vuetify/settings' with (
 //   $color-pack: false
 // );
-.v-card--variant-elevated,
-.v-card--variant-flat {
-    background-color: rgb(var(--v-theme-background));
-}
-
-html {
-    overflow-y: auto;
-}
-
-.justify-between {
-    justify-content: space-between;
-}
-
-.warp {
-    margin: 0 auto;
-    max-width: 760px;
-    position: relative;
-    padding: 0 1rem;
-}
