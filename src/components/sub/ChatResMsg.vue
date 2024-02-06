@@ -80,10 +80,6 @@ function copy(text) {
     font-weight: 600;
   }
 
-  .message {
-    line-height: 2rem;
-    overflow: hidden;
-  }
   .message-actions {
     display: flex;
     justify-content: flex-start;

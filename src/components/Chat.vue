@@ -5,7 +5,7 @@
     ref="chatPanelRef"
   >
     <div class="warp">
-      <template v-for="(item, i) in cloneData" :key="chatId + '@' + i">
+      <template v-for="(item, i) in cloneData" :key="chatId + '@' + item.id">
         <ChatReqContent
           v-if="item.role == 'user'"
           :index="i"
@@ -25,7 +25,9 @@
           :isLast="cloneData.length - 1 == i"
           :generating="generating"
           :loadfun="loadfun"
-          :value="item"
+          :modelValue="item.content.content"
+          :funcall="item.content.functionCall"
+          @update:modelValue="(v) => updateItem(item, v)"
           @regenerate="regenerate"
           @nextgenerate="next"
         />
@@ -63,7 +65,15 @@
   </div>
 </template>
 <script setup>
-import { nextTick, onMounted, ref, watch, unref, onUnmounted } from "vue";
+import {
+  nextTick,
+  onMounted,
+  ref,
+  watch,
+  unref,
+  toValue,
+  onUnmounted,
+} from "vue";
 import { useRouter } from "vue-router";
 import { llm } from "@/service/llmAdapter";
 import { goChat } from "@/utils/chatSupport";
@@ -85,7 +95,12 @@ const props = defineProps([
   "explore",
   "loadfun",
 ]);
-const emit = defineEmits(["qa", "replaceAllChatItems", "selectedUserType"]);
+const emit = defineEmits([
+  "addItems",
+  "updateItem",
+  "replaceAllItems",
+  "selectedUserType",
+]);
 const router = useRouter();
 const value = ref("");
 const generating = ref(false);
@@ -106,6 +121,11 @@ const scrollToBottom = () => {
   // window.scrollTo(0, document.body.scrollHeight);
 };
 
+async function updateItem(item, v) {
+  item.content.content = toValue(v);
+  emit("updateItem", clone(item));
+}
+
 async function applyEdit(index, next) {
   cloneData.value = cloneData.value.slice(0, index + 1);
   editIndex.value = -1;
@@ -114,7 +134,7 @@ async function applyEdit(index, next) {
   await gen();
   // console.log(cloneData);
   //替换所有
-  emit("replaceAllChatItems", unref(cloneData));
+  emit("replaceAllItems", clone(unref(cloneData)));
 }
 
 let genFuns = [];
@@ -127,6 +147,22 @@ function clickBtn() {
   } else {
     send();
   }
+}
+
+async function send(text) {
+  cloneData.value = props.data.map((o) => ({
+    id: o.id,
+    role: o.role,
+    content: o.content,
+  }));
+  text = text || value.value;
+  text = text.trim();
+  const req = { role: "user", content: text, chatId: props.chatId };
+  cloneData.value.push(req);
+  value.value = "";
+  nextTick(scrollToBottom);
+  const resItem = await gen();
+  emit("addItems", clone([req, resItem]));
 }
 
 function initEl() {
@@ -153,30 +189,15 @@ async function regenerate() {
   //重新生成
   await gen();
   //替换所有
-  emit("replaceAllChatItems", unref(cloneData));
+  emit("replaceAllItems", clone(unref(cloneData)));
 }
 
-async function send(text) {
-  cloneData.value = props.data.map((o) => ({
-    role: o.role,
-    content: o.content,
-  }));
-  text = text || value.value;
-  text = text.trim();
-  const req = { role: "user", content: text, chatId: props.chatId };
-  cloneData.value.push(req);
-  value.value = "";
-  nextTick(scrollToBottom);
-  const resItem = await gen();
-  emit("qa", [req, resItem]);
+async function next(data, disabledTools) {
+  const resItem = await gen(data, disabledTools);
+  emit("addItems", clone([resItem]));
 }
 
-async function next() {
-  const resItem = await gen();
-  emit("qa", [resItem]);
-}
-
-async function gen() {
+async function gen(data, disabledTools = false) {
   genFuns = [];
   if (generating.value) {
     alert({ text: "请等回复完后再重试" });
@@ -184,14 +205,14 @@ async function gen() {
   }
   let i = 0;
   generating.value = true;
-  const reqData = multiTurn();
+  const reqData = multiTurn(data);
   const resItem = { role: "model", content: "", chatId: props.chatId };
   try {
     cloneData.value.push(resItem);
     controller = new AbortController();
     let content = "";
 
-    for await (const line of llm(reqData, controller.signal)) {
+    for await (const line of llm(reqData, controller.signal, disabledTools)) {
       if (line.type == "text") {
         for (let chat of line.data) {
           if (generating.value) {
@@ -213,7 +234,10 @@ async function gen() {
         }
       } else {
         resItem.role = "functionCall";
-        resItem.content = line.data;
+        resItem.content = {
+          functionCall: line.data,
+          content: "",
+        };
       }
     }
   } catch (e) {
@@ -226,6 +250,7 @@ async function gen() {
     } else {
       alert({ text: "抱歉，请重新试下或换个问法", type: "warn" });
     }
+    resItem.content = "抱歉，请重新试下或换个问法";
     return new Promise((_, rej) => {
       setTimeout(() => {
         generating.value = false;
@@ -245,12 +270,20 @@ async function gen() {
   });
 }
 
-function multiTurn() {
+function multiTurn(data) {
   let key = "";
   let array = [];
-  for (let item of cloneData.value) {
+  data = data || clone(cloneData.value);
+  for (let i in data) {
+    let item = data[i];
     if (item.role == "functionCall") {
-      item.role = "user";
+      // 最后一条角色转化为user
+      item.role = i == data.length - 1 ? "user" : "model";
+      if (typeof item.content.content === "string") {
+        item.content = item.content.content;
+      } else {
+        item.content = JSON.stringify(item.content.content);
+      }
     }
     if (item.role == key) {
       array[array.length - 1].parts.push({
@@ -288,6 +321,10 @@ async function toChat(item) {
     },
   ]);
   router.push("/chats/" + chatId);
+}
+
+function clone(o) {
+  return JSON.parse(JSON.stringify(o));
 }
 
 let initFun = null;

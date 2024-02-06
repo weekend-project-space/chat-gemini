@@ -1,30 +1,32 @@
 <template>
   <template v-if="chat && chat.id">
     <ChatGc
-      v-if="qa && qa.length && qa[0].content.indexOf('(') == 0"
-      :name="qa[0].name"
-      :prompt="qa[0].content"
+      v-if="items && items.length && items[0].content.indexOf('(') == 0"
+      :name="items[0].name"
+      :prompt="items[0].content"
     />
     <Chat
       v-else
       :chat-id="chat.id"
-      :data="qa"
+      :data="items"
       :loading="loading"
       :prompts="prompts"
       :userTypes="userTypes"
       :explore="morePrompts"
       :loadfun="findByName"
       @selectedUserType="(v) => (userType = v)"
-      @qa="addChatItems"
-      @replaceAllChatItems="replaceAllChatItems"
+      @addItems="addChatItems"
+      @updateItem="updateItem"
+      @replaceAllItems="replaceAllItems"
     ></Chat>
   </template>
 </template>
 <script setup>
 import { ref, watch } from "vue";
+import { useRouter } from "vue-router";
 import Chat from "@/components/Chat";
 import ChatGc from "@/components/ChatGc";
-import { listChatItem, del } from "@/repo/chatItemRepository";
+import { listChatItem, del, save as saveItem } from "@/repo/chatItemRepository";
 import { listAll } from "@/repo/promptRepository";
 import { get, save } from "@/repo/chatRepository";
 import { findByName } from "@/repo/toolRepository";
@@ -36,6 +38,8 @@ const model = ref(localStorage.getItem("llm-model") || "Gemini Pro");
 watch(model, (v) => {
   localStorage.setItem("llm-model", v);
 });
+
+const router = useRouter();
 
 const userType = ref("");
 
@@ -59,9 +63,15 @@ const chat = computedAsync(async () => {
   return props.id && (await get(Number.parseInt(props.id)));
 }, {});
 
+watch(chat, () => {
+  if (!chat.value) {
+    router.push("/chats");
+  }
+});
+
 const loading = ref(false);
 
-const qa = computedAsync(
+const items = computedAsync(
   async () => {
     loading.value = true;
     const r = props.id && (await listChatItem(Number.parseInt(props.id)));
@@ -80,24 +90,29 @@ const prompts = computedAsync(async () =>
   })
 );
 
-async function addChatItems(items) {
+async function addChatItems(chatItems) {
   // 更新会话名称
-  if (qa.value.length == 0) {
-    const o = Object.assign({}, chat.value, { name: items[0].content });
+  if (items.value.length == 0) {
+    const o = Object.assign({}, chat.value, { name: chatItems[0].content });
     await save(o);
     chat.value = o;
   }
   await saveChatItems(
-    items.map((msg) => ({
+    chatItems.map((msg) => ({
       chatId: Number.parseInt(msg.chatId),
       role: msg.role,
       content: msg.content,
     }))
   );
-  qa.value = await listChatItem(Number.parseInt(props.id));
+  items.value = await listChatItem(Number.parseInt(props.id));
 }
 
-async function replaceAllChatItems(items) {
+async function updateItem(item) {
+  await saveItem(item);
+}
+
+async function replaceAllItems(items) {
+  console.log("replaceAllItems", items);
   del(Number.parseInt(items[0].chatId));
   addChatItems(items);
 }

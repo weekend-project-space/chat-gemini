@@ -6,7 +6,6 @@
       <textarea
         v-if="editableIndex == index"
         class="textarea"
-        :key="i"
         :value="item.content"
         @input="(event) => changeContent(event.target.value)"
         ref="textAreaRef"
@@ -96,10 +95,6 @@ function changeContent(content) {
     font-weight: 600;
   }
 
-  .message {
-    line-height: 2rem;
-    overflow: hidden;
-  }
   .message-actions {
     display: flex;
     justify-content: flex-start;

@@ -1,11 +1,11 @@
 <template>
   <div class="chat-item-warp">
     <v-avatar color="blue" size="small"
-      ><v-icon icon="mdi-robot-industrial-outline"></v-icon
+      ><v-icon :icon="icon"></v-icon
     ></v-avatar>
     <div>
       <div class="d-flex justify-space-between">
-        <div class="name" v-text="functionCall.name"></div>
+        <div class="name" v-text="name"></div>
         <v-tooltip
           :text="isDebug ? '关闭调试' : '查看调用信息'"
           location="bottom"
@@ -21,28 +21,30 @@
           </template>
         </v-tooltip>
       </div>
-      <!-- debug -->
-      <v-card v-show="isDebug" class="my-3" variant="tonal">
-        <v-tabs v-model="tab" color="primary">
-          <v-tab value="fun">函数信息</v-tab>
-          <v-tab value="args">函数参数</v-tab>
-          <v-tab value="res">返回结果</v-tab>
-        </v-tabs>
+      <v-expand-transition>
+        <!-- debug -->
+        <v-card v-show="isDebug" class="my-3" variant="outlined">
+          <v-tabs v-model="tab" color="primary">
+            <v-tab value="fun">函数信息</v-tab>
+            <v-tab value="args">函数参数</v-tab>
+            <v-tab value="res">返回结果</v-tab>
+          </v-tabs>
 
-        <v-card-text>
-          <v-window v-model="tab">
-            <v-window-item value="fun">
-              <div v-text="functionCall"></div>
-            </v-window-item>
-            <v-window-item value="args">
-              <div v-text="functionCall.args"></div>
-            </v-window-item>
-            <v-window-item value="res">
-              <div ref="resRef"></div>
-            </v-window-item>
-          </v-window>
-        </v-card-text>
-      </v-card>
+          <v-card-text>
+            <v-window v-model="tab">
+              <v-window-item value="fun">
+                <div v-text="functionCall"></div>
+              </v-window-item>
+              <v-window-item value="args">
+                <div v-text="functionCall.args"></div>
+              </v-window-item>
+              <v-window-item value="res">
+                <div ref="resRef"></div>
+              </v-window-item>
+            </v-window>
+          </v-card-text>
+        </v-card>
+      </v-expand-transition>
       <div class="message" ref="messageRef"></div>
       <div class="message-actions">
         <div class="actions-warp" v-if="!generating">
@@ -53,7 +55,7 @@
                 icon="mdi-content-copy"
                 variant="text"
                 size="small"
-                @click="copy(micromark(item.content).replace(/<[^>]*>/g, ''))"
+                @click="copy(micromark(modelValue).replace(/<[^>]*>/g, ''))"
               ></v-btn>
             </template>
           </v-tooltip>
@@ -64,7 +66,7 @@
                 icon=" mdi-language-markdown-outline"
                 variant="text"
                 size="small"
-                @click="copy(item.content)"
+                @click="copy(modelValue)"
               ></v-btn>
             </template>
           </v-tooltip>
@@ -75,7 +77,7 @@
                 icon=" mdi-replay"
                 variant="text"
                 size="small"
-                @click="emit('regenerate', '')"
+                @click="emit('regenerate')"
               ></v-btn>
             </template>
           </v-tooltip>
@@ -88,50 +90,138 @@
 <script setup>
 import { computed, h, render, ref, onMounted, watch, nextTick } from "vue";
 import { copy as copy0 } from "@/utils/copySupport";
+import { loadfun as loadfun0 } from "@/service/toolService";
 import micromark from "@/service/micromark";
 import alert from "@/compose/useAlert";
-const props = defineProps(["value", "isLast", "generating", "loadfun"]);
-const emit = defineEmits(["regenerate", "nextgenerate"]);
-const item = computed(() => props.value);
-const functionCall = computed(() => JSON.parse(props.value.content));
+const props = defineProps([
+  "modelValue",
+  "funcall",
+  "isLast",
+  "generating",
+  "loadfun",
+]);
+const emit = defineEmits(["regenerate", "nextgenerate", "update:modelValue"]);
+const functionCall = computed(() => props.funcall);
 const messageRef = ref();
 const resRef = ref();
 const tab = ref("");
 const isDebug = ref(false);
-
+const icon = computed(() => {
+  const n = functionCall.value.name.replace("find_", "");
+  let icons = {
+    weather: "mdi-spider-outline",
+    webcrawer: "mdi-spider-outline",
+    currenttime: "mdi-spider-outline",
+  };
+  return icons[n] || "mdi-robot-industrial-outline";
+});
+const name = computed(() => {
+  const n = functionCall.value.name.replace("find_", "");
+  let names = {
+    weather: "天气",
+    webcrawer: "网络爬虫",
+    currenttime: "当前时间助手",
+  };
+  return names[n] || "-";
+});
 function copy(text) {
   copy0(text);
   alert({ text: "复制成功" });
 }
 
+let tmpfuncallstr = "";
+
 async function _render() {
-  const t = await props.loadfun(functionCall.value.name);
-  console.log(t);
-  const f = await (await fetch("/fun/weath.js")).text();
-  const fun = eval(f);
-  let el = await fun(functionCall.value.args, {
-    h,
-    alert,
-    copy: copy0,
-    next: () => {
-      emit("nextgenerate");
-    },
-    micromark,
-  });
-  render(el, messageRef.value);
+  // 防止重复渲染
+  if (JSON.stringify(props.funcall) === tmpfuncallstr) {
+    return;
+  } else {
+    tmpfuncallstr = JSON.stringify(props.funcall);
+  }
+  let content = props.modelValue;
+  const convert = (content) => {
+    if (typeof content === "string") {
+      return { content: micromark(content) };
+    } else if (typeof content === "object") {
+      return Object.assign(content, { content: micromark(content.content) });
+    } else {
+      return {};
+    }
+  };
+  // console.log(content);
+  if (content) {
+    // skip
+  } else {
+    // const t = await props.loadfun(functionCall.value.name);
+    // console.log(t);
+    let holder = { haseNext: false };
+    const n = functionCall.value.name.replace("find_", "");
+    const fun = await loadfun0(n, "/fun/" + n + ".js");
+    let data = await fun(functionCall.value.args, {
+      next: (text, disabledTools = false) => {
+        holder.haseNext = true;
+        setTimeout(() => {
+          emit(
+            "nextgenerate",
+            [{ role: "user", content: text }],
+            disabledTools
+          );
+        }, 300);
+      },
+      lab: {
+        h,
+        alert,
+        copy: copy0,
+        micromark,
+      },
+    });
+    let res = {};
+    if (holder.haseNext) {
+      if (typeof data === "object") {
+        res = Object.assign({}, data, holder);
+      } else if (typeof data == "string") {
+        res = { content: data, haseNext: holder.haseNext };
+      } else {
+        res = data;
+      }
+    } else {
+      res = data;
+    }
+    emit("update:modelValue", res);
+    content = res;
+  }
+  let d = convert(content);
+  if (!d.haseNext) {
+    messageRef.value.innerHTML = d.content;
+  } else {
+    render(
+      h("span", {
+        class:
+          "mdi-truck-cargo-container tip my-2 mdi v-icon notranslate  v-icon--size-default",
+      }),
+      messageRef.value
+    );
+  }
   watch(tab, () => {
     if (tab.value == "res") {
       nextTick(() => {
         if (resRef.value) {
-          render(el, resRef.value);
+          resRef.value.innerHTML = d.content;
         }
       });
     }
   });
 }
 
-onMounted(_render);
-watch(() => props.item, _render);
+onMounted(() => {
+  // 防止重复渲染
+  if (props.isLast && props.generating) {
+    //
+  } else {
+    _render();
+  }
+});
+// watch(() => props.funcall, _render);
 </script>
 <style lang="less" scoped>
 .chat-item-warp {
@@ -143,10 +233,6 @@ watch(() => props.item, _render);
     font-weight: 600;
   }
 
-  .message {
-    line-height: 2rem;
-    overflow: hidden;
-  }
   .message-actions {
     display: flex;
     justify-content: flex-start;

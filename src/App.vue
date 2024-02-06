@@ -26,7 +26,9 @@ onMounted(() => {
 html {
   overflow-y: auto;
 }
-
+.tip {
+  opacity: 0.8;
+}
 .justify-between {
   justify-content: space-between;
 }
@@ -39,6 +41,12 @@ html {
 }
 // chat begin
 .chat-item-warp {
+  .message {
+    > div p ul li {
+      line-height: 2rem;
+      overflow: hidden;
+    }
+  }
   .message-actions .actions-warp {
     display: none;
     .v-btn--icon.v-btn--density-default {
