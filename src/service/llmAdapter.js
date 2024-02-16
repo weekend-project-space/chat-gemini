@@ -6,10 +6,10 @@ const controller = new AbortController();
 
 export const abort = controller.abort
 
-export async function* llm(data, signal = controller.signal, disabledTools = false, type = 'gemi') {
+export async function* llm(data, signal = controller.signal, enabledTools = false, type = 'gemi') {
   type = localStorage.getItem("llm-model") || "Gemini Pro"
   if (type == 'Gemini Pro') {
-    if (!disabledTools) {
+    if (enabledTools) {
       data.tools = [{
         "functionDeclarations": [{
           "name": "find_weather",

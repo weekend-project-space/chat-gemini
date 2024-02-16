@@ -78,6 +78,7 @@ function copy(text) {
   margin-bottom: 1rem;
   .name {
     font-weight: 600;
+    margin-bottom: 0.3rem;
   }
 
   .message-actions {

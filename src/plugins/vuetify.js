@@ -21,6 +21,7 @@ export default createVuetify({
         colors: {
           primary: '#1aa181',
           secondary: '#6366F1',
+          surface: '#f3f3f3'
         },
       },
       dark: {

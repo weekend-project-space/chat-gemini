@@ -29,7 +29,7 @@
           :funcall="item.content.functionCall"
           @update:modelValue="(v) => updateItem(item, v)"
           @regenerate="regenerate"
-          @nextgenerate="next"
+          @nextgenerate="nextgenerate"
         />
       </template>
       <template v-if="!loading && cloneData && cloneData.length == 0">
@@ -43,7 +43,6 @@
       </template>
     </div>
   </div>
-
   <div class="warp">
     <ChatInput
       :generating="generating"
@@ -51,6 +50,7 @@
       @send="send"
       @stop="clickBtn"
       @tochat="toChat"
+      v-model:tools="tools"
     />
     <div class="text-center tip">
       <small
@@ -108,6 +108,7 @@ const inputRef = ref();
 const chatPanelRef = ref();
 const cloneData = ref([]);
 const editIndex = ref(-1);
+const tools = ref(false);
 let controller = new AbortController();
 
 const scrollToBottom = () => {
@@ -161,7 +162,7 @@ async function send(text) {
   cloneData.value.push(req);
   value.value = "";
   nextTick(scrollToBottom);
-  const resItem = await gen();
+  const resItem = await gen(cloneData.value);
   emit("addItems", clone([req, resItem]));
 }
 
@@ -192,12 +193,12 @@ async function regenerate() {
   emit("replaceAllItems", clone(unref(cloneData)));
 }
 
-async function next(data, disabledTools) {
-  const resItem = await gen(data, disabledTools);
+async function nextgenerate(data, enabledTools) {
+  const resItem = await gen(data, enabledTools);
   emit("addItems", clone([resItem]));
 }
 
-async function gen(data, disabledTools = false) {
+async function gen(data, enabledTools) {
   genFuns = [];
   if (generating.value) {
     alert({ text: "请等回复完后再重试" });
@@ -211,8 +212,9 @@ async function gen(data, disabledTools = false) {
     cloneData.value.push(resItem);
     controller = new AbortController();
     let content = "";
-
-    for await (const line of llm(reqData, controller.signal, disabledTools)) {
+    enabledTools =
+      typeof enabledTools == "boolean" ? enabledTools : tools.value;
+    for await (const line of llm(reqData, controller.signal, enabledTools)) {
       if (line.type == "text") {
         for (let chat of line.data) {
           if (generating.value) {
