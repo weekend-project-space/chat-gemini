@@ -1,15 +1,14 @@
 <template>
   <div class="empty">
-    <v-avatar color="primary" size="80">
+    <!-- <v-avatar color="primary" size="80"  variant="outlined"> -->
+    <div class="logo-warp mx-auto">
       <v-icon icon="mdi-link" size="60"></v-icon>
-    </v-avatar>
+    </div>
+    <!-- </v-avatar> -->
     <div class="mt-5 bold">我今天能帮你做什么？</div>
 
     <div class="mt-5">
-      <v-btn
-        prepend-icon="mdi-wechat"
-        color="#ee6A42"
-        href="https://zhidayingxiao.cn/to/06g6y3"
+      <v-btn prepend-icon="mdi-wechat" href="https://zhidayingxiao.cn/to/06g6y3"
         >点击进微信交流群
       </v-btn>
       <div class="mt-3">
@@ -30,6 +29,13 @@
   </div>
 </template>
 <style lang="less" scoped>
+.logo-warp {
+  width: 80px;
+  height: 80px;
+  padding: 9px;
+  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-radius: 50%;
+}
 .empty {
   text-align: center;
   margin-top: 20vh;
