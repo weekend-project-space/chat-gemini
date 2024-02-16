@@ -39,7 +39,8 @@ html {
   // position: relative;
   padding: 0 1rem;
 }
-.warp .v-theme--light {
+.warp .v-theme--light,
+.warp .v-theme--dark {
   --v-theme-surface: var(--v-theme-background);
 }
 #app .v-navigation-drawer--left {
