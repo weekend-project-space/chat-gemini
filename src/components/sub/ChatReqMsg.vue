@@ -1,6 +1,10 @@
 <template>
   <div class="chat-item-warp">
-    <v-avatar color="#FF6A42" size="small">Y</v-avatar>
+    <v-avatar
+      color="#ee6A42"
+      size="small"
+      icon="mdi-account-circle-outline"
+    ></v-avatar>
     <div>
       <div class="name">我</div>
       <textarea

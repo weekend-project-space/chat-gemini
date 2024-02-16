@@ -1,6 +1,6 @@
 <template>
   <div class="chat-item-warp">
-    <v-avatar color="blue" size="small"
+    <v-avatar color="#426Acd" size="small"
       ><v-icon icon="mdi-puzzle-outline"></v-icon
     ></v-avatar>
     <div>

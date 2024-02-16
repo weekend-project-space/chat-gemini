@@ -6,12 +6,12 @@
     <div class="mt-5 bold">我今天能帮你做什么？</div>
 
     <div class="mt-5">
-      <!-- <v-btn
+      <v-btn
         prepend-icon="mdi-wechat"
-        color="#FF6A42"
+        color="#ee6A42"
         href="https://zhidayingxiao.cn/to/06g6y3"
         >点击进微信交流群
-      </v-btn> -->
+      </v-btn>
       <div class="mt-3">
         <small class="tip"
           >机器人运行可能会遇到问题，为确保您正常使用，请加入<a
