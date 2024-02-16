@@ -27,7 +27,7 @@
             <v-checkbox
               :model-value="tools"
               @update:model-value="(v) => emit('update:tools', v)"
-              label="开启插件"
+              label="开启插件（获取网络信息）"
               hide-details
             ></v-checkbox>
           </v-card>
