@@ -38,12 +38,12 @@ export async function* llm(data, signal = controller.signal, enabledTools = fals
                 "type": "STRING",
                 "description": "url,网址"
               },
-              "summarize": {
-                "type": "BOOLEAN",
-                "description": "是否需要总结"
+              "nextaction": {
+                "type": "STRING",
+                "description": "获取内容之后做什么请用中文描述"
               },
             },
-            "required": ["url", "summarize"]
+            "required": ["url", "nextaction"]
           }
         }, {
           "name": "find_currenttime",
