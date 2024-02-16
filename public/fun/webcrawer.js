@@ -1,5 +1,5 @@
 async (args, {
-  next
+  nextGen
 }) => {
   const d = await (
     await fetch(
@@ -7,9 +7,7 @@ async (args, {
     )
   ).text();
   if (args.summarize) {
-    next('总结一下：' + d, true)
+    nextGen('总结一下：' + d, false)
   }
-  return {
-    content: d,
-  }
+  return d
 };

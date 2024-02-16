@@ -201,53 +201,55 @@ async function send(text) {
   //   emit("qa", [req, { role: "model", content, chatId: props.chatId }]);
 }
 
-async function gen() {
+async function gen(data) {
   genFuns = [];
   if (generating.value) {
     alert({ text: "请等回复完后再重试" });
     return;
   }
-  let content = "";
   let i = 0;
   generating.value = true;
+  const reqData = multiTurn(data);
+  const resItem = { role: "model", content: "", chatId: props.chatId };
   try {
-    const reqData = multiTurn();
-    const resItem = { role: "model", content: "", chatId: props.chatId };
     cloneData.value.push(resItem);
     controller = new AbortController();
+    let content = "";
     for await (const line of llm(reqData, controller.signal)) {
-      for (let chat of line) {
-        if (generating.value) {
-          i += 20;
-          const g = () => {
-            if (generating.value) {
-              content += chat;
-              resItem.content = content;
-              cloneData.value.splice(
-                cloneData.value.length - 1,
-                cloneData.value.length - 1,
-                Object.assign({}, resItem)
-              );
-              nextTick(scrollToBottom);
-            }
-          };
+      if (line.type == "text") {
+        for (let chat of line.data) {
           if (generating.value) {
+            i += 20;
+            const g = () => {
+              if (generating.value) {
+                content += chat;
+                resItem.content = content;
+                cloneData.value.splice(
+                  cloneData.value.length - 1,
+                  cloneData.value.length - 1,
+                  Object.assign({}, resItem)
+                );
+                nextTick(scrollToBottom);
+              }
+            };
             genFuns.push(setTimeout(g, i));
           }
         }
+      } else {
+        console.error(line);
       }
     }
   } catch (e) {
     console.error(e);
     const eText = e.toString();
-    if (eText.includes("aborted")) {
+    if (eText.includes("The user aborted a request")) {
       alert({ text: "取消成功" });
     } else if (eText.includes("API key not valid")) {
       alert({ text: "点击左下角设置您的key", type: "warn" });
     } else {
       alert({ text: "抱歉，请重新试下或换个问法", type: "warn" });
     }
-    initEl();
+    resItem.content = "抱歉，请重新试下或换个问法";
     return new Promise((_, rej) => {
       setTimeout(() => {
         generating.value = false;
@@ -256,14 +258,12 @@ async function gen() {
       rej(e.toString());
     });
   }
-
   return new Promise((resolve) => {
     setTimeout(() => {
       setTimeout(() => {
         generating.value = false;
       }, 500);
-      initEl();
-      resolve(content);
+      resolve(resItem);
     }, i + 300);
   });
 }

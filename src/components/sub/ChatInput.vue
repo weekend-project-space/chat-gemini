@@ -1,27 +1,36 @@
 <template>
   <div class="input-warp">
     <div>
-      <v-menu>
+      <v-menu :close-on-content-click="false">
         <template v-slot:activator="{ props: menu }">
           <v-btn
             id="extBtn"
-            icon="mdi-star-outline"
+            :icon="tools ? 'mdi-puzzle-star-outline' : 'mdi-star-outline'"
             v-bind="menu"
             variant="text"
             size="small"
           ></v-btn>
         </template>
         <v-list density="compact" nav class="extmenu">
-          <v-list-item
-            v-for="(item, index) in prompts"
-            :key="index"
-            @click="clickPrompt(item)"
-          >
-            <v-list-item-title>{{ item.name }}</v-list-item-title>
-          </v-list-item>
-          <div v-if="prompts.length == 0" class="mx-5 my-2">
-            <small>暂无收藏 </small>
-          </div>
+          <v-card min-width="300" flat>
+            <v-list-item
+              v-for="(item, index) in prompts"
+              :key="index"
+              @click="clickPrompt(item)"
+            >
+              <v-list-item-title>{{ item.name }}</v-list-item-title>
+            </v-list-item>
+            <div v-if="prompts.length == 0" class="mx-5 my-2">
+              <small>暂无收藏 </small>
+            </div>
+            <v-divider></v-divider>
+            <v-checkbox
+              :model-value="tools"
+              @update:model-value="(v) => emit('update:tools', v)"
+              label="开启插件（获取网络信息）"
+              hide-details
+            ></v-checkbox>
+          </v-card>
         </v-list>
       </v-menu>
     </div>
@@ -48,8 +57,8 @@
 <script setup>
 import { onMounted, ref, watch } from "vue";
 
-const props = defineProps(["prompts", "generating"]);
-const emit = defineEmits(["send", "stop", "tochat"]);
+const props = defineProps(["prompts", "generating", "tools"]);
+const emit = defineEmits(["send", "stop", "tochat", "update:tools"]);
 
 const inputRef = ref();
 const value = ref("");
@@ -107,7 +116,7 @@ onMounted(() => {
   grid-template-columns: 40px 1fr 40px;
   grid-gap: 0.5rem;
   align-items: center;
-  background: rgb(var(--v-theme-surface));
+  background: rgb(var(--v-theme-background));
   padding: 0.5rem;
   border-radius: 1rem;
   border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));

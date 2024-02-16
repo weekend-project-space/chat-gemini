@@ -1,11 +1,11 @@
 <template>
   <div class="chat-item-warp">
-    <v-avatar color="blue" size="small"
-      ><v-icon :icon="icon"></v-icon
+    <v-avatar color="#426Acd" size="small"
+      ><v-icon icon="mdi-puzzle-outline"></v-icon
     ></v-avatar>
     <div>
       <div class="d-flex justify-space-between">
-        <div class="name" v-text="name"></div>
+        <div class="name" v-text="name + '-插件'"></div>
         <v-tooltip
           :text="isDebug ? '关闭调试' : '查看调用信息'"
           location="bottom"
@@ -33,13 +33,15 @@
           <v-card-text>
             <v-window v-model="tab">
               <v-window-item value="fun">
-                <div v-text="functionCall"></div>
+                <div>
+                  {{ formatJSON(functionCall) }}
+                </div>
               </v-window-item>
               <v-window-item value="args">
                 <div v-text="functionCall.args"></div>
               </v-window-item>
               <v-window-item value="res">
-                <div ref="resRef"></div>
+                <div v-html="formatJSON(modelValue)"></div>
               </v-window-item>
             </v-window>
           </v-card-text>
@@ -55,7 +57,14 @@
                 icon="mdi-content-copy"
                 variant="text"
                 size="small"
-                @click="copy(micromark(modelValue).replace(/<[^>]*>/g, ''))"
+                @click="
+                  copy(
+                    micromark(modelValue.content || modelValue).replace(
+                      /<[^>]*>/g,
+                      ''
+                    )
+                  )
+                "
               ></v-btn>
             </template>
           </v-tooltip>
@@ -66,7 +75,7 @@
                 icon=" mdi-language-markdown-outline"
                 variant="text"
                 size="small"
-                @click="copy(modelValue)"
+                @click="copy(modelValue.content || modelValue)"
               ></v-btn>
             </template>
           </v-tooltip>
@@ -88,7 +97,7 @@
 </template>
 
 <script setup>
-import { computed, h, render, ref, onMounted, watch, nextTick } from "vue";
+import { computed, h, render, ref, onMounted, isReactive, toRaw } from "vue";
 import { copy as copy0 } from "@/utils/copySupport";
 import { loadfun as loadfun0 } from "@/service/toolService";
 import micromark from "@/service/micromark";
@@ -103,11 +112,12 @@ const props = defineProps([
 const emit = defineEmits(["regenerate", "nextgenerate", "update:modelValue"]);
 const functionCall = computed(() => props.funcall);
 const messageRef = ref();
-const resRef = ref();
 const tab = ref("");
 const isDebug = ref(false);
 const icon = computed(() => {
-  const n = functionCall.value.name.replace("find_", "");
+  const n = functionCall.value.name
+    ? functionCall.value.name.replace("find_", "")
+    : "";
   let icons = {
     weather: "mdi-weather-fog",
     webcrawer: "mdi-spider-outline",
@@ -116,7 +126,9 @@ const icon = computed(() => {
   return icons[n] || "mdi-robot-industrial-outline";
 });
 const name = computed(() => {
-  const n = functionCall.value.name.replace("find_", "");
+  const n = functionCall.value.name
+    ? functionCall.value.name.replace("find_", "")
+    : "";
   let names = {
     weather: "天气",
     webcrawer: "网络爬虫",
@@ -127,6 +139,10 @@ const name = computed(() => {
 function copy(text) {
   copy0(text);
   alert({ text: "复制成功" });
+}
+
+function formatJSON(obj) {
+  return JSON.stringify(isReactive(obj) ? toRaw(obj) : obj, null, 4);
 }
 
 let tmpfuncallstr = "";
@@ -141,9 +157,9 @@ async function _render() {
   let content = props.modelValue;
   const convert = (content) => {
     if (typeof content === "string") {
-      return { content: micromark(content) };
+      return { content: content };
     } else if (typeof content === "object") {
-      return Object.assign(content, { content: micromark(content.content) });
+      return Object.assign({}, content);
     } else {
       return {};
     }
@@ -154,18 +170,16 @@ async function _render() {
   } else {
     // const t = await props.loadfun(functionCall.value.name);
     // console.log(t);
-    let holder = { haseNext: false };
-    const n = functionCall.value.name.replace("find_", "");
+    let holder = { next: false };
+    const n = functionCall.value.name
+      ? functionCall.value.name.replace("find_", "")
+      : "";
     const fun = await loadfun0(n, "/fun/" + n + ".js");
     let data = await fun(functionCall.value.args, {
-      next: (text, disabledTools = false) => {
-        holder.haseNext = true;
+      nextGen: (text, enabledTools = false) => {
+        holder.next = true;
         setTimeout(() => {
-          emit(
-            "nextgenerate",
-            [{ role: "user", content: text }],
-            disabledTools
-          );
+          emit("nextgenerate", [{ role: "user", content: text }], enabledTools);
         }, 300);
       },
       lab: {
@@ -176,11 +190,11 @@ async function _render() {
       },
     });
     let res = {};
-    if (holder.haseNext) {
+    if (holder.next) {
       if (typeof data === "object") {
         res = Object.assign({}, data, holder);
       } else if (typeof data == "string") {
-        res = { content: data, haseNext: holder.haseNext };
+        res = { content: data, next: holder.next };
       } else {
         res = data;
       }
@@ -191,26 +205,17 @@ async function _render() {
     content = res;
   }
   let d = convert(content);
-  if (!d.haseNext) {
-    messageRef.value.innerHTML = d.content;
+  if (!d.next) {
+    messageRef.value.innerHTML = micromark(d.content);
   } else {
     render(
       h("span", {
         class:
-          "mdi-truck-cargo-container tip my-2 mdi v-icon notranslate  v-icon--size-default",
+          icon.value + " tip my-2 mdi v-icon notranslate  v-icon--size-default",
       }),
       messageRef.value
     );
   }
-  watch(tab, () => {
-    if (tab.value == "res") {
-      nextTick(() => {
-        if (resRef.value) {
-          resRef.value.innerHTML = d.content;
-        }
-      });
-    }
-  });
 }
 
 onMounted(() => {
@@ -231,6 +236,7 @@ onMounted(() => {
   margin-bottom: 1rem;
   .name {
     font-weight: 600;
+    margin-bottom: 0.3rem;
   }
 
   .message-actions {

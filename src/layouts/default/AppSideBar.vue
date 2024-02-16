@@ -18,7 +18,7 @@
     </v-bottom-navigation>
   </template>
   <template v-else>
-    <v-navigation-drawer class="drawer" theme="dark" width="130">
+    <v-navigation-drawer class="drawer" width="130">
       <!-- <v-tooltip text="伊娃">
         <template v-slot:activator="{ props }">
           <v-list v-bind="props" nav>
@@ -51,7 +51,7 @@
         </v-list>
       </div>
     </v-navigation-drawer>
-    <v-navigation-drawer class="drawer" theme="dark" width="260">
+    <v-navigation-drawer class="drawer" width="260">
       <slot></slot>
     </v-navigation-drawer>
   </template>

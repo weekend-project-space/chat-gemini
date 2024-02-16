@@ -112,7 +112,7 @@ async function updateItem(item) {
 }
 
 async function replaceAllItems(items) {
-  console.log("replaceAllItems", items);
+  // console.log("replaceAllItems", items);
   del(Number.parseInt(items[0].chatId));
   addChatItems(items);
 }
