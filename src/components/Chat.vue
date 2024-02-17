@@ -73,6 +73,7 @@ import {
   unref,
   toValue,
   onUnmounted,
+  toRaw,
 } from "vue";
 import { useRouter } from "vue-router";
 import { llm } from "@/service/llmAdapter";
@@ -123,7 +124,7 @@ const scrollToBottom = () => {
 };
 
 async function updateItem(item, v) {
-  item.content.content = toValue(v);
+  item.content.content = toRaw(v);
   emit("updateItem", clone(item));
 }
 
@@ -256,7 +257,7 @@ async function gen(data, enabledTools) {
     return new Promise((_, rej) => {
       setTimeout(() => {
         generating.value = false;
-        inputRef.value.focus();
+        inputRef.value && inputRef.value.focus();
       }, 500);
 
       rej(e.toString());

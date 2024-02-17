@@ -23,4 +23,4 @@ const markOption = {
   extensions: [gfm()],
   htmlExtensions: [gfmHtml()]
 }
-export default (v) => micromark(v, markOption)
+export default (v) => v.indexOf('<iframe') == 0 ? v : micromark(v, markOption)
