@@ -4,7 +4,7 @@
       <v-list density="compact" nav>
         <div class="mb-3">
           <div class="justify-between">
-            <span>Discover</span> <span>{{ name }}</span>
+            <span>发现</span> <span>{{ name }}</span>
           </div>
           <input
             class="search-input mt-1"
@@ -18,11 +18,11 @@
           :title="item[actKey]"
           :value="item[promptKey]"
           :key="item[actKey]"
-          :to="toUrl(item)"
           :subtitle="item[promptKey]"
+          @click="goChat(item)"
         >
           <template v-slot:prepend>
-            <v-avatar color="secondary" size="small">
+            <v-avatar color="primary" size="small">
               {{ item[actKey].substring(0, 1) }}
             </v-avatar>
           </template>
@@ -34,13 +34,16 @@
 <script setup>
 import { discover, discoverList } from "@/api/discover";
 import { computed, onMounted, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import { createChat } from "@/service/chatService";
 const route = useRoute();
+const router = useRouter();
 const data = ref([]);
 const value = ref("");
 const actKey = ref("act");
 const promptKey = ref("prompt");
 const name = ref("");
+let hint = false;
 onMounted(loadData);
 watch(route, loadData);
 async function loadData() {
@@ -50,6 +53,7 @@ async function loadData() {
     data.value = await discover(item.url);
     actKey.value = item.act || "act";
     promptKey.value = item.prompt || "prompt";
+    hint = item.hint || false;
     name.value = item.name;
   }
 }
@@ -62,10 +66,28 @@ const d = computed(() => {
   );
   return r.slice(0, r.length > 60 ? 60 : r.length);
 });
-function toUrl(item) {
-  return `/prompts/setup?name=${item[actKey.value]}&prompt=${
-    item[promptKey.value]
-  }`;
+// function toUrl(item) {
+//   return `/prompts/setup?name=${item[actKey.value]}&prompt=${
+//     item[promptKey.value]
+//   }`;
+// }
+async function goChat(item) {
+  let content = item[promptKey.value];
+  if (hint) {
+    content = `(textarea ${item.hint} = '')(${item.content.replace(
+      "[PROMPT]",
+      "${" + item.hint + "}"
+    )})`;
+  }
+  const chatId = await createChat([
+    {
+      promptId: item[actKey.value],
+      name: item[actKey.value],
+      role: "user",
+      content,
+    },
+  ]);
+  router.push("/chats/" + chatId);
 }
 </script>
 <style lang="less" scoped>
@@ -86,5 +108,8 @@ function toUrl(item) {
   font-weight: 400;
   line-height: 1.375rem;
   margin: 0.5rem 0.2rem;
+}
+.warp .v-list--nav {
+  padding-inline: 0;
 }
 </style>

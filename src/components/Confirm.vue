@@ -54,7 +54,7 @@ defineProps(["text", "type", "confirm", "cancel", "confirmText", "cancelText"]);
   }
 }
 .confrim.success {
-  border-left: 5px solid rgb(var(--v-theme-secondary));
+  border-left: 5px solid rgb(var(--v-theme-primary));
 }
 .confrim.warn {
   border-left: 5px solid rgb(var(--v-theme-warning));

@@ -11,14 +11,14 @@
         <v-icon :icon="bar.icon"></v-icon>
         <span v-text="bar.name"></span>
       </v-btn>
-      <v-btn value="setting" to="/settings">
-        <v-icon icon="mdi-cog-outline"></v-icon>
-        <span> settings </span>
+      <v-btn value="group" href="https://zhidayingxiao.cn/to/06g6y3">
+        <v-icon icon="mdi-wechat"></v-icon>
+        <span> 微信群 </span>
       </v-btn>
     </v-bottom-navigation>
   </template>
   <template v-else>
-    <v-navigation-drawer theme="dark" rail>
+    <v-navigation-drawer class="drawer" width="130">
       <!-- <v-tooltip text="伊娃">
         <template v-slot:activator="{ props }">
           <v-list v-bind="props" nav>
@@ -43,15 +43,15 @@
         <v-divider></v-divider>
         <v-list density="compact" nav>
           <v-list-item
-            prepend-icon="mdi-cog-outline"
-            title="settings"
-            value="settings"
-            to="/settings"
+            prepend-icon="mdi-wechat"
+            title="微信群"
+            value="group"
+            href="https://zhidayingxiao.cn/to/06g6y3"
           ></v-list-item>
         </v-list>
       </div>
     </v-navigation-drawer>
-    <v-navigation-drawer theme="dark" width="260">
+    <v-navigation-drawer class="drawer" width="260">
       <slot></slot>
     </v-navigation-drawer>
   </template>
@@ -62,9 +62,9 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 const { mobile } = useDisplay();
 const bars = [
-  { icon: "mdi-message-outline", name: "Chats", value: "/chats" },
-  { icon: "mdi-pound-box-outline", name: "Prompts", value: "/prompts" },
-  { icon: "mdi-compass-outline", name: "Discover", value: "/discover" },
+  { icon: "mdi-message-outline", name: "对话", value: "/chats" },
+  { icon: "mdi-star-outline", name: "收藏", value: "/prompts" },
+  { icon: "mdi-compass-outline", name: "发现", value: "/discover" },
 ];
 </script>
 <style lang="less" scoped>
@@ -72,5 +72,16 @@ const bars = [
   position: absolute;
   bottom: 0;
   width: 100%;
+}
+</style>
+<style lang="less">
+.drawer .v-navigation-drawer__content {
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 20px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(var(--v-theme-on-background), 0.3);
+  }
 }
 </style>

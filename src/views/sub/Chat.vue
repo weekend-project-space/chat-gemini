@@ -1,61 +1,84 @@
 <template>
-  <v-app-bar :elevation="0" height="56">
-    <template v-slot:prepend>
-      <div class="llm-select-warp">
-        <div class="select">
-          <v-select
-            variant="flat"
-            density="compact"
-            hide-details
-            label="model"
-            v-model="model"
-            :items="['Gemini Pro']"
-          ></v-select>
-        </div>
-      </div>
-    </template>
-
-    <!-- <v-app-bar-title>Application Bar</v-app-bar-title> -->
-  </v-app-bar>
-
   <template v-if="chat && chat.id">
     <ChatGc
-      v-if="qa && qa.length && qa[0].content.indexOf('(') == 0"
-      :name="qa[0].name"
-      :prompt="qa[0].content"
+      v-if="items && items.length && items[0].content.indexOf('(') == 0"
+      :name="items[0].name"
+      :prompt="items[0].content"
     />
     <Chat
       v-else
       :chat-id="chat.id"
-      :data="qa"
+      :data="items"
+      :loading="loading"
       :prompts="prompts"
-      @qa="addChatItems"
-      @replaceAllChatItems="replaceAllChatItems"
+      :userTypes="userTypes"
+      :explore="morePrompts"
+      :loadfun="findByName"
+      @selectedUserType="(v) => (userType = v)"
+      @addItems="addChatItems"
+      @updateItem="updateItem"
+      @replaceAllItems="replaceAllItems"
     ></Chat>
   </template>
 </template>
 <script setup>
 import { ref, watch } from "vue";
+import { useRouter } from "vue-router";
 import Chat from "@/components/Chat";
 import ChatGc from "@/components/ChatGc";
-import { listChatItem, del } from "@/repo/chatItemRepository";
+import { listChatItem, del, save as saveItem } from "@/repo/chatItemRepository";
 import { listAll } from "@/repo/promptRepository";
 import { get, save } from "@/repo/chatRepository";
+import { findByName } from "@/repo/toolRepository";
 import { saveChatItems } from "@/service/chatService";
 import { computedAsync } from "@vueuse/core";
+import { discover } from "@/api/discover";
 const props = defineProps(["id"]);
 const model = ref(localStorage.getItem("llm-model") || "Gemini Pro");
 watch(model, (v) => {
   localStorage.setItem("llm-model", v);
 });
 
+const router = useRouter();
+
+const userType = ref("");
+
+const userTypes = computedAsync(async () => {
+  return await discover(`/user-types.json`);
+});
+
+const morePrompts = computedAsync(async () => {
+  const randomNumber = userType.value
+    ? userType.value.data[
+        Math.floor(Math.random() * userType.value.data.length)
+      ]
+    : Math.floor(Math.random() * 17);
+  const data = await discover(`/${randomNumber}.json`);
+  let index = Math.floor(Math.random() * data.length - 5);
+  index = index < 0 ? 0 : index;
+  return data.slice(index, index + 4);
+});
+
 const chat = computedAsync(async () => {
   return props.id && (await get(Number.parseInt(props.id)));
 }, {});
 
-const qa = computedAsync(
+watch(chat, () => {
+  if (!chat.value) {
+    router.push("/chats");
+  }
+});
+
+const loading = ref(false);
+
+const items = computedAsync(
   async () => {
-    return props.id && (await listChatItem(Number.parseInt(props.id)));
+    loading.value = true;
+    const r = props.id && (await listChatItem(Number.parseInt(props.id)));
+    setTimeout(() => {
+      loading.value = false;
+    }, 200);
+    return r;
   },
   [] // initial state
 );
@@ -67,38 +90,30 @@ const prompts = computedAsync(async () =>
   })
 );
 
-async function addChatItems(items) {
+async function addChatItems(chatItems) {
   // 更新会话名称
-  if (qa.value.length == 0) {
-    const o = Object.assign({}, chat.value, { name: items[0].content });
+  if (items.value.length == 0) {
+    const o = Object.assign({}, chat.value, { name: chatItems[0].content });
     await save(o);
     chat.value = o;
   }
   await saveChatItems(
-    items.map((msg) => ({
+    chatItems.map((msg) => ({
       chatId: Number.parseInt(msg.chatId),
       role: msg.role,
       content: msg.content,
     }))
   );
-  qa.value = await listChatItem(Number.parseInt(props.id));
+  items.value = await listChatItem(Number.parseInt(props.id));
 }
 
-async function replaceAllChatItems(items) {
+async function updateItem(item) {
+  await saveItem(item);
+}
+
+async function replaceAllItems(items) {
+  // console.log("replaceAllItems", items);
   del(Number.parseInt(items[0].chatId));
   addChatItems(items);
 }
 </script>
-<style lang="less" scoped>
-.llm-select-warp {
-  ::v-deep(.select) {
-    width: 150px;
-    .v-field__input {
-      --v-field-input-padding-top: 0;
-      --v-field-input-padding-bottom: 0;
-      padding-top: 0;
-      padding-bottom: 0;
-    }
-  }
-}
-</style>

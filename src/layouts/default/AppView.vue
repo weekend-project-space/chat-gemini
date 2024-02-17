@@ -22,9 +22,10 @@ function toggleSideBar() {
 </script>
 <style lang="less" scoped>
 .bar-warp {
-  position: absolute;
+  position: fixed;
   top: calc(50vh - 2.6rem);
   padding: 1rem 0.5rem 1rem 1rem;
+  z-index: 1;
   .bar {
     background: #999;
     width: 4px;

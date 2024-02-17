@@ -1,185 +1,112 @@
 <template>
-  <div class="chat-warp" ref="chatPanelRef">
+  <div
+    class="chat-warp"
+    :class="{ hiddenoverflow: !loading && cloneData && cloneData.length == 0 }"
+    ref="chatPanelRef"
+  >
     <div class="warp">
-      <div class="chat-line" v-for="(item, i) in cloneData" :key="i">
-        <div class="eva" v-if="item.role == 'user'">
-          <v-avatar color="secondary" size="small">Y</v-avatar>
-          <div>
-            <div class="name">你</div>
-            <textarea
-              class="textarea"
-              :disabled="i != editIndex"
-              v-model="item.content"
-              ref="textAreaRefs"
-              :style="{
-                height: item.content
-                  ? textAreaRefs.length > Number.parseInt(i / 2) &&
-                    textAreaRefs[Number.parseInt(i / 2)].scrollHeight + 'px'
-                  : '2rem',
-              }"
-            />
-            <div class="message-actions">
-              <div class="actions" v-if="i == editIndex">
-                <v-btn size="small" color="secondary" @click="applyEdit(item)">
-                  确认
-                </v-btn>
-                <v-btn size="small" @click="cancleEdit(item)"> 取消 </v-btn>
-              </div>
-              <div class="actions-warp" v-else>
-                <v-tooltip text="编辑" location="bottom">
-                  <template v-slot:activator="{ props }">
-                    <v-btn
-                      v-bind="props"
-                      icon="mdi-pencil-outline"
-                      variant="text"
-                      size="small"
-                      @click="edit(item.content, i)"
-                    ></v-btn>
-                  </template>
-                </v-tooltip>
-                <v-tooltip text="新建提示" location="bottom">
-                  <template v-slot:activator="{ props }">
-                    <v-btn
-                      v-bind="props"
-                      icon="mdi-pound-box-outline"
-                      variant="text"
-                      size="small"
-                      :to="'/setup?prompt=' + item.content"
-                    ></v-btn>
-                  </template>
-                </v-tooltip>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="eva" v-else-if="item.role == 'model'">
-          <v-avatar color="secondary" size="small"
-            ><v-icon icon="mdi-link"></v-icon
-          ></v-avatar>
-          <div>
-            <div class="name">Eywa</div>
-            <div class="message">
-              <div
-                v-html="
-                  micromark(
-                    item.content +
-                      (i == cloneData.length - 1 && generating
-                        ? '<span class=generating></span>'
-                        : '')
-                  )
-                "
-              ></div>
-            </div>
-            <div class="message-actions">
-              <div class="actions-warp" v-if="!generating">
-                <v-tooltip text="复制" location="bottom">
-                  <template v-slot:activator="{ props }">
-                    <v-btn
-                      v-bind="props"
-                      icon="mdi-content-copy"
-                      variant="text"
-                      size="small"
-                      @click="
-                        copy(micromark(item.content).replace(/<[^>]*>/g, ''))
-                      "
-                    ></v-btn>
-                  </template>
-                </v-tooltip>
-                <v-tooltip text="复制成markdown" location="bottom">
-                  <template v-slot:activator="{ props }">
-                    <v-btn
-                      v-bind="props"
-                      icon=" mdi-language-markdown-outline"
-                      variant="text"
-                      size="small"
-                      @click="copy(item.content)"
-                    ></v-btn>
-                  </template>
-                </v-tooltip>
-                <v-tooltip
-                  text="重新生成"
-                  location="bottom"
-                  v-if="i == cloneData.length - 1"
-                >
-                  <template v-slot:activator="{ props }">
-                    <v-btn
-                      v-bind="props"
-                      icon=" mdi-replay"
-                      variant="text"
-                      size="small"
-                      @click="regenerate"
-                    ></v-btn>
-                  </template>
-                </v-tooltip>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div v-if="cloneData && cloneData.length == 0" class="empty">
-        <v-avatar color="secondary" size="80">
-          <v-icon icon="mdi-link" size="60"></v-icon>
-        </v-avatar>
-        <div class="mt-5">需要我做点什么？</div>
+      <template v-for="(item, i) in cloneData" :key="chatId + '@' + item.id">
+        <ChatReqContent
+          v-if="item.role == 'user'"
+          :index="i"
+          :modelValue="item"
+          @update:modelValue="(v) => (cloneData[i] = v)"
+          @apply-edit="applyEdit"
+        />
+        <ChatResContent
+          v-else-if="item.role == 'model'"
+          :isLast="cloneData.length - 1 == i"
+          :generating="generating"
+          :value="item"
+          @regenerate="regenerate"
+        />
+        <ChatFunContent
+          v-else-if="item.role == 'functionCall'"
+          :isLast="cloneData.length - 1 == i"
+          :generating="generating"
+          :loadfun="loadfun"
+          :modelValue="item.content.content"
+          :funcall="item.content.functionCall"
+          @update:modelValue="(v) => updateItem(item, v)"
+          @regenerate="regenerate"
+          @nextgenerate="nextgenerate"
+        />
+      </template>
+      <template v-if="!loading && cloneData && cloneData.length == 0">
+        <ChatEmpty />
+        <ChatExplore
+          @update:modelValue="(v) => emit('selectedUserType', v)"
+          :items="explore"
+          :types="userTypes"
+          @click="(item) => goChat(item, router)"
+        />
+      </template>
+      <div v-if="regeneratebtn" class="text-align mt-5">
+        <v-btn prepend-icon="mdi-replay" color="primary" @click="regenerate"
+          >重新生成</v-btn
+        >
       </div>
     </div>
   </div>
   <div class="warp">
-    <div class="input-warp">
-      <div>
-        <v-menu>
-          <template v-slot:activator="{ props: menu }">
-            <v-btn
-              id="extBtn"
-              icon="mdi-square-rounded-badge-outline"
-              v-bind="menu"
-              variant="text"
-              size="small"
-            ></v-btn>
-          </template>
-          <v-list density="compact" nav class="extmenu">
-            <v-list-item
-              v-for="(item, index) in prompts"
-              :key="index"
-              @click="clickPrompt(item)"
-            >
-              <v-list-item-title>{{ item.name }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </div>
-
-      <textarea
-        class="textarea"
-        placeholder="请输入问题或#获取快捷指令"
-        v-model="value"
-        @keyup.enter="quickEnter"
-        :style="{
-          height: value ? inputRef.scrollHeight + 'px' : '2rem',
-        }"
-        ref="inputRef"
-      />
-      <v-btn
-        :icon="
-          generating ? 'mdi-stop-circle-outline' : 'mdi-apple-keyboard-caps'
-        "
-        variant="text"
-        size="small"
-        :disabled="!value && !generating"
-        @click="clickBtn()"
-      ></v-btn>
+    <ChatInput
+      :generating="generating"
+      :prompts="prompts"
+      @send="send"
+      @stop="clickBtn"
+      @tochat="toChat"
+      v-model:tools="tools"
+    />
+    <div class="text-center tip">
+      <small
+        >如发现站点功能异常，<a href="https://zhidayingxiao.cn/to/06g6y3"
+          >加微信群</a
+        >或<a
+          href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=6fc5B9qUuEANrhxu_NoFxYf0E7GRv00D&authKey=usE9I3Rs9Dca8Q3aC%2BpbUyI4WjF0Eahjku8psS5%2FyJ6axVKCTJuqqFEw8vLAGv6S&noverify=0&group_code=574528625"
+          >qq群:</a
+        >574528625截图反馈。Eywa可能会犯错误。请考虑核实重要信息。
+      </small>
     </div>
   </div>
 </template>
 <script setup>
-import { nextTick, onMounted, ref, watch, unref, onUnmounted } from "vue";
+import {
+  nextTick,
+  onMounted,
+  ref,
+  watch,
+  unref,
+  toValue,
+  onUnmounted,
+  toRaw,
+} from "vue";
 import { useRouter } from "vue-router";
 import { llm } from "@/service/llmAdapter";
-import micromark from "@/service/micromark";
+import { goChat } from "@/utils/chatSupport";
+import { copy as copy0 } from "@/utils/copySupport";
 import alert from "@/compose/useAlert";
+import ChatReqContent from "./sub/ChatReqMsg.vue";
+import ChatResContent from "./sub/ChatResMsg.vue";
+import ChatFunContent from "./sub/ChatFunMsg.vue";
+import ChatEmpty from "./sub/ChatEmpty.vue";
+import ChatExplore from "./sub/ChatExplore.vue";
+import ChatInput from "./sub/ChatInput.vue";
 import { createChat } from "@/service/chatService";
-const props = defineProps(["data", "chatId", "prompts"]);
-const emit = defineEmits(["qa", "replaceAllChatItems"]);
+const props = defineProps([
+  "data",
+  "chatId",
+  "prompts",
+  "loading",
+  "userTypes",
+  "explore",
+  "loadfun",
+]);
+const emit = defineEmits([
+  "addItems",
+  "updateItem",
+  "replaceAllItems",
+  "selectedUserType",
+]);
 const router = useRouter();
 const value = ref("");
 const generating = ref(false);
@@ -187,8 +114,9 @@ const inputRef = ref();
 const chatPanelRef = ref();
 const cloneData = ref([]);
 const editIndex = ref(-1);
+const tools = ref(false);
+const regeneratebtn = ref(false);
 let controller = new AbortController();
-const textAreaRefs = ref([]);
 
 const scrollToBottom = () => {
   const domWrapper = chatPanelRef.value;
@@ -201,70 +129,37 @@ const scrollToBottom = () => {
   // window.scrollTo(0, document.body.scrollHeight);
 };
 
-let tempContent = "";
-function edit(content, index) {
-  tempContent = content;
-  editIndex.value = index;
+async function updateItem(item, v) {
+  item.content.content = toRaw(v);
+  emit("updateItem", clone(item));
 }
 
-function cancleEdit(item) {
-  item.content = tempContent;
+async function applyEdit(index, next) {
+  cloneData.value = cloneData.value.slice(0, index + 1);
   editIndex.value = -1;
-}
-
-async function applyEdit() {
-  cloneData.value = cloneData.value.slice(0, editIndex.value + 1);
-  editIndex.value = -1;
+  next();
   //重新生成
   await gen();
   // console.log(cloneData);
   //替换所有
-  emit("replaceAllChatItems", unref(cloneData));
+  emit("replaceAllItems", clone(unref(cloneData)));
 }
+
+let genFuns = [];
 
 function clickBtn() {
   if (generating.value) {
     controller.abort();
     generating.value = false;
+    genFuns.forEach(clearTimeout);
   } else {
-    send();
-  }
-}
-
-function initEl() {
-  generating.value = false;
-  cloneData.value = props.data;
-  inputRef.value && inputRef.value.focus();
-
-  nextTick(() => {
-    scrollToBottom();
-  });
-
-  const buttons = document.querySelectorAll("pre");
-  buttons.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      copy(e.target.innerText);
-    });
-  });
-}
-
-async function regenerate() {
-  // 移除最后回答
-  cloneData.value.pop();
-  //重新生成
-  await gen();
-  //替换所有
-  emit("replaceAllChatItems", unref(cloneData));
-}
-
-function quickEnter(e) {
-  if (e.keyCode == 13 && !e.shiftKey && !generating.value) {
     send();
   }
 }
 
 async function send(text) {
   cloneData.value = props.data.map((o) => ({
+    id: o.id,
     role: o.role,
     content: o.content,
   }));
@@ -274,40 +169,85 @@ async function send(text) {
   cloneData.value.push(req);
   value.value = "";
   nextTick(scrollToBottom);
-  const content = await gen();
-  emit("qa", [req, { role: "model", content, chatId: props.chatId }]);
+  const resItem = await gen(cloneData.value);
+  emit("addItems", clone([req, resItem]));
 }
 
-async function gen() {
+function initEl() {
+  generating.value = false;
+  cloneData.value = props.data;
+  inputRef.value && inputRef.value.focus();
+
+  nextTick(() => {
+    scrollToBottom();
+    setTimeout(() => {
+      const buttons = document.querySelectorAll("pre");
+      buttons.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          copy(e.target.innerText);
+        });
+      });
+    }, 1000);
+  });
+}
+
+async function regenerate() {
+  // 移除最后回答
+  cloneData.value.pop();
+  //重新生成
+  await gen();
+  //替换所有
+  emit("replaceAllItems", clone(unref(cloneData)));
+}
+
+async function nextgenerate(data, enabledTools) {
+  const resItem = await gen(data, enabledTools);
+  emit("addItems", clone([resItem]));
+}
+
+async function gen(data, enabledTools) {
+  regeneratebtn.value = false;
+  genFuns = [];
   if (generating.value) {
     alert({ text: "请等回复完后再重试" });
     return;
   }
-  let content = "";
   let i = 0;
   generating.value = true;
+  const reqData = multiTurn(data);
+  const resItem = { role: "model", content: "", chatId: props.chatId };
   try {
-    const reqData = multiTurn();
-    const resItem = { role: "model", content: "", chatId: props.chatId };
     cloneData.value.push(resItem);
     controller = new AbortController();
-    for await (const line of llm(reqData, controller.signal)) {
-      for (let chat of line) {
-        if (generating.value) {
-          i += 20;
-          setTimeout(() => {
-            if (generating.value) {
-              content += chat;
-              resItem.content = content;
-              cloneData.value.splice(
-                cloneData.value.length - 1,
-                cloneData.value.length - 1,
-                Object.assign({}, resItem)
-              );
-              nextTick(scrollToBottom);
-            }
-          }, i);
+    let content = "";
+    enabledTools =
+      typeof enabledTools == "boolean" ? enabledTools : tools.value;
+    for await (const line of llm(reqData, controller.signal, enabledTools)) {
+      if (line.type == "text") {
+        for (let chat of line.data) {
+          if (generating.value) {
+            i += 20;
+            const g = () => {
+              if (generating.value) {
+                content += chat;
+                resItem.content = content;
+                cloneData.value.splice(
+                  cloneData.value.length - 1,
+                  cloneData.value.length - 1,
+                  Object.assign({}, resItem)
+                );
+                nextTick(scrollToBottom);
+              }
+            };
+            genFuns.push(setTimeout(g, i));
+          }
         }
+      } else {
+        resItem.role = "functionCall";
+        resItem.content = {
+          functionCall: line.data,
+          content: "",
+        };
       }
     }
   } catch (e) {
@@ -318,12 +258,14 @@ async function gen() {
     } else if (eText.includes("API key not valid")) {
       alert({ text: "点击左下角设置您的key", type: "warn" });
     } else {
-      alert({ text: "出现点问题请稍候，或点击左下角设置", type: "warn" });
+      // alert({ text: "抱歉，请重新试下或换个问法", type: "warn" });
+      regeneratebtn.value = true;
     }
+    resItem.content = "抱歉，请重新试下或换个问法";
     return new Promise((_, rej) => {
       setTimeout(() => {
         generating.value = false;
-        inputRef.value.focus();
+        inputRef.value && inputRef.value.focus();
       }, 500);
 
       rej(e.toString());
@@ -334,46 +276,50 @@ async function gen() {
       setTimeout(() => {
         generating.value = false;
       }, 500);
-      resolve(content);
+      resolve(resItem);
     }, i + 300);
   });
 }
 
-function multiTurn() {
+function multiTurn(data) {
+  let key = "";
+  let array = [];
+  data = data || clone(cloneData.value);
+  for (let i in data) {
+    let item = data[i];
+    if (item.role == "functionCall") {
+      // 最后一条角色转化为user
+      item.role = i == data.length - 1 ? "user" : "model";
+      if (typeof item.content.content === "string") {
+        item.content = item.content.content;
+      } else {
+        item.content = JSON.stringify(item.content.content);
+      }
+    }
+    if (item.role == key) {
+      array[array.length - 1].parts.push({
+        text: item.content,
+      });
+    } else {
+      array.push({
+        role: item.role,
+        parts: [
+          {
+            text: item.content,
+          },
+        ],
+      });
+    }
+    key = item.role;
+  }
   return {
-    contents: cloneData.value.map((o) => ({
-      role: o.role,
-      parts: [
-        {
-          text: o.content,
-        },
-      ],
-    })),
+    contents: array,
   };
 }
 
-let extShow = false;
-
 function copy(text) {
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(text);
-  }
+  copy0(text);
   alert({ text: "复制成功" });
-}
-
-function clickPrompt(item) {
-  if (item.x) {
-    toChat(item);
-  } else {
-    value.value = item.prompt;
-    setTimeout(() => {
-      if (extShow) {
-        document.getElementById("extBtn").click();
-        extShow = false;
-      }
-      inputRef.value.focus();
-    }, 100);
-  }
 }
 
 async function toChat(item) {
@@ -386,6 +332,10 @@ async function toChat(item) {
     },
   ]);
   router.push("/chats/" + chatId);
+}
+
+function clone(o) {
+  return JSON.parse(JSON.stringify(o));
 }
 
 let initFun = null;
@@ -406,15 +356,7 @@ onMounted(() => {
       nextTick(initEl);
     }
   );
-  watch(value, (v) => {
-    if (v == "#") {
-      document.getElementById("extBtn").click();
-      setTimeout(() => {
-        document.getElementsByClassName("extmenu")[0].focus();
-      }, 300);
-      extShow = true;
-    }
-  });
+
   initFun = setTimeout(() => {
     initEl();
   }, 30);
@@ -425,8 +367,12 @@ onUnmounted(() => {
 });
 </script>
 <style lang="less" scoped>
+.text-align {
+  text-align: center;
+}
 .chat-warp {
-  height: calc(100vh - 70px - 1rem - 56px);
+  position: relative;
+  height: calc(100vh - 70px - 1.2rem);
   overflow: auto;
   &::-webkit-scrollbar {
     width: 8px;
@@ -436,171 +382,11 @@ onUnmounted(() => {
     background: rgba(var(--v-theme-on-background), 0.3);
   }
   .warp {
-    padding: 2rem 1.5rem 5rem;
+    padding: 2rem 1rem;
   }
 }
-.chat-line {
-  .eva {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-gap: 1rem;
-    margin-bottom: 1rem;
-  }
-  .message {
-    line-height: 2rem;
-    overflow: hidden;
-  }
-  .message-actions {
-    display: flex;
-    justify-content: flex-start;
-    min-height: 28px;
-    // margin-top: 0.5rem;
-  }
-}
-.input-warp {
-  position: absolute;
-  width: calc(100% - 2rem);
-  bottom: -70px;
-  display: grid;
-  grid-template-columns: 40px 1fr 40px;
-  grid-gap: 0.5rem;
-  align-items: center;
-  background: rgb(var(--v-theme-surface));
-  padding: 0.5rem;
-  border-radius: 1.2rem;
-  border: 1px solid rgb(var(--v-theme-code));
-  box-shadow: 0px 3px 1px -2px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)),
-    0px 2px 2px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
-    0px 1px 3px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.12));
-  .textarea {
-    outline: none;
-    // padding-inline-start: 1rem;
-    height: 2rem;
-    max-height: 12rem;
-    overflow: auto;
-    &::-webkit-scrollbar {
-      width: 8px;
-      height: 20px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background: rgba(var(--v-theme-on-background), 0.3);
-    }
-  }
-}
-.name {
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-.empty {
-  text-align: center;
-  font-weight: bold;
-  margin-top: 30vh;
-}
-.chat-line {
-  .message-actions .actions-warp {
-    display: none;
-    .v-btn--icon.v-btn--density-default {
-      width: calc(var(--v-btn-height));
-      height: calc(var(--v-btn-height));
-    }
-  }
-  &:last-child {
-    .message-actions .actions-warp {
-      display: block;
-    }
-  }
-  .message-actions:hover {
-    .actions-warp {
-      display: block;
-    }
-  }
-  .actions {
-    margin: 0 auto;
-    .v-btn {
-      margin: 0 0.5rem;
-    }
-  }
 
-  .actions-warp {
-    .v-btn {
-      margin-right: 0.5rem;
-    }
-  }
-}
-.textarea {
-  display: block;
-  resize: none;
-  width: 100%;
-  outline: none;
-  overflow-y: hidden;
-  line-height: 2rem;
-  height: 2rem;
-}
-.textarea:disabled {
-  color: rgba(var(--v-theme-on-background), var(--v-high-emphasis-opacity));
-}
-</style>
-<style lang="less">
-.message ol,
-.message ul {
-  margin-inline-start: 1rem;
-}
-.message pre {
-  position: relative;
-  max-width: calc(var(--v-warp-widht) - 32px - 1rem);
-  overflow: auto;
-  background: rgba(var(--v-theme-on-code), 0.8);
-  color: rgb(var(--v-theme-code));
-  padding: 1rem;
-  border-radius: 0.5rem;
-  pointer-events: none;
-  &::before {
-    position: absolute;
-    content: "复制";
-    background: rgba(var(--v-theme-on-code), 0.8);
-    top: 0rem;
-    right: 0rem;
-    padding: 0.3rem 1rem;
-    border-top-right-radius: 0.5rem;
-    border-bottom-left-radius: 0.5rem;
-    pointer-events: all;
-  }
-  code {
-    max-width: calc(var(--v-warp-widht) - 32px - 1rem);
-  }
-}
-@keyframes scale {
-  0% {
-    transform: scale(1);
-  }
-  25% {
-    transform: scale(0.9);
-  }
-  50% {
-    transform: scale(0.6);
-  }
-  75% {
-    transform: scale(0.9);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-.generating {
-  background: rgba(
-    var(--v-theme-on-background),
-    var(--v-high-emphasis-opacity)
-  );
-  display: inline-block;
-  margin: 0 0.5rem;
-  width: 16px;
-  height: 16px;
-  border-radius: 8px;
-  animation-name: scale; // 动画名称
-  animation-direction: alternate; // 动画在奇数次（1、3、5...）正向播放，在偶数次（2、4、6...）反向播放。
-  animation-timing-function: linear;
-  animation-delay: 0s; // 动画延迟时间
-  animation-iteration-count: infinite; //  动画播放次数，infinite：一直播放
-  animation-duration: 1s; // 动画完成时间
+.tip {
+  opacity: 0.5;
 }
 </style>

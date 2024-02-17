@@ -1,6 +1,32 @@
 <template>
   <div class="warp">
-    <h2 class="my-5" v-text="name"></h2>
+    <div class="d-flex align-center">
+      <h2 class="my-5" v-text="name"></h2>
+
+      <v-tooltip text="新建收藏" location="bottom">
+        <template v-slot:activator="{ props }">
+          <v-btn
+            v-bind="props"
+            icon="mdi-star-outline"
+            variant="text"
+            size="small"
+            :to="'/prompts/setup?prompt=' + prompt + '&name=' + name"
+            class="mx-3"
+          ></v-btn>
+        </template>
+      </v-tooltip>
+      <v-tooltip text="分享" location="bottom">
+        <template v-slot:activator="{ props }">
+          <v-btn
+            v-bind="props"
+            icon="mdi-share-outline"
+            variant="text"
+            size="small"
+            @click="share"
+          ></v-btn>
+        </template>
+      </v-tooltip>
+    </div>
     <template v-for="item in d.components">
       <v-text-field
         :key="item.name + 'input'"
@@ -14,6 +40,13 @@
         :label="item.name"
         v-model="d.data[item.name]"
       ></v-textarea>
+      <v-text-field
+        :key="item.name + 'number'"
+        v-else-if="item.type == 'number'"
+        :label="item.name"
+        type="number"
+        v-model="d.data[item.name]"
+      ></v-text-field>
       <v-select
         :key="item.name + 'select'"
         v-else-if="item.type == 'select'"
@@ -38,13 +71,14 @@
         item.value
       }}</component>
     </template>
+
     <v-btn
       block
-      icon="mdi-send-outline"
+      :icon="generating ? 'mdi-stop-circle-outline' : 'mdi-send-outline'"
       rounded="lg"
       :disabled="!d.hasAllValue"
-      color="secondary"
-      @click="send"
+      color="primary"
+      @click="clickBtn"
     >
     </v-btn>
     <div class="message my-5" v-if="res">
@@ -67,6 +101,17 @@
             ></v-btn>
           </template>
         </v-tooltip>
+        <v-tooltip text="开始对话" location="bottom">
+          <template v-slot:activator="{ props }">
+            <v-btn
+              v-bind="props"
+              icon="mdi-message-outline"
+              variant="text"
+              size="small"
+              @click="goChat"
+            ></v-btn>
+          </template>
+        </v-tooltip>
       </div>
     </div>
   </div>
@@ -75,9 +120,14 @@
 import { ref, nextTick, computed, watch } from "vue";
 import { useInter } from "@/compose/promptInter";
 import { llm } from "@/service/llmAdapter";
+import { copy as copy0 } from "@/utils/copySupport";
+import { share as share0 } from "@/api/share";
+import { createChat } from "@/service/chatService";
+import { useRouter } from "vue-router";
 import alert from "@/compose/useAlert";
 import micromark from "@/service/micromark";
 const props = defineProps(["prompt", "name"]);
+const router = useRouter();
 const d = useInter(props);
 const generating = ref(false);
 const cloneData = ref([]);
@@ -88,6 +138,17 @@ const res = computed(() =>
 watch(props, () => {
   cloneData.value = [];
 });
+
+async function share() {
+  const id = await share0({
+    title: props.name,
+    url: `${window.location.origin}/prompts/setup?name=${props.name}&prompt=${props.prompt}`,
+  });
+  copy0(
+    `发现了一个好用的《${props.name}》AI机器人\n免费使用，点击链接🔗立即体验吧\n${id}`
+  );
+  alert({ text: "链接复制成功，赶快分享给好友吧" });
+}
 
 const scrollToBottom = () => {
   //   const domWrapper = document;
@@ -100,6 +161,35 @@ const scrollToBottom = () => {
   window.scrollTo(0, document.body.scrollHeight);
 };
 
+let genFuns = [];
+
+let controller = new AbortController();
+
+function initEl() {
+  nextTick(() => {
+    scrollToBottom();
+    setTimeout(() => {
+      const buttons = document.querySelectorAll("pre");
+      console.log(buttons);
+      buttons.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          copy(e.target.innerText);
+        });
+      });
+    }, 1000);
+  });
+}
+
+function clickBtn() {
+  if (generating.value) {
+    generating.value = false;
+    controller.abort();
+    genFuns.forEach(clearTimeout);
+  } else {
+    send();
+  }
+}
+
 async function send(text) {
   cloneData.value = [];
   text = d.value.inter();
@@ -111,36 +201,42 @@ async function send(text) {
   //   emit("qa", [req, { role: "model", content, chatId: props.chatId }]);
 }
 
-async function gen() {
+async function gen(data) {
+  genFuns = [];
   if (generating.value) {
     alert({ text: "请等回复完后再重试" });
     return;
   }
-  let content = "";
   let i = 0;
   generating.value = true;
+  const reqData = multiTurn(data);
+  const resItem = { role: "model", content: "", chatId: props.chatId };
   try {
-    const reqData = multiTurn();
-    const resItem = { role: "model", content: "", chatId: props.chatId };
     cloneData.value.push(resItem);
-    const controller = new AbortController();
+    controller = new AbortController();
+    let content = "";
     for await (const line of llm(reqData, controller.signal)) {
-      for (let chat of line) {
-        if (generating.value) {
-          i += 20;
-          setTimeout(() => {
-            if (generating.value) {
-              content += chat;
-              resItem.content = content;
-              cloneData.value.splice(
-                cloneData.value.length - 1,
-                cloneData.value.length - 1,
-                Object.assign({}, resItem)
-              );
-              nextTick(scrollToBottom);
-            }
-          }, i);
+      if (line.type == "text") {
+        for (let chat of line.data) {
+          if (generating.value) {
+            i += 20;
+            const g = () => {
+              if (generating.value) {
+                content += chat;
+                resItem.content = content;
+                cloneData.value.splice(
+                  cloneData.value.length - 1,
+                  cloneData.value.length - 1,
+                  Object.assign({}, resItem)
+                );
+                nextTick(scrollToBottom);
+              }
+            };
+            genFuns.push(setTimeout(g, i));
+          }
         }
+      } else {
+        console.error(line);
       }
     }
   } catch (e) {
@@ -151,8 +247,9 @@ async function gen() {
     } else if (eText.includes("API key not valid")) {
       alert({ text: "点击左下角设置您的key", type: "warn" });
     } else {
-      alert({ text: "出现点问题请稍候，或点击左下角设置", type: "warn" });
+      alert({ text: "抱歉，请重新试下或换个问法", type: "warn" });
     }
+    resItem.content = "抱歉，请重新试下或换个问法";
     return new Promise((_, rej) => {
       setTimeout(() => {
         generating.value = false;
@@ -166,7 +263,7 @@ async function gen() {
       setTimeout(() => {
         generating.value = false;
       }, 500);
-      resolve(content);
+      resolve(resItem);
     }, i + 300);
   });
 }
@@ -184,10 +281,19 @@ function multiTurn() {
   };
 }
 
+async function goChat() {
+  const items = cloneData.value.map((item) => ({
+    promptId: item.content,
+    name: item.content,
+    role: item.role,
+    content: item.content,
+  }));
+  const chatId = await createChat(items);
+  router.push("/chats/" + chatId);
+}
+
 function copy(text) {
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(text);
-  }
+  copy0(text);
   alert({ text: "复制成功" });
 }
 </script>
@@ -202,6 +308,9 @@ function copy(text) {
       width: calc(var(--v-btn-height));
       height: calc(var(--v-btn-height));
     }
+    .v-btn {
+      margin: 0 0.5rem;
+    }
   }
 }
 </style>
@@ -209,6 +318,13 @@ function copy(text) {
 .message ol,
 .message ul {
   margin-inline-start: 1rem;
+}
+.message {
+  img,
+  * {
+    max-width: 100%;
+    overflow-y: auto;
+  }
 }
 .message pre {
   position: relative;

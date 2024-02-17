@@ -1,7 +1,7 @@
 <template>
   <div class="mx-3 my-2">
     <div class="d-flex flex">
-      <v-list-subheader>Chats </v-list-subheader>
+      <v-list-subheader> 对话</v-list-subheader>
       <v-btn
         prepend-icon=" mdi-file-edit-outline"
         size="small"
@@ -35,7 +35,7 @@
               size="small"
               variant="text"
               icon="mdi-delete-outline"
-              @click="delChat0(item.id)"
+              @click.prevent="delChat0(item.id)"
             ></v-btn>
           </div>
         </template>
@@ -89,7 +89,9 @@ async function createChat() {
 
 async function delChat0(id) {
   await delChat(id);
-  newChat0();
+  if (!mobile.value) {
+    newChat0();
+  }
 }
 
 function formatData(time) {

@@ -1,20 +1,22 @@
 <template>
   <div class="warp">
-    <v-card-title class="mb-3">{{
-      index > -1 ? "Prompts Edit" : "Prompts Add"
-    }}</v-card-title>
-    <v-card-text>
-      <v-text-field label="简称" v-model="item.name"></v-text-field>
-      <v-textarea label="提示词" v-model="item.prompt"></v-textarea>
-    </v-card-text>
-    <v-btn
-      class="mx-4"
-      :disabled="!(item.name && item.prompt)"
-      @click="submit"
-      color="secondary"
-    >
-      确定
-    </v-btn>
+    <v-card flat>
+      <v-card-title class="mb-3">{{
+        index > -1 ? "编辑收藏" : "新建收藏"
+      }}</v-card-title>
+      <v-card-text>
+        <v-text-field label="简称" v-model="item.name"></v-text-field>
+        <v-textarea label="提示词" v-model="item.prompt"></v-textarea>
+      </v-card-text>
+      <v-btn
+        class="mx-4"
+        :disabled="!(item.name && item.prompt)"
+        @click="submit"
+        color="primary"
+      >
+        确定
+      </v-btn>
+    </v-card>
   </div>
 </template>
 <script setup>
@@ -33,8 +35,13 @@ const item = ref({
 onMounted(initItem);
 watch(route, initItem);
 function initItem() {
+  console.log(route.query);
   if (route.query.prompt) {
     item.value = Object.assign({}, route.query);
+  } else if (window.location.search.length > 5) {
+    item.value = Object.fromEntries(
+      new URLSearchParams(decodeURIComponent(window.location.search))
+    );
   }
 }
 async function submit() {
@@ -76,3 +83,8 @@ async function goChat(item) {
   router.push("/chats/" + chatId);
 }
 </script>
+<style lang="less" scoped>
+.warp {
+  padding: 0;
+}
+</style>
