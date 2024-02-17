@@ -2,8 +2,9 @@
 
 > 基于 llm，all chat one ui，源于阿凡达中潘罗拉星球的eywa, 寓意链接更多智慧与知识，或虚拟人
 
+[大模型应用层爱好者群](https://zhidayingxiao.cn/to/06g6y3)
 
-[大模型应用层爱好者群](https://zhidayingxiao.cn/to/06g6xX)
+[在线预览](https://1e1.fun)
 
 [在线预览](https://1e1.fun)
 
@@ -29,6 +30,8 @@ Deploy With Vercel
 ## 界面
 
 ![mobile](./data/mobile.png)
+
+![plugins](./data/plugins.png)
 
 ![x-prompts](./data/x-prompts.png)
 
