@@ -2,7 +2,7 @@
 
 > 基于 llm，chat next ui
 
-[大模型应用层爱好者群](https://zhidayingxiao.cn/to/06g6xX)
+[大模型应用层爱好者群](https://zhidayingxiao.cn/to/06g6y3)
 
 ## 功能
 
