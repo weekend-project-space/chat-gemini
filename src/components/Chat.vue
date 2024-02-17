@@ -41,6 +41,11 @@
           @click="(item) => goChat(item, router)"
         />
       </template>
+      <div v-if="regeneratebtn" class="text-align mt-5">
+        <v-btn prepend-icon="mdi-replay" color="primary" @click="regenerate"
+          >重新生成</v-btn
+        >
+      </div>
     </div>
   </div>
   <div class="warp">
@@ -73,6 +78,7 @@ import {
   unref,
   toValue,
   onUnmounted,
+  toRaw,
 } from "vue";
 import { useRouter } from "vue-router";
 import { llm } from "@/service/llmAdapter";
@@ -109,6 +115,7 @@ const chatPanelRef = ref();
 const cloneData = ref([]);
 const editIndex = ref(-1);
 const tools = ref(false);
+const regeneratebtn = ref(false);
 let controller = new AbortController();
 
 const scrollToBottom = () => {
@@ -123,7 +130,7 @@ const scrollToBottom = () => {
 };
 
 async function updateItem(item, v) {
-  item.content.content = toValue(v);
+  item.content.content = toRaw(v);
   emit("updateItem", clone(item));
 }
 
@@ -199,6 +206,7 @@ async function nextgenerate(data, enabledTools) {
 }
 
 async function gen(data, enabledTools) {
+  regeneratebtn.value = false;
   genFuns = [];
   if (generating.value) {
     alert({ text: "请等回复完后再重试" });
@@ -250,13 +258,14 @@ async function gen(data, enabledTools) {
     } else if (eText.includes("API key not valid")) {
       alert({ text: "点击左下角设置您的key", type: "warn" });
     } else {
-      alert({ text: "抱歉，请重新试下或换个问法", type: "warn" });
+      // alert({ text: "抱歉，请重新试下或换个问法", type: "warn" });
+      regeneratebtn.value = true;
     }
     resItem.content = "抱歉，请重新试下或换个问法";
     return new Promise((_, rej) => {
       setTimeout(() => {
         generating.value = false;
-        inputRef.value.focus();
+        inputRef.value && inputRef.value.focus();
       }, 500);
 
       rej(e.toString());

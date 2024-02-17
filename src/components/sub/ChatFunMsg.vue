@@ -33,15 +33,13 @@
           <v-card-text>
             <v-window v-model="tab">
               <v-window-item value="fun">
-                <div>
-                  {{ formatJSON(functionCall) }}
-                </div>
+                <div v-text="formatJSON(functionCall)"></div>
               </v-window-item>
               <v-window-item value="args">
                 <div v-text="functionCall.args"></div>
               </v-window-item>
               <v-window-item value="res">
-                <div v-html="formatJSON(modelValue)"></div>
+                <div v-text="formatJSON(modelValue)"></div>
               </v-window-item>
             </v-window>
           </v-card-text>
@@ -97,7 +95,16 @@
 </template>
 
 <script setup>
-import { computed, h, render, ref, onMounted, isReactive, toRaw } from "vue";
+import {
+  computed,
+  h,
+  render,
+  ref,
+  onMounted,
+  isReactive,
+  toRaw,
+  nextTick,
+} from "vue";
 import { copy as copy0 } from "@/utils/copySupport";
 import { loadfun as loadfun0 } from "@/service/toolService";
 import micromark from "@/service/micromark";
@@ -122,6 +129,7 @@ const icon = computed(() => {
     weather: "mdi-weather-fog",
     webcrawer: "mdi-spider-outline",
     currenttime: "mdi-clock-outline",
+    md2mindmap: " mdi-graphql",
   };
   return icons[n] || "mdi-robot-industrial-outline";
 });
@@ -133,6 +141,7 @@ const name = computed(() => {
     weather: "天气",
     webcrawer: "网络爬虫",
     currenttime: "当前时间助手",
+    md2mindmap: "思维导图",
   };
   return names[n] || "-";
 });
@@ -207,6 +216,11 @@ async function _render() {
   let d = convert(content);
   if (!d.next) {
     messageRef.value.innerHTML = micromark(d.content);
+    if (d.lazyfun) {
+      setTimeout(() => {
+        eval(d.lazyfun)(messageRef.value, functionCall.value.args);
+      }, 1000);
+    }
   } else {
     render(
       h("span", {
