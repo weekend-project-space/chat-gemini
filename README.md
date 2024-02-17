@@ -2,7 +2,6 @@
 
 > 基于 llm，chat next ui
 
-
 [大模型应用层爱好者群](https://zhidayingxiao.cn/to/06g6xX)
 
 ## 功能
@@ -18,7 +17,10 @@
 - [x] more LLM API
 
 ## 界面
+
 ![mobile](./data/mobile.png)
+
+![plugins](./data/plugins.png)
 
 ![x-prompts](./data/x-prompts.png)
 
