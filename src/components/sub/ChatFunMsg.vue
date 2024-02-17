@@ -216,13 +216,9 @@ async function _render() {
   let d = convert(content);
   if (!d.next) {
     messageRef.value.innerHTML = micromark(d.content);
-    nextTick(() => {
-      console.log(d.lazyfun);
-      console.log(props.funcall);
-    });
     if (d.lazyfun) {
       setTimeout(() => {
-        eval(d.lazyfun)(functionCall.value.args);
+        eval(d.lazyfun)(messageRef.value, functionCall.value.args);
       }, 1000);
     }
   } else {
