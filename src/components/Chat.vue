@@ -4,6 +4,7 @@
     :class="{ hiddenoverflow: !loading && cloneData && cloneData.length == 0 }"
     ref="chatPanelRef"
   >
+    <ChatHeader v-model="tools" />
     <div class="warp">
       <template v-for="(item, i) in cloneData" :key="chatId + '@' + item.id">
         <ChatReqContent
@@ -76,7 +77,6 @@ import {
   ref,
   watch,
   unref,
-  toValue,
   onUnmounted,
   toRaw,
 } from "vue";
@@ -85,6 +85,7 @@ import { llm } from "@/service/llmAdapter";
 import { goChat } from "@/utils/chatSupport";
 import { copy as copy0 } from "@/utils/copySupport";
 import alert from "@/compose/useAlert";
+import ChatHeader from "./sub/ChatHeader.vue";
 import ChatReqContent from "./sub/ChatReqMsg.vue";
 import ChatResContent from "./sub/ChatResMsg.vue";
 import ChatFunContent from "./sub/ChatFunMsg.vue";
