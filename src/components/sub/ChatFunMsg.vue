@@ -95,16 +95,7 @@
 </template>
 
 <script setup>
-import {
-  computed,
-  h,
-  render,
-  ref,
-  onMounted,
-  isReactive,
-  toRaw,
-  nextTick,
-} from "vue";
+import { computed, h, render, ref, onMounted, isReactive, toRaw } from "vue";
 import { copy as copy0 } from "@/utils/copySupport";
 import { loadfun as loadfun0 } from "@/service/toolService";
 import micromark from "@/service/micromark";
