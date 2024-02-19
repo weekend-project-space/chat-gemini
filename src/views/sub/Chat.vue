@@ -1,7 +1,12 @@
 <template>
   <template v-if="chat && chat.id">
     <ChatGc
-      v-if="items && items.length && items[0].content.indexOf('(') == 0"
+      v-if="
+        items &&
+        items.length &&
+        items[0].content &&
+        items[0].content.indexOf('(') == 0
+      "
       :name="items[0].name"
       :prompt="items[0].content"
     />
