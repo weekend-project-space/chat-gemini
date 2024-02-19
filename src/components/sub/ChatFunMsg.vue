@@ -95,7 +95,16 @@
 </template>
 
 <script setup>
-import { computed, h, render, ref, onMounted, isReactive, toRaw } from "vue";
+import {
+  computed,
+  h,
+  render,
+  ref,
+  onMounted,
+  isReactive,
+  toRaw,
+  nextTick,
+} from "vue";
 import { copy as copy0 } from "@/utils/copySupport";
 import { loadfun as loadfun0 } from "@/service/toolService";
 import micromark from "@/service/micromark";
@@ -207,7 +216,15 @@ async function _render() {
   let d = convert(content);
   if (!d.next) {
     messageRef.value.innerHTML = micromark(d.content);
-    if (d.lazyfun) {
+    let iframes = messageRef.value.getElementsByTagName("iframe");
+    if (iframes.length) {
+      var iframe = iframes[0];
+      iframe.addEventListener("load", function () {
+        setTimeout(() => {
+          eval(d.lazyfun)(messageRef.value, functionCall.value.args);
+        }, 500);
+      });
+    } else {
       setTimeout(() => {
         eval(d.lazyfun)(messageRef.value, functionCall.value.args);
       }, 1000);
