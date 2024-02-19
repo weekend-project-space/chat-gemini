@@ -27,3 +27,8 @@ export async function del(chatId) {
   const items = await listChatItem(chatId)
   return await chatItems.bulkDelete(items.map(o => o.id))
 }
+
+export async function delLastId(chatId, lastId) {
+  const items = await chatItems.where('chatId').equals(chatId).filter(o => o.id >= lastId).toArray()
+  return await chatItems.bulkDelete(items.map(o => o.id))
+}

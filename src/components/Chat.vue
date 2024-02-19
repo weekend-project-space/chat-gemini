@@ -105,7 +105,7 @@ const props = defineProps([
 const emit = defineEmits([
   "addItems",
   "updateItem",
-  "replaceAllItems",
+  "replaceItems",
   "selectedUserType",
 ]);
 const router = useRouter();
@@ -138,12 +138,13 @@ async function updateItem(item, v) {
 async function applyEdit(index, next) {
   cloneData.value = cloneData.value.slice(0, index + 1);
   editIndex.value = -1;
+  const lastId = cloneData.value[cloneData.value.length - 1].id;
   next();
   //重新生成
   await gen();
   // console.log(cloneData);
   //替换所有
-  emit("replaceAllItems", clone(unref(cloneData)));
+  emit("replaceItems", lastId, clone(unref(cloneData)).slice(index));
 }
 
 let genFuns = [];
@@ -159,18 +160,13 @@ function clickBtn() {
 }
 
 async function send(text) {
-  cloneData.value = props.data.map((o) => ({
-    id: o.id,
-    role: o.role,
-    content: o.content,
-  }));
   text = text || value.value;
   text = text.trim();
   const req = { role: "user", content: text, chatId: props.chatId };
   cloneData.value.push(req);
   value.value = "";
   nextTick(scrollToBottom);
-  const resItem = await gen(cloneData.value);
+  const resItem = await gen();
   emit("addItems", clone([req, resItem]));
 }
 
@@ -194,11 +190,13 @@ function initEl() {
 
 async function regenerate() {
   // 移除最后回答
+  const lastId = cloneData.value[cloneData.value.length - 1].id;
   cloneData.value.pop();
+  let index = cloneData.value.length;
   //重新生成
   await gen();
   //替换所有
-  emit("replaceAllItems", clone(unref(cloneData)));
+  emit("replaceItems", lastId, clone(unref(cloneData)).slice(index));
 }
 
 async function nextgenerate(data, enabledTools) {

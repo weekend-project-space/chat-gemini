@@ -17,7 +17,7 @@
       @selectedUserType="(v) => (userType = v)"
       @addItems="addChatItems"
       @updateItem="updateItem"
-      @replaceAllItems="replaceAllItems"
+      @replaceItems="replaceItems"
     ></Chat>
   </template>
 </template>
@@ -26,7 +26,11 @@ import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import Chat from "@/components/Chat";
 import ChatGc from "@/components/ChatGc";
-import { listChatItem, del, save as saveItem } from "@/repo/chatItemRepository";
+import {
+  listChatItem,
+  delLastId,
+  save as saveItem,
+} from "@/repo/chatItemRepository";
 import { listAll } from "@/repo/promptRepository";
 import { get, save } from "@/repo/chatRepository";
 import { findByName } from "@/repo/toolRepository";
@@ -104,16 +108,16 @@ async function addChatItems(chatItems) {
       content: msg.content,
     }))
   );
-  items.value = await listChatItem(Number.parseInt(props.id));
+
+  // items.value = await listChatItem(Number.parseInt(props.id));
 }
 
 async function updateItem(item) {
   await saveItem(item);
 }
 
-async function replaceAllItems(items) {
-  // console.log("replaceAllItems", items);
-  del(Number.parseInt(items[0].chatId));
+async function replaceItems(lastId, items) {
+  delLastId(Number.parseInt(items[0].chatId), lastId);
   addChatItems(items);
 }
 </script>
