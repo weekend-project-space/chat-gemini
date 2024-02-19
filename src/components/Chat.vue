@@ -191,6 +191,7 @@ function initEl() {
 async function regenerate() {
   // 移除最后回答
   const lastId = cloneData.value[cloneData.value.length - 1].id;
+  console.log(cloneData.value[cloneData.value.length - 1]);
   cloneData.value.pop();
   let index = cloneData.value.length;
   //重新生成

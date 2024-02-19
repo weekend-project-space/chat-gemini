@@ -95,8 +95,9 @@ const prompts = computedAsync(async () =>
 );
 
 async function addChatItems(chatItems) {
+  const items0 = props.id && (await listChatItem(Number.parseInt(props.id)));
   // 更新会话名称
-  if (items.value.length == 0) {
+  if (items0.length == 0) {
     const o = Object.assign({}, chat.value, { name: chatItems[0].content });
     await save(o);
     chat.value = o;
@@ -108,8 +109,7 @@ async function addChatItems(chatItems) {
       content: msg.content,
     }))
   );
-
-  // items.value = await listChatItem(Number.parseInt(props.id));
+  items.value = await listChatItem(Number.parseInt(props.id));
 }
 
 async function updateItem(item) {
@@ -117,7 +117,7 @@ async function updateItem(item) {
 }
 
 async function replaceItems(lastId, items) {
-  delLastId(Number.parseInt(items[0].chatId), lastId);
+  await delLastId(Number.parseInt(items[0].chatId), lastId);
   addChatItems(items);
 }
 </script>
