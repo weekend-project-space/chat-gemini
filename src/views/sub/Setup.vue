@@ -16,7 +16,7 @@
         > -->
       </v-card-text>
       <div class="mx-3">
-        <v-btn color="primary" @click="ok"> 确认进入 </v-btn>
+        <v-btn color="primary" @click="ok"> 立即激活 </v-btn>
       </div>
     </v-card>
   </div>
