@@ -291,6 +291,11 @@ function multiTurn(data) {
       item.role = i == data.length - 1 ? "user" : "model";
       if (typeof item.content.content === "string") {
         item.content = item.content.content;
+      } else if (
+        item.content.content.content &&
+        typeof item.content.content.content === "string"
+      ) {
+        item.content = item.content.content.content;
       } else {
         item.content = JSON.stringify(item.content.content);
       }
