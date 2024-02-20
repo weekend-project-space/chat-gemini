@@ -4,7 +4,7 @@
       ><v-icon icon="mdi-link"></v-icon
     ></v-avatar>
     <div>
-      <div class="name">Eywa</div>
+      <div class="name">极速ai</div>
       <div class="message">
         <div
           v-html="

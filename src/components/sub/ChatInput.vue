@@ -37,7 +37,7 @@
 
     <textarea
       class="textarea"
-      placeholder="发送消息给Eywa或#打开收藏"
+      placeholder="发送消息给极速ai或#打开收藏"
       v-model="value"
       @keyup.enter="quickEnter"
       :style="{

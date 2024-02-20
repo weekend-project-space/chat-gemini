@@ -60,12 +60,9 @@
     />
     <div class="text-center tip">
       <small
-        >如发现站点功能异常，<a href="https://zhidayingxiao.cn/to/06g6y3"
+        >如发现站点功能异常，<a href="https://zhidayingxiao.cn/to/06g6xX"
           >加微信群</a
-        >或<a
-          href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=6fc5B9qUuEANrhxu_NoFxYf0E7GRv00D&authKey=usE9I3Rs9Dca8Q3aC%2BpbUyI4WjF0Eahjku8psS5%2FyJ6axVKCTJuqqFEw8vLAGv6S&noverify=0&group_code=574528625"
-          >qq群:</a
-        >574528625截图反馈。Eywa可能会犯错误。请考虑核实重要信息。
+        >。极速ai可能会犯错误。请考虑核实重要信息。
       </small>
     </div>
   </div>

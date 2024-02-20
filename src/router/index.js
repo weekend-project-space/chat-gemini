@@ -35,11 +35,11 @@ const routes = [{
       component: () => import('@/views/sub/Discover.vue')
     }]
   }, {
-    path: 'settings',
+    path: 'setup',
     component: () => import('@/views/Settings.vue'),
     children: [{
         path: '',
-        component: () => import('@/views/sub/Setting.vue')
+        component: () => import('@/views/sub/Setup.vue')
       }
 
     ]
@@ -51,6 +51,12 @@ const router = createRouter({
   routes,
 })
 
-
+router.beforeEach((to, from, next) => {
+  if (to.path !== '/setup' && !localStorage.getItem('qaiKey')) {
+    next('/setup')
+  } else {
+    next()
+  }
+})
 
 export default router

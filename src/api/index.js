@@ -71,8 +71,8 @@
 // } = controller;
 
 export async function* reqGemini(data, signal) {
-  const API_BASE = localStorage.getItem('geminiApi') || 'https://api-gm.xfjy.in/v1beta/models/gemini-pro:streamGenerateContent?key='
-  const API = API_BASE + (localStorage.getItem('geminiKey') || 'AIzaSyDp2ZFINm52zyxLE0-Z4GXVd-_oycmwJOc')
+  const API_BASE = localStorage.getItem('qaiApi') || 'https://api-gm.xfjy.in/v1beta/models/gemini-pro:streamGenerateContent?key='
+  const API = API_BASE + localStorage.getItem('qaiKey')
   const rb = await fetch(API, {
     method: 'POST',
     body: JSON.stringify(data),

@@ -14,7 +14,7 @@
         prepend-icon="mdi-wechat"
         size="small"
         color="primary"
-        href="https://zhidayingxiao.cn/to/06g6y3"
+        href="https://zhidayingxiao.cn/to/06g6xX"
       >
         微信客服
       </v-btn>

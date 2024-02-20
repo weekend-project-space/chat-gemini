@@ -10,18 +10,15 @@
     <div class="mt-5">
       <small class="tip"
         >机器人运行可能会遇到问题，为确保您正常使用，请加入<a
-          href="https://zhidayingxiao.cn/to/06g6y3"
+          href="https://zhidayingxiao.cn/to/06g6xX"
           >微信交流群</a
-        >或<a
-          href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=6fc5B9qUuEANrhxu_NoFxYf0E7GRv00D&authKey=usE9I3Rs9Dca8Q3aC%2BpbUyI4WjF0Eahjku8psS5%2FyJ6axVKCTJuqqFEw8vLAGv6S&noverify=0&group_code=574528625"
-          >qq群:</a
-        >574528625，以便第一时间解决。</small
+        >，以便第一时间解决。</small
       >
       <div class="mt-5">
         <v-btn
           color="primary"
           prepend-icon="mdi-wechat"
-          href="https://zhidayingxiao.cn/to/06g6y3"
+          href="https://zhidayingxiao.cn/to/06g6xX"
           >点击👆进微信交流群
         </v-btn>
       </div>

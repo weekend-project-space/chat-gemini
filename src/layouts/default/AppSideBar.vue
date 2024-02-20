@@ -11,7 +11,7 @@
         <v-icon :icon="bar.icon"></v-icon>
         <span v-text="bar.name"></span>
       </v-btn>
-      <v-btn value="group" href="https://zhidayingxiao.cn/to/06g6y3">
+      <v-btn value="group" href="https://zhidayingxiao.cn/to/06g6xX">
         <v-icon icon="mdi-wechat"></v-icon>
         <span> 微信群 </span>
       </v-btn>
@@ -46,7 +46,7 @@
             prepend-icon="mdi-wechat"
             title="微信群"
             value="group"
-            href="https://zhidayingxiao.cn/to/06g6y3"
+            href="https://zhidayingxiao.cn/to/06g6xX"
           ></v-list-item>
         </v-list>
       </div>
