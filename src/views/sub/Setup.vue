@@ -11,9 +11,9 @@
       <v-card-text>
         <!-- <v-text-field label="geminiApi" v-model="geminiApi"></v-text-field> -->
         <v-text-field label="卡密" v-model="qaiKey"></v-text-field>
-        <a href="https://makersuite.google.com/app/apikey" target="_blank"
+        <!-- <a href="https://makersuite.google.com/app/apikey" target="_blank"
           >获取apiKey</a
-        >
+        > -->
       </v-card-text>
       <div class="mx-3">
         <v-btn color="primary" @click="ok"> 确认进入 </v-btn>
