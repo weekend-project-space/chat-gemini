@@ -6,6 +6,8 @@
 
 [在线预览](https://1e1.fun)
 
+[在线预览](https://1e1.fun)
+
 ## 功能
 
 - [x] chat gui support mobile （大模型的能力以对话的形式呈现，在这里开启交互）

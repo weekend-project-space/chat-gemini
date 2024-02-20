@@ -1,7 +1,12 @@
 <template>
   <template v-if="chat && chat.id">
     <ChatGc
-      v-if="items && items.length && items[0].content.indexOf('(') == 0"
+      v-if="
+        items &&
+        items.length &&
+        items[0].content &&
+        items[0].content.indexOf('(') == 0
+      "
       :name="items[0].name"
       :prompt="items[0].content"
     />
@@ -17,7 +22,7 @@
       @selectedUserType="(v) => (userType = v)"
       @addItems="addChatItems"
       @updateItem="updateItem"
-      @replaceAllItems="replaceAllItems"
+      @replaceItems="replaceItems"
     ></Chat>
   </template>
 </template>
@@ -26,7 +31,11 @@ import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import Chat from "@/components/Chat";
 import ChatGc from "@/components/ChatGc";
-import { listChatItem, del, save as saveItem } from "@/repo/chatItemRepository";
+import {
+  listChatItem,
+  delLastId,
+  save as saveItem,
+} from "@/repo/chatItemRepository";
 import { listAll } from "@/repo/promptRepository";
 import { get, save } from "@/repo/chatRepository";
 import { findByName } from "@/repo/toolRepository";
@@ -91,8 +100,9 @@ const prompts = computedAsync(async () =>
 );
 
 async function addChatItems(chatItems) {
+  const items0 = props.id && (await listChatItem(Number.parseInt(props.id)));
   // 更新会话名称
-  if (items.value.length == 0) {
+  if (items0.length == 0) {
     const o = Object.assign({}, chat.value, { name: chatItems[0].content });
     await save(o);
     chat.value = o;
@@ -111,9 +121,8 @@ async function updateItem(item) {
   await saveItem(item);
 }
 
-async function replaceAllItems(items) {
-  // console.log("replaceAllItems", items);
-  del(Number.parseInt(items[0].chatId));
+async function replaceItems(lastId, items) {
+  await delLastId(Number.parseInt(items[0].chatId), lastId);
   addChatItems(items);
 }
 </script>

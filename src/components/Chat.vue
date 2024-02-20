@@ -4,6 +4,7 @@
     :class="{ hiddenoverflow: !loading && cloneData && cloneData.length == 0 }"
     ref="chatPanelRef"
   >
+    <ChatHeader v-model="tools" />
     <div class="warp">
       <template v-for="(item, i) in cloneData" :key="chatId + '@' + item.id">
         <ChatReqContent
@@ -76,7 +77,6 @@ import {
   ref,
   watch,
   unref,
-  toValue,
   onUnmounted,
   toRaw,
 } from "vue";
@@ -85,6 +85,7 @@ import { llm } from "@/service/llmAdapter";
 import { goChat } from "@/utils/chatSupport";
 import { copy as copy0 } from "@/utils/copySupport";
 import alert from "@/compose/useAlert";
+import ChatHeader from "./sub/ChatHeader.vue";
 import ChatReqContent from "./sub/ChatReqMsg.vue";
 import ChatResContent from "./sub/ChatResMsg.vue";
 import ChatFunContent from "./sub/ChatFunMsg.vue";
@@ -104,7 +105,7 @@ const props = defineProps([
 const emit = defineEmits([
   "addItems",
   "updateItem",
-  "replaceAllItems",
+  "replaceItems",
   "selectedUserType",
 ]);
 const router = useRouter();
@@ -137,12 +138,13 @@ async function updateItem(item, v) {
 async function applyEdit(index, next) {
   cloneData.value = cloneData.value.slice(0, index + 1);
   editIndex.value = -1;
+  const lastId = cloneData.value[cloneData.value.length - 1].id;
   next();
   //重新生成
   await gen();
   // console.log(cloneData);
   //替换所有
-  emit("replaceAllItems", clone(unref(cloneData)));
+  emit("replaceItems", lastId, clone(unref(cloneData)).slice(index));
 }
 
 let genFuns = [];
@@ -158,18 +160,13 @@ function clickBtn() {
 }
 
 async function send(text) {
-  cloneData.value = props.data.map((o) => ({
-    id: o.id,
-    role: o.role,
-    content: o.content,
-  }));
   text = text || value.value;
   text = text.trim();
   const req = { role: "user", content: text, chatId: props.chatId };
   cloneData.value.push(req);
   value.value = "";
   nextTick(scrollToBottom);
-  const resItem = await gen(cloneData.value);
+  const resItem = await gen();
   emit("addItems", clone([req, resItem]));
 }
 
@@ -193,11 +190,13 @@ function initEl() {
 
 async function regenerate() {
   // 移除最后回答
+  const lastId = cloneData.value[cloneData.value.length - 1].id;
   cloneData.value.pop();
+  let index = cloneData.value.length;
   //重新生成
   await gen();
   //替换所有
-  emit("replaceAllItems", clone(unref(cloneData)));
+  emit("replaceItems", lastId, clone(unref(cloneData)).slice(index));
 }
 
 async function nextgenerate(data, enabledTools) {
@@ -292,6 +291,11 @@ function multiTurn(data) {
       item.role = i == data.length - 1 ? "user" : "model";
       if (typeof item.content.content === "string") {
         item.content = item.content.content;
+      } else if (
+        item.content.content.content &&
+        typeof item.content.content.content === "string"
+      ) {
+        item.content = item.content.content.content;
       } else {
         item.content = JSON.stringify(item.content.content);
       }

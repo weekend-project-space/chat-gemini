@@ -216,7 +216,15 @@ async function _render() {
   let d = convert(content);
   if (!d.next) {
     messageRef.value.innerHTML = micromark(d.content);
-    if (d.lazyfun) {
+    let iframes = messageRef.value.getElementsByTagName("iframe");
+    if (iframes.length) {
+      var iframe = iframes[0];
+      iframe.addEventListener("load", function () {
+        setTimeout(() => {
+          eval(d.lazyfun)(messageRef.value, functionCall.value.args);
+        }, 500);
+      });
+    } else {
       setTimeout(() => {
         eval(d.lazyfun)(messageRef.value, functionCall.value.args);
       }, 1000);

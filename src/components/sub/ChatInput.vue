@@ -27,7 +27,7 @@
             <v-checkbox
               :model-value="tools"
               @update:model-value="(v) => emit('update:tools', v)"
-              label="开启插件（链接网络及生成思维导图）"
+              label="开启插件（连接网络及生成思维导图）"
               hide-details
             ></v-checkbox>
           </v-card>
