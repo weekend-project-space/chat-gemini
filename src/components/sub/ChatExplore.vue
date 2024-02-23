@@ -56,9 +56,12 @@ const emit = defineEmits(["update:modelValue", "click"]);
 }
 .explore-warp {
   position: absolute;
-  bottom: 1rem;
+  bottom: 0;
+  padding-bottom: 1rem;
   animation: up 3s;
   max-width: calc(var(--v-warp-widht) - 2rem);
+  background-color: rgb(var(--v-theme-background));
+  z-index: 10;
 }
 .explore-list {
   display: grid;
