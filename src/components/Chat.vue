@@ -1,29 +1,33 @@
 <template>
+
   <div
     class="chat-warp"
-    :class="{ hiddenoverflow: !loading && cloneData && cloneData.length == 0 }"
+    :class="{ hiddenoverflow: !loading && cloneData && cloneData.length === 0 }"
+    :style="{ height: clientHeight - 26 - (inputRef?inputRef.height:54)+ 'px' }"
     ref="chatPanelRef"
+    v-show="(clientHeight - 26 - (inputRef?inputRef.height: 54))>0"
   >
     <ChatHeader v-model="tools" />
+
     <div class="warp">
       <template v-for="(item, i) in cloneData" :key="chatId + '@' + item.id">
         <ChatReqContent
-          v-if="item.role == 'user'"
+          v-if="item.role === 'user'"
           :index="i"
           :modelValue="item"
           @update:modelValue="(v) => (cloneData[i] = v)"
           @apply-edit="applyEdit"
         />
         <ChatResContent
-          v-else-if="item.role == 'model'"
-          :isLast="cloneData.length - 1 == i"
+          v-else-if="item.role === 'model'"
+          :isLast="cloneData.length - 1 === i"
           :generating="generating"
           :value="item"
           @regenerate="regenerate"
         />
         <ChatFunContent
-          v-else-if="item.role == 'functionCall'"
-          :isLast="cloneData.length - 1 == i"
+          v-else-if="item.role === 'functionCall'"
+          :isLast="cloneData.length - 1 === i"
           :generating="generating"
           :loadfun="loadfun"
           :modelValue="item.content.content"
@@ -33,7 +37,7 @@
           @nextgenerate="nextgenerate"
         />
       </template>
-      <template v-if="!loading && cloneData && cloneData.length == 0">
+      <template v-if="!loading && cloneData && cloneData.length === 0">
         <ChatEmpty />
         <ChatExplore
           @update:modelValue="(v) => emit('selectedUserType', v)"
@@ -42,7 +46,12 @@
           @click="(item) => goChat(item, router)"
         />
       </template>
-      <div v-if="regeneratebtn" class="text-align mt-5">
+      <div v-if="generating" class="text-align mt-3">
+        <v-btn prepend-icon="mdi-stop-circle-outline"   @click="clickBtn"
+        >停止生成</v-btn
+        >
+      </div>
+      <div v-else-if="regenerateBtn" class="text-align mt-3">
         <v-btn prepend-icon="mdi-replay" color="primary" @click="regenerate"
           >重新生成</v-btn
         >
@@ -51,6 +60,7 @@
   </div>
   <div class="warp">
     <ChatInput
+      ref="inputRef"
       :generating="generating"
       :prompts="prompts"
       @send="send"
@@ -116,7 +126,9 @@ const chatPanelRef = ref();
 const cloneData = ref([]);
 const editIndex = ref(-1);
 const tools = ref(false);
-const regeneratebtn = ref(false);
+const regenerateBtn = ref(false);
+const clientHeight = ref(window.document.body.clientHeight);
+
 let controller = new AbortController();
 
 const scrollToBottom = () => {
@@ -165,7 +177,7 @@ async function send(text) {
   const req = { role: "user", content: text, chatId: props.chatId };
   cloneData.value.push(req);
   value.value = "";
-  nextTick(scrollToBottom);
+  await nextTick(scrollToBottom);
   const resItem = await gen();
   emit("addItems", clone([req, resItem]));
 }
@@ -173,8 +185,7 @@ async function send(text) {
 function initEl() {
   generating.value = false;
   cloneData.value = props.data;
-  inputRef.value && inputRef.value.focus();
-
+  inputRef.value.inputRef && inputRef.value.inputRef.focus();
   nextTick(() => {
     scrollToBottom();
     setTimeout(() => {
@@ -205,7 +216,7 @@ async function nextgenerate(data, enabledTools) {
 }
 
 async function gen(data, enabledTools) {
-  regeneratebtn.value = false;
+  regenerateBtn.value = false;
   genFuns = [];
   if (generating.value) {
     alert({ text: "请等回复完后再重试" });
@@ -258,13 +269,13 @@ async function gen(data, enabledTools) {
       alert({ text: "点击左下角设置您的key", type: "warn" });
     } else {
       // alert({ text: "抱歉，请重新试下或换个问法", type: "warn" });
-      regeneratebtn.value = true;
+      regenerateBtn.value = true;
     }
     resItem.content = "抱歉，请重新试下或换个问法";
     return new Promise((_, rej) => {
       setTimeout(() => {
         generating.value = false;
-        inputRef.value && inputRef.value.focus();
+        inputRef.value.inputRef && inputRef.value.inputRef.focus();
       }, 500);
 
       rej(e.toString());
@@ -286,9 +297,9 @@ function multiTurn(data) {
   data = data || clone(cloneData.value);
   for (let i in data) {
     let item = data[i];
-    if (item.role == "functionCall") {
+    if (item.role === "functionCall") {
       // 最后一条角色转化为user
-      item.role = i == data.length - 1 ? "user" : "model";
+      item.role = i === data.length - 1 ? "user" : "model";
       if (typeof item.content.content === "string") {
         item.content = item.content.content;
       } else if (
@@ -300,7 +311,7 @@ function multiTurn(data) {
         item.content = JSON.stringify(item.content.content);
       }
     }
-    if (item.role == key) {
+    if (item.role === key) {
       array[array.length - 1].parts.push({
         text: item.content,
       });
@@ -335,7 +346,7 @@ async function toChat(item) {
       content: item.prompt,
     },
   ]);
-  router.push("/chats/" + chatId);
+  await router.push("/chats/" + chatId);
 }
 
 function clone(o) {
@@ -364,6 +375,10 @@ onMounted(() => {
   initFun = setTimeout(() => {
     initEl();
   }, 30);
+
+  window.addEventListener('resize',()=>{
+    clientHeight.value = window.document.body.clientHeight;
+  });
 });
 
 onUnmounted(() => {
