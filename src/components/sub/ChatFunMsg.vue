@@ -265,7 +265,7 @@ onMounted(() => {
     display: flex;
     justify-content: flex-start;
     min-height: 28px;
-    // margin-top: 0.5rem;
+     margin-top: 0.5rem;
   }
   .actions {
     // margin: 0 auto;

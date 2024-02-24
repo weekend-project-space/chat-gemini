@@ -104,7 +104,7 @@ function changeContent(content) {
     display: flex;
     justify-content: flex-start;
     min-height: 28px;
-    // margin-top: 0.5rem;
+     margin-top: 0.5rem;
   }
   .textarea0 {
     //width: calc(100% - 1rem);

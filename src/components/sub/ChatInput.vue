@@ -119,6 +119,7 @@ defineExpose({ value, inputRef, height })
 </script>
 <style lang="less" scoped>
 .input-warp {
+  box-sizing: border-box;
   bottom: -70px;
   display: grid;
   grid-template-columns: 36px 1fr 36px;

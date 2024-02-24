@@ -29,6 +29,7 @@ defineProps(["text", "type"]);
     0px 2px 2px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
     0px 1px 5px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.12));
   animation: down 5s infinite;
+  z-index: 100;
 }
 .alert.success {
   border-left: 5px solid rgb(var(--v-theme-primary));

@@ -377,7 +377,8 @@ onMounted(() => {
   }, 30);
 
   window.addEventListener('resize',()=>{
-    clientHeight.value = window.document.body.clientHeight;
+    console.log('resize')
+    clientHeight.value = window.innerHeight;
   });
 });
 
@@ -401,7 +402,7 @@ onUnmounted(() => {
     background: rgba(var(--v-theme-on-background), 0.3);
   }
   .warp {
-    padding: 2rem 1rem;
+    //padding: 2rem 1rem;
   }
 }
 
