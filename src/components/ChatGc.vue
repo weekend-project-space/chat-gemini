@@ -1,8 +1,9 @@
 <template>
-  <div class="warp">
-    <div class="d-flex align-center">
-      <h2 class="my-5" v-text="name"></h2>
-
+  <div class="grid py-5">
+    <div class="message">
+      <div class="d-flex align-center">
+        <h2 class="my-5" v-text="name"></h2>
+        <!-- 
       <v-tooltip text="新建收藏" location="bottom">
         <template v-slot:activator="{ props }">
           <v-btn
@@ -25,83 +26,87 @@
             @click="share"
           ></v-btn>
         </template>
-      </v-tooltip>
-    </div>
-    <template v-for="item in d.components">
-      <v-text-field
-        :key="item.name + 'input'"
-        v-if="item.type == 'input'"
-        :label="item.name"
-        v-model="d.data[item.name]"
-      ></v-text-field>
-      <v-textarea
-        :key="item.name + 'textarea'"
-        v-else-if="item.type == 'textarea'"
-        :label="item.name"
-        v-model="d.data[item.name]"
-      ></v-textarea>
-      <v-text-field
-        :key="item.name + 'number'"
-        v-else-if="item.type == 'number'"
-        :label="item.name"
-        type="number"
-        v-model="d.data[item.name]"
-      ></v-text-field>
-      <v-select
-        :key="item.name + 'select'"
-        v-else-if="item.type == 'select'"
-        :label="item.name"
-        :items="item.value"
-        v-model="d.data[item.name]"
-      ></v-select>
-      <v-radio-group
-        :key="item.name + 'radio'"
-        v-else-if="item.type == 'radio'"
-        :label="item.name"
-        v-model="d.data[item.name]"
-      >
-        <v-radio
-          v-for="v in item.value"
-          :key="v"
-          :label="v"
-          :value="v"
-        ></v-radio>
-      </v-radio-group>
-      <component v-else :key="item.name + 'comp'" :is="item.type">{{
-        item.value
-      }}</component>
-    </template>
+      </v-tooltip> -->
+      </div>
+      <template v-for="item in d.components">
+        <v-text-field
+          :key="item.name + 'input'"
+          v-if="item.type == 'input'"
+          :label="item.name"
+          v-model="d.data[item.name]"
+        ></v-text-field>
+        <v-textarea
+          :key="item.name + 'textarea'"
+          v-else-if="item.type == 'textarea'"
+          :label="item.name"
+          v-model="d.data[item.name]"
+        ></v-textarea>
+        <v-text-field
+          :key="item.name + 'number'"
+          v-else-if="item.type == 'number'"
+          :label="item.name"
+          type="number"
+          v-model="d.data[item.name]"
+        ></v-text-field>
+        <v-select
+          :key="item.name + 'select'"
+          v-else-if="item.type == 'select'"
+          :label="item.name"
+          :items="item.value"
+          v-model="d.data[item.name]"
+        ></v-select>
+        <v-radio-group
+          :key="item.name + 'radio'"
+          v-else-if="item.type == 'radio'"
+          :label="item.name"
+          v-model="d.data[item.name]"
+        >
+          <v-radio
+            v-for="v in item.value"
+            :key="v"
+            :label="v"
+            :value="v"
+          ></v-radio>
+        </v-radio-group>
+        <component v-else :key="item.name + 'comp'" :is="item.type">{{
+          item.value
+        }}</component>
+      </template>
 
-    <v-btn
-      block
-      :icon="generating ? 'mdi-stop-circle-outline' : 'mdi-send-outline'"
-      rounded="lg"
-      :disabled="!d.hasAllValue"
-      color="primary"
-      @click="clickBtn"
-    >
-    </v-btn>
-    <div class="message my-5" v-if="res">
-      <div
-        v-html="
-          micromark(
-            res.content + (generating ? '<span class=generating></span>' : '')
-          )
-        "
-      ></div>
-      <div class="actions-warp mt-3" v-if="!generating">
-        <v-tooltip text="复制" location="bottom">
-          <template v-slot:activator="{ props }">
-            <v-btn
-              v-bind="props"
-              icon="mdi-content-copy"
-              variant="text"
-              size="small"
-              @click="copy(micromark(res.content).replace(/<[^>]*>/g, ''))"
-            ></v-btn>
-          </template>
-        </v-tooltip>
-        <v-tooltip text="开始对话" location="bottom">
+      <v-btn
+        block
+        :icon="generating ? 'mdi-stop-circle-outline' : 'mdi-send-outline'"
+        rounded="lg"
+        :disabled="!d.hasAllValue"
+        color="primary"
+        @click="clickBtn"
+      >
+      </v-btn>
+    </div>
+    <div class="message">
+      <label for="">生成文案</label>
+      <template v-if="res">
+        <div
+          class="ma-5"
+          v-html="
+            micromark(
+              res.content + (generating ? '<span class=generating></span>' : '')
+            )
+          "
+        ></div>
+        <div class="actions-warp mt-3" v-if="!generating">
+          <v-tooltip text="复制" location="bottom">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                v-bind="props"
+                icon="mdi-content-copy"
+                variant="text"
+                size="small"
+                @click="copy(micromark(res.content).replace(/<[^>]*>/g, ''))"
+              ></v-btn>
+            </template>
+          </v-tooltip>
+          <!-- <v-tooltip text="开始对话" location="bottom">
           <template v-slot:activator="{ props }">
             <v-btn
               v-bind="props"
@@ -111,8 +116,9 @@
               @click="goChat"
             ></v-btn>
           </template>
-        </v-tooltip>
-      </div>
+        </v-tooltip> -->
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -299,10 +305,11 @@ function copy(text) {
 </script>
 <style lang="less" scoped>
 .message {
-  background: rgba(var(--v-theme-code), 0.5);
+  background: rgb(255, 255, 255);
   padding: 1rem;
   border-radius: 1rem;
   border: 1px solid rgb(var(--v-theme-code));
+  min-height: calc(100vh - 2.5rem);
   .actions-warp {
     .v-btn--icon.v-btn--density-default {
       width: calc(var(--v-btn-height));
@@ -312,5 +319,19 @@ function copy(text) {
       margin: 0 0.5rem;
     }
   }
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-gap: 1rem;
+}
+</style>
+<style>
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 20px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(var(--v-theme-on-background), 0.3);
 }
 </style>

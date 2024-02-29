@@ -6,7 +6,7 @@ import {
 
 const routes = [{
   path: '',
-  component: () => import('@/layouts/default/Default.vue'),
+  component: () => import('@/layouts/easy/Index.vue'),
   redirect: '/chats',
   children: [{
     path: 'chats',
