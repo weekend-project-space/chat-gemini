@@ -1,8 +1,8 @@
 <template>
-  <div class="grid py-5">
+  <div class="pa-3" :class="mobile ? 'grid-sm' : 'grid'">
     <div class="message">
       <div class="d-flex align-center">
-        <h2 class="my-5" v-text="name"></h2>
+        <h5 class="mb-5" v-text="name"></h5>
         <!-- 
       <v-tooltip text="新建收藏" location="bottom">
         <template v-slot:activator="{ props }">
@@ -84,16 +84,18 @@
       </v-btn>
     </div>
     <div class="message">
-      <label for="">生成文案</label>
+      <h5 for=""><v-icon>mdi-magic-staff</v-icon>生成文案</h5>
       <template v-if="res">
-        <div
-          class="ma-5"
-          v-html="
-            micromark(
-              res.content + (generating ? '<span class=generating></span>' : '')
-            )
-          "
-        ></div>
+        <div class="message-warp pa-5 mt-3">
+          <div
+            v-html="
+              micromark(
+                res.content +
+                  (generating ? '<span class=generating></span>' : '')
+              )
+            "
+          ></div>
+        </div>
         <div class="actions-warp mt-3" v-if="!generating">
           <v-tooltip text="复制" location="bottom">
             <template v-slot:activator="{ props }">
@@ -124,6 +126,7 @@
 </template>
 <script setup>
 import { ref, nextTick, computed, watch } from "vue";
+import { useDisplay } from "vuetify";
 import { useInter } from "@/compose/promptInter";
 import { llm } from "@/service/llmAdapter";
 import { copy as copy0 } from "@/utils/copySupport";
@@ -137,6 +140,7 @@ const router = useRouter();
 const d = useInter(props);
 const generating = ref(false);
 const cloneData = ref([]);
+const { mobile } = useDisplay();
 const res = computed(() =>
   cloneData.value.length > 1 ? cloneData.value[1] : ""
 );
@@ -309,7 +313,7 @@ function copy(text) {
   padding: 1rem;
   border-radius: 1rem;
   border: 1px solid rgb(var(--v-theme-code));
-  min-height: calc(100vh - 2.5rem);
+  min-height: calc(100vh - 1.5rem - 56px);
   .actions-warp {
     .v-btn--icon.v-btn--density-default {
       width: calc(var(--v-btn-height));
@@ -320,10 +324,22 @@ function copy(text) {
     }
   }
 }
+.grid-sm {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 1rem;
+  .message {
+    min-height: 0;
+  }
+}
 .grid {
   display: grid;
   grid-template-columns: 1fr 2fr;
   grid-gap: 1rem;
+}
+.message-warp {
+  background: #f9f9f9;
+  border-radius: 0.5rem;
 }
 </style>
 <style>
