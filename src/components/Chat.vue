@@ -1,11 +1,12 @@
 <template>
-
   <div
     class="chat-warp"
     :class="{ hiddenoverflow: !loading && cloneData && cloneData.length === 0 }"
-    :style="{ height: clientHeight - 26 - (inputRef?inputRef.height:54)+ 'px' }"
+    :style="{
+      height: clientHeight - 26 - (inputRef ? inputRef.height : 54) + 'px',
+    }"
     ref="chatPanelRef"
-    v-show="(clientHeight - 26 - (inputRef?inputRef.height: 54))>0"
+    v-show="clientHeight - 26 - (inputRef ? inputRef.height : 54) > 0"
   >
     <ChatHeader v-model="tools" />
 
@@ -47,8 +48,8 @@
         />
       </template>
       <div v-if="generating" class="text-align mt-3">
-        <v-btn prepend-icon="mdi-stop-circle-outline"   @click="clickBtn"
-        >停止生成</v-btn
+        <v-btn prepend-icon="mdi-stop-circle-outline" @click="clickBtn"
+          >停止生成</v-btn
         >
       </div>
       <div v-else-if="regenerateBtn" class="text-align mt-3">
@@ -261,7 +262,6 @@ async function gen(data, enabledTools) {
       }
     }
   } catch (e) {
-    console.error(e);
     const eText = e.toString();
     if (eText.includes("The user aborted a request")) {
       alert({ text: "取消成功" });
@@ -271,7 +271,7 @@ async function gen(data, enabledTools) {
       // alert({ text: "抱歉，请重新试下或换个问法", type: "warn" });
       regenerateBtn.value = true;
     }
-    resItem.content = "抱歉，请重新试下或换个问法";
+    resItem.content = eText || "抱歉，请重新试下或换个问法";
     return new Promise((_, rej) => {
       setTimeout(() => {
         generating.value = false;
@@ -376,8 +376,8 @@ onMounted(() => {
     initEl();
   }, 30);
 
-  window.addEventListener('resize',()=>{
-    console.log('resize')
+  window.addEventListener("resize", () => {
+    console.log("resize");
     clientHeight.value = window.innerHeight;
   });
 });

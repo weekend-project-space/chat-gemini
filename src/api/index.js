@@ -71,13 +71,15 @@
 // } = controller;
 
 export async function* reqGemini(data, signal) {
-  const API_BASE = localStorage.getItem('geminiApi') || 'https://api-gm.xfjy.in/v1beta/models/gemini-pro:streamGenerateContent?key='
-  const API = API_BASE + (localStorage.getItem('geminiKey') || 'AIzaSyDp2ZFINm52zyxLE0-Z4GXVd-_oycmwJOc')
+  const API_BASE = 'http://localhost:3390/v1/completions' // localStorage.getItem('geminiApi') || 'https://api-gm.xfjy.in/v1beta/models/gemini-pro:streamGenerateContent?key='
+  const API = API_BASE // + (localStorage.getItem('geminiKey') || 'AIzaSyDp2ZFINm52zyxLE0-Z4GXVd-_oycmwJOc')
   const rb = await fetch(API, {
     method: 'POST',
     body: JSON.stringify(data),
     signal
-  }).then((response) => response.body);
+  }).then(res => res.status < 300 ? res : Promise.reject(res.text())).then((response) => response.body).catch(async e => {
+    throw new Error(await e)
+  });
   const reader = rb.getReader();
   const textDecoder = new TextDecoder();
   let hasNext = true
