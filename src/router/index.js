@@ -28,7 +28,7 @@ const routes = [{
       component: () => import('@/views/sub/Prompts.vue')
     }, ]
   }, {
-    path: 'discover',
+    path: 'app',
     component: () => import('@/views/Discover.vue'),
     children: [{
       path: ':id',

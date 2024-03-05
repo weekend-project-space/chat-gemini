@@ -33,7 +33,7 @@
       :value="item.name"
       :subtitle="item.desc"
       :key="item.key"
-      :to="'/discover/' + item.key"
+      :to="'/app/' + item.key"
     >
     </v-list-item>
   </v-list>
