@@ -4,7 +4,7 @@
       ><v-icon icon="mdi-link"></v-icon
     ></v-avatar>
     <div class="chat-item-message">
-      <div class="name">Eywa</div>
+      <div class="name">极速AI</div>
       <div class="message"  v-html="
             micromark(
               item.content +

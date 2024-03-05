@@ -71,11 +71,16 @@
 // } = controller;
 
 export async function* reqGemini(data, signal) {
-  const API_BASE = localStorage.getItem('qaiApi') || 'https://api-gm.xfjy.in/v1beta/models/gemini-pro:streamGenerateContent?key='
-  const API = API_BASE + localStorage.getItem('qaiKey')
+  // const API_BASE = localStorage.getItem('qaiApi') || 'https://api-gm.xfjy.in/v1beta/models/gemini-pro:streamGenerateContent?key='
+  const API = 'https://api.jisuai.cn/v1/completions'
+
   const rb = await fetch(API, {
     method: 'POST',
     body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('qaiKey') || ''
+    },
     signal
   }).then(res => res.status < 300 ? res : Promise.reject(res.text())).then((response) => response.body).catch(async e => {
     throw new Error(await e)

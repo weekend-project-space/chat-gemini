@@ -3,10 +3,19 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue";
-onMounted(() => {
+import { onMounted, provide, ref } from "vue";
+import { getSurplus } from "@/api/surplus.js";
+const surplusText = ref("");
+onMounted(async () => {
   document.body.removeChild(document.getElementById("loading"));
+  document.addEventListener("llmEnd", async () => {
+    surplusText.value = await getSurplus();
+  });
+  if (localStorage.getItem("qaiKey")) {
+    surplusText.value = await getSurplus();
+  }
 });
+provide("surplusText", surplusText);
 </script>
 <style lang="less">
 .warp-sm {
@@ -121,7 +130,8 @@ html {
 }
 .message {
   img,
-  pre ,code{
+  pre,
+  code {
     max-width: 100%;
     overflow-y: auto;
   }

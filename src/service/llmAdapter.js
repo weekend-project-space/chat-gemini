@@ -67,6 +67,7 @@ export async function* llm(data, signal = controller.signal, enabledTools = fals
       }]
     }
     for await (const line of (await reqGemini(data, signal))) {
+      // console.log(line)
       if (line.includes('{') || line.includes('}')) {
         const start = line.indexOf('{')
         const end = line.lastIndexOf('}')
@@ -101,5 +102,7 @@ export async function* llm(data, signal = controller.signal, enabledTools = fals
 
       }
     }
+    const sendEvent = new Event("llmEnd")
+    document.dispatchEvent(sendEvent)
   }
 }

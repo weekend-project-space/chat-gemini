@@ -41,13 +41,15 @@
       </v-list>
       <div class="bar-footer">
         <v-divider></v-divider>
+
         <v-list density="compact" nav>
-          <v-list-item
+          <v-list-item :title="surplusText"></v-list-item>
+          <!-- <v-list-item
             prepend-icon="mdi-wechat"
             title="微信群"
             value="group"
             href="https://zhidayingxiao.cn/to/06g6xX"
-          ></v-list-item>
+          ></v-list-item> -->
         </v-list>
       </div>
     </v-navigation-drawer>
@@ -59,13 +61,17 @@
 <script setup>
 import { useDisplay } from "vuetify";
 import { useRoute } from "vue-router";
+import { inject } from "vue";
 const route = useRoute();
 const { mobile } = useDisplay();
+
 const bars = [
   { icon: "mdi-message-outline", name: "对话", value: "/chats" },
   { icon: "mdi-star-outline", name: "收藏", value: "/prompts" },
   { icon: "mdi-compass-outline", name: "应用", value: "/app" },
 ];
+
+const surplusText = inject("surplusText");
 </script>
 <style lang="less" scoped>
 .bar-footer {
