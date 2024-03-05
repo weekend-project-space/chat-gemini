@@ -8,7 +8,6 @@
             :icon="tools ? 'mdi-puzzle-star-outline' : 'mdi-star-outline'"
             v-bind="menu"
             variant="text"
-            size="small"
           ></v-btn>
         </template>
         <v-list density="compact" nav class="extmenu">
@@ -40,31 +39,33 @@
       placeholder="发送消息给极速ai或#打开收藏"
       v-model="value"
       @keyup.enter="quickEnter"
-      :style="{
-        height: value ? inputRef.scrollHeight + 'px' : '2rem',
-      }"
       ref="inputRef"
     />
-    <v-btn
-      :icon="generating ? 'mdi-stop-circle-outline' : 'mdi-apple-keyboard-caps'"
-      variant="text"
-      size="small"
-      :disabled="!value && !generating"
-      @click="clickBtn"
-    ></v-btn>
+    <v-tooltip :text="generating ? '停止生成' : '发送消息'" location="top">
+      <template v-slot:activator="{ props }">
+      <v-btn
+        v-bind="props"
+        :icon="generating ? ' mdi-stop-circle' : 'mdi-arrow-up-box'"
+        variant="text"
+        :disabled="!value && !generating"
+        @click="clickBtn"
+      ></v-btn>
+      </template>
+    </v-tooltip>
   </div>
 </template>
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import {nextTick, onMounted, ref, watch} from "vue";
 
 const props = defineProps(["prompts", "generating", "tools"]);
 const emit = defineEmits(["send", "stop", "tochat", "update:tools"]);
+
 
 const inputRef = ref();
 const value = ref("");
 
 function quickEnter(e) {
-  if (e.keyCode == 13 && !e.shiftKey && !props.generating) {
+  if (e.keyCode === 13 && !e.shiftKey && !props.generating) {
     emit("send", value.value);
     value.value = "";
   }
@@ -96,26 +97,34 @@ function clickPrompt(item) {
     }, 100);
   }
 }
-
+const  height = ref(54);
 onMounted(() => {
   watch(value, (v) => {
-    if (v == "#") {
+    if (v === "#") {
       document.getElementById("extBtn").click();
       setTimeout(() => {
         document.getElementsByClassName("extmenu")[0].focus();
       }, 300);
       extShow = true;
     }
+    nextTick(()=>{
+      inputRef.value.style.height = "2rem"; //先重置为auto
+      inputRef.value.style.height = inputRef.value.scrollHeight + "px";
+      height.value = inputRef.value.scrollHeight + 18;
+    })
   });
 });
+
+defineExpose({ value, inputRef, height })
 </script>
 <style lang="less" scoped>
 .input-warp {
+  box-sizing: border-box;
   bottom: -70px;
   display: grid;
-  grid-template-columns: 40px 1fr 40px;
+  grid-template-columns: 36px 1fr 36px;
   grid-gap: 0.5rem;
-  align-items: center;
+  align-items: flex-end;
   background: rgb(var(--v-theme-background));
   padding: 0.5rem;
   border-radius: 1rem;
@@ -126,9 +135,10 @@ onMounted(() => {
   .textarea {
     outline: none;
     display: block;
-    height: 2rem;
-    max-height: 12rem;
-    line-height: 2rem;
+    height: 36px;
+    min-height: 36px;
+    //max-height: 12rem;
+    line-height: 36px;
     resize: none;
 
     overflow: auto;
@@ -140,5 +150,9 @@ onMounted(() => {
       background: rgba(var(--v-theme-on-background), 0.3);
     }
   }
+}
+.v-btn--icon.v-btn--density-default {
+  width: calc(var(--v-btn-height) );
+  height: calc(var(--v-btn-height));
 }
 </style>

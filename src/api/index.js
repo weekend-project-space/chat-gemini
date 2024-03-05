@@ -77,7 +77,9 @@ export async function* reqGemini(data, signal) {
     method: 'POST',
     body: JSON.stringify(data),
     signal
-  }).then((response) => response.body);
+  }).then(res => res.status < 300 ? res : Promise.reject(res.text())).then((response) => response.body).catch(async e => {
+    throw new Error(await e)
+  });
   const reader = rb.getReader();
   const textDecoder = new TextDecoder();
   let hasNext = true

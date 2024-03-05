@@ -104,11 +104,13 @@ function changeContent(content) {
     display: flex;
     justify-content: flex-start;
     min-height: 28px;
-    // margin-top: 0.5rem;
+     margin-top: 0.5rem;
   }
   .textarea0 {
-    width: 100%;
+    //width: calc(100% - 1rem);
     line-height: 2rem;
+    word-wrap: break-word;
+    white-space: pre-wrap;
   }
   .textarea {
     display: block;

@@ -64,7 +64,7 @@ const { mobile } = useDisplay();
 const bars = [
   { icon: "mdi-message-outline", name: "对话", value: "/chats" },
   { icon: "mdi-star-outline", name: "收藏", value: "/prompts" },
-  { icon: "mdi-compass-outline", name: "发现", value: "/discover" },
+  { icon: "mdi-compass-outline", name: "应用", value: "/app" },
 ];
 </script>
 <style lang="less" scoped>
