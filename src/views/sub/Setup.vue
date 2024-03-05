@@ -33,8 +33,10 @@ const qaiKey = ref(localStorage.getItem("qaiKey"));
 // );
 async function ok() {
   localStorage.setItem("qaiKey", qaiKey.value);
-  const sendEvent = new Event("llmEnd");
-  document.dispatchEvent(sendEvent);
+  setTimeout(() => {
+    const sendEvent = new Event("llmEnd");
+    document.dispatchEvent(sendEvent);
+  }, 100);
   // localStorage.setItem("geminiApi", geminiApi.value);
   await confirm({ text: "保存成功, 立刻开始对话?" });
   router.push("/chats");
