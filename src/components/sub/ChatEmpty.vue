@@ -20,9 +20,9 @@
       <div class="mt-5">
         <v-btn
           color="primary"
-          prepend-icon="mdi-wechat"
-          href="https://zhidayingxiao.cn/to/06g6y3"
-          >点击👆进微信交流群
+          prepend-icon="mdi-arrow-up-circle"
+          href="https://item.taobao.com/item.htm?ft=t&id=771495870230&spm=a21dvs.23580594.0.0.47b33d0dHMMXEU"
+          >点击👆购买专业版
         </v-btn>
       </div>
     </div>
