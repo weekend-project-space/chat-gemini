@@ -1,8 +1,8 @@
 <template>
   <div class="warp empty">
     <div class="">
-      <div class="logo-warp mx-auto mb-5">
-        <v-icon icon="mdi-link" size="60"></v-icon>
+      <div class="logo-warp mx-auto">
+        <img src="/logo.png" style="width: 80px" alt="" />
       </div>
     </div>
 
@@ -15,8 +15,15 @@
           >获取apiKey</a
         > -->
       </v-card-text>
-      <div class="mx-3">
+      <div class="mx-3 my-2">
         <v-btn color="primary" @click="ok"> 立即激活 </v-btn>
+        <br />
+        <br />
+        <v-btn
+          prepend-icon="mdi-credit-card"
+          text="去购买"
+          href="https://item.taobao.com/item.htm?ft=t&id=771495870230&spm=a21dvs.23580594.0.0.47b33d0dHMMXEU"
+        ></v-btn>
       </div>
     </v-card>
   </div>
@@ -46,9 +53,6 @@ async function ok() {
 .logo-warp {
   width: 80px;
   height: 80px;
-  padding: 9px;
-  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
-  border-radius: 50%;
 }
 .empty {
   text-align: center;

@@ -166,4 +166,7 @@ html {
   }
 }
 //chat end
+.font-sm {
+  font-size: 0.85rem;
+}
 </style>

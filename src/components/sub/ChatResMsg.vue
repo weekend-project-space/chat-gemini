@@ -1,17 +1,17 @@
 <template>
   <div class="chat-item-warp">
-    <v-avatar color="primary" size="small"
-      ><v-icon icon="mdi-link"></v-icon
-    ></v-avatar>
+    <v-img src="/logo.png" style="width: 30px; height: 30px"></v-img>
     <div class="chat-item-message">
       <div class="name">极速AI</div>
-      <div class="message"  v-html="
-            micromark(
-              item.content +
-                (isLast && generating ? '<span class=generating></span>' : '')
-            )
-          ">
-      </div>
+      <div
+        class="message"
+        v-html="
+          micromark(
+            item.content +
+              (isLast && generating ? '<span class=generating></span>' : '')
+          )
+        "
+      ></div>
       <div class="message-actions">
         <div class="actions-warp" v-if="!generating">
           <v-tooltip text="复制" location="bottom">
@@ -77,8 +77,8 @@ function copy(text) {
     font-weight: 600;
     margin-bottom: 0.3rem;
   }
-  .message{
-    overflow: auto
+  .message {
+    overflow: auto;
   }
   .message-actions {
     display: flex;

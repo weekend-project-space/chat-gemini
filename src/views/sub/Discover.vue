@@ -21,11 +21,6 @@
           :subtitle="item[promptKey]"
           @click="goChat(item)"
         >
-          <template v-slot:prepend>
-            <v-avatar color="primary" size="small">
-              {{ item[actKey].substring(0, 1) }}
-            </v-avatar>
-          </template>
         </v-list-item>
       </v-list>
     </v-card>

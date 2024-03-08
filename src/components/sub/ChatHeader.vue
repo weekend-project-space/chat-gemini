@@ -11,7 +11,7 @@
           :color="modelValue ? 'primary' : ''"
           icon=" mdi-puzzle-outline"
         ></v-icon>
-        <span class="mx-2">连网插件</span>
+        <span class="mx-2">联网插件</span>
       </template>
     </v-switch>
   </div>

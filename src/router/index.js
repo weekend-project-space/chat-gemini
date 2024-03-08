@@ -38,11 +38,12 @@ const routes = [{
     path: 'setup',
     component: () => import('@/views/Settings.vue'),
     children: [{
-        path: '',
-        component: () => import('@/views/sub/Setup.vue')
-      }
-
-    ]
+      path: '',
+      component: () => import('@/views/sub/Setup.vue')
+    }, ]
+  }, {
+    path: 'user',
+    component: () => import('@/views/sub/User.vue')
   }]
 }]
 

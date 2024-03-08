@@ -2,7 +2,7 @@
   <div class="empty">
     <!-- <v-avatar color="primary" size="80"  variant="outlined"> -->
     <div class="logo-warp mx-auto">
-      <v-icon icon="mdi-link" size="60"></v-icon>
+      <img src="/logo.png" style="width: 80px" alt="" />
     </div>
     <!-- </v-avatar> -->
     <div class="mt-5 bold">我今天能帮你做什么？</div>
@@ -29,9 +29,6 @@
 .logo-warp {
   width: 80px;
   height: 80px;
-  padding: 9px;
-  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
-  border-radius: 50%;
 }
 .empty {
   text-align: center;
