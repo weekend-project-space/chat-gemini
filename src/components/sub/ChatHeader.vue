@@ -7,11 +7,17 @@
       @update:modelValue="(v) => emit('update:modelValue', v)"
     >
       <template #label>
-        <v-icon
-          :color="modelValue ? 'primary' : ''"
-          icon=" mdi-puzzle-outline"
-        ></v-icon>
-        <span class="mx-2">联网插件</span>
+        <v-tooltip text="支持联网，生成思维导图，天气查询" location="bottom">
+          <template v-slot:activator="{ props }">
+            <div v-bind="props">
+              <v-icon
+                :color="modelValue ? 'primary' : ''"
+                icon=" mdi-puzzle-outline"
+              ></v-icon>
+              <span class="mx-2">联网插件</span>
+            </div>
+          </template>
+        </v-tooltip>
       </template>
     </v-switch>
   </div>
