@@ -26,7 +26,7 @@
           <small>{{ item.desc }}</small>
         </div>
         <div class="icon">
-          <v-icon size="sm">mdi-apple-keyboard-caps</v-icon>
+          <v-icon>mdi-pencil-outline</v-icon>
         </div>
       </div>
     </div>

@@ -19,13 +19,9 @@
   </template>
   <template v-else>
     <v-navigation-drawer class="drawer" width="130">
-      <!-- <v-tooltip text="伊娃">
-        <template v-slot:activator="{ props }">
-          <v-list v-bind="props" nav>
-            <v-avatar icon="mdi-link" color="secondary"></v-avatar>
-          </v-list>
-        </template>
-      </v-tooltip>
+      <!-- <v-list v-bind="props" nav>
+        <v-avatar image="/logo.png"></v-avatar>
+      </v-list>
 
       <v-divider></v-divider> -->
 
@@ -97,7 +93,7 @@ const { mobile } = useDisplay();
 const bars = [
   { icon: "mdi-message-outline", name: "对话", value: "/chats" },
 
-  { icon: "mdi-compass-outline", name: "应用", value: "/app" },
+  { icon: "mdi-pencil-circle-outline", name: "创作", value: "/app" },
 
   { icon: "mdi-star-outline", name: "收藏", value: "/prompts" },
 ];

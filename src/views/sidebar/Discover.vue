@@ -35,11 +35,11 @@
       :key="item.key"
       :to="'/app/' + item.key"
     >
-      <template v-slot:prepend>
+      <!-- <template v-slot:prepend>
         <v-avatar color="primary" size="small">
           {{ item.name.substring(0, 1) }}
         </v-avatar>
-      </template>
+      </template> -->
     </v-list-item>
   </v-list>
 </template>

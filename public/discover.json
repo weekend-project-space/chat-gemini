@@ -1,12 +1,4 @@
 [{
-    "key": "x-code-copilot",
-    "name": "编码助手",
-    "desc": "编码助手",
-    "url": "/11.json",
-    "act": "name",
-    "prompt": "desc",
-    "hint": true
-}, {
     "key": "x-doc-copilot",
     "name": "文章写作",
     "desc": "助力文章写作",
@@ -59,6 +51,14 @@
     "name": "学习辅导",
     "desc": "学习辅导",
     "url": "/6.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-code-copilot",
+    "name": "编码助手",
+    "desc": "编码助手",
+    "url": "/11.json",
     "act": "name",
     "prompt": "desc",
     "hint": true

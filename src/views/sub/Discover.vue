@@ -1,6 +1,6 @@
 <template>
-  <div class="warp">
-    <v-card flat>
+  <div class="warp my-5">
+    <!-- <v-card flat>
       <v-list density="compact" nav>
         <div class="mb-3">
           <div class="justify-between">
@@ -23,7 +23,41 @@
         >
         </v-list-item>
       </v-list>
-    </v-card>
+    </v-card> -->
+    <div class="mb-5">
+      <div class="justify-between">
+        <span>创作</span> <span>{{ name }}</span>
+      </div>
+      <input
+        class="search-input mt-1"
+        type="text"
+        placeholder="搜索"
+        v-model="value"
+      />
+    </div>
+    <v-row>
+      <v-col v-for="(item, i) in d" :key="i" cols="auto">
+        <v-card
+          class="mx-auto"
+          width="226"
+          variant="outlined"
+          @click="goChat(item)"
+        >
+          <v-card-item>
+            <div class="text-overline mb-2 d-flex">
+              <v-avatar color="primary" size="small" class="mr-2">
+                {{ item.name.substring(0, 1) }}
+              </v-avatar>
+              <div>
+                {{ item.name }}
+              </div>
+            </div>
+            <!-- <div class="text-h6 mb-1">{{ item.name }}</div> -->
+            <div class="text-caption">{{ item[promptKey] }}</div>
+          </v-card-item>
+        </v-card>
+      </v-col>
+    </v-row>
   </div>
 </template>
 <script setup>
@@ -106,5 +140,8 @@ async function goChat(item) {
 }
 .warp .v-list--nav {
   padding-inline: 0;
+}
+.v-card--variant-outlined {
+  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
 }
 </style>
