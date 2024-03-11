@@ -1,31 +1,38 @@
 <template>
-  <div class="pt-5 pm-5 pl-9 pr-5" :class="mobile ? 'grid-sm' : 'grid'">
+  <div class="pa-5" :class="mobile ? 'grid-sm pl-5 ' : 'grid pl-9 '">
     <div class="message">
-      <div class="d-flex align-center mb-3">
-        <h5 v-text="name"></h5>
-        <v-tooltip text="新建收藏" location="bottom">
-          <template v-slot:activator="{ props }">
-            <v-btn
-              v-bind="props"
-              icon="mdi-star-outline"
-              variant="text"
-              size="small"
-              :to="'/prompts/setup?prompt=' + prompt + '&name=' + name"
-              class="mx-3"
-            ></v-btn>
-          </template>
-        </v-tooltip>
-        <v-tooltip text="分享" location="bottom">
-          <template v-slot:activator="{ props }">
-            <v-btn
-              v-bind="props"
-              icon="mdi-share-outline"
-              variant="text"
-              size="small"
-              @click="share"
-            ></v-btn>
-          </template>
-        </v-tooltip>
+      <div class="d-flex align-center justify-space-between mb-3">
+        <div class="d-flex align-center">
+          <v-avatar color="primary" size="small" class="mr-2">
+            {{ name.substring(0, 1) }}
+          </v-avatar>
+          <h5 v-text="name"></h5>
+        </div>
+        <div>
+          <v-tooltip text="新建收藏" location="bottom">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                v-bind="props"
+                icon="mdi-star-outline"
+                variant="text"
+                size="small"
+                :to="'/prompts/setup?prompt=' + prompt + '&name=' + name"
+                class="mx-3"
+              ></v-btn>
+            </template>
+          </v-tooltip>
+          <v-tooltip text="分享" location="bottom">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                v-bind="props"
+                icon="mdi-share-outline"
+                variant="text"
+                size="small"
+                @click="share"
+              ></v-btn>
+            </template>
+          </v-tooltip>
+        </div>
       </div>
       <template v-for="item in d.components">
         <v-text-field
@@ -107,17 +114,17 @@
               ></v-btn>
             </template>
           </v-tooltip>
-          <!-- <v-tooltip text="开始对话" location="bottom">
-          <template v-slot:activator="{ props }">
-            <v-btn
-              v-bind="props"
-              icon="mdi-message-outline"
-              variant="text"
-              size="small"
-              @click="goChat"
-            ></v-btn>
-          </template>
-        </v-tooltip> -->
+          <v-tooltip text="开始对话" location="bottom">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                v-bind="props"
+                icon="mdi-message-outline"
+                variant="text"
+                size="small"
+                @click="goChat"
+              ></v-btn>
+            </template>
+          </v-tooltip>
         </div>
       </template>
     </div>

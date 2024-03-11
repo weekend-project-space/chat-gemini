@@ -46,10 +46,10 @@
           <v-card-item>
             <div class="text-overline mb-2 d-flex">
               <v-avatar color="primary" size="small" class="mr-2">
-                {{ item.name.substring(0, 1) }}
+                {{ item[actKey].substring(0, 1) }}
               </v-avatar>
               <div>
-                {{ item.name }}
+                {{ item[actKey] }}
               </div>
             </div>
             <!-- <div class="text-h6 mb-1">{{ item.name }}</div> -->

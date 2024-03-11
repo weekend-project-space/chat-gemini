@@ -45,11 +45,20 @@
 </template>
 <script setup>
 import { discoverList } from "@/api/discover";
-import { computed, onMounted, ref } from "vue";
+import { computed, nextTick, onMounted, ref } from "vue";
+import { useDisplay } from "vuetify";
 const data = ref([]);
 const value = ref("");
+const { mobile } = useDisplay();
 onMounted(async () => {
   data.value = await discoverList();
+  nextTick(() => {
+    if (!mobile.value) {
+      document
+        .querySelector(".v-navigation-drawer:last-of-type .v-list-item")
+        .click();
+    }
+  });
 });
 const d = computed(() =>
   data.value.filter(

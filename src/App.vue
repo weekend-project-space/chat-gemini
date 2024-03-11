@@ -135,6 +135,33 @@ html {
     max-width: 100%;
     overflow-y: auto;
   }
+  /* CSS Table Style */
+  ul li {
+    list-style: none;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+  }
+
+  th,
+  td {
+    border: 1px solid rgb(var(--v-theme-surface));
+    padding: 0.5rem;
+  }
+  tr:nth-child(even) {
+    background-color: rgb(var(--v-theme-surface));
+  }
+  th {
+    background-color: rgba(var(--v-theme-on-code), 0.1);
+    text-align: center;
+  }
+
+  td {
+    text-align: center;
+  }
 }
 .message ol,
 .message ul {
