@@ -1,7 +1,8 @@
 <template>
   <div class="chat-item-warp">
+    <!-- ee6A42 -->
     <v-avatar
-      color="#ee6A42"
+      color="primary"
       size="small"
       icon="mdi-account-circle-outline"
     ></v-avatar>
@@ -104,7 +105,7 @@ function changeContent(content) {
     display: flex;
     justify-content: flex-start;
     min-height: 28px;
-     margin-top: 0.5rem;
+    margin-top: 0.5rem;
   }
   .textarea0 {
     //width: calc(100% - 1rem);

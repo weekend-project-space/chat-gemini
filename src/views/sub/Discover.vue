@@ -35,7 +35,27 @@
         v-model="value"
       />
     </div>
-    <v-row>
+    <div class="explore-list">
+      <div
+        v-for="item in d"
+        :key="item.act || item.name"
+        class="explore"
+        @click="goChat(item)"
+      >
+        <div>
+          <p>
+            <v-avatar color="primary" size="small" class="mr-3">
+              {{ item[actKey].substring(0, 1) }} </v-avatar
+            >{{ item[actKey] }}
+          </p>
+          <small>{{ item.desc || "开始对话吧" }}</small>
+        </div>
+        <div class="icon">
+          <v-icon>mdi-pencil-outline</v-icon>
+        </div>
+      </div>
+    </div>
+    <!-- <v-row>
       <v-col v-for="(item, i) in d" :key="i" cols="auto">
         <v-card
           class="mx-auto"
@@ -52,12 +72,11 @@
                 {{ item[actKey] }}
               </div>
             </div>
-            <!-- <div class="text-h6 mb-1">{{ item.name }}</div> -->
             <div class="text-caption">{{ item[promptKey] }}</div>
           </v-card-item>
         </v-card>
       </v-col>
-    </v-row>
+    </v-row> -->
   </div>
 </template>
 <script setup>
@@ -143,5 +162,35 @@ async function goChat(item) {
 }
 .v-card--variant-outlined {
   border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+}
+.explore-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 0.8rem;
+  > * {
+    font-size: 0.8rem;
+    display: grid;
+    grid-template-columns: 1fr 1rem;
+    align-items: center;
+    border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+    padding: 0.5rem 1rem;
+    border-radius: 0.8rem;
+    p {
+      margin-bottom: 0.3rem;
+    }
+    small {
+      opacity: 0.5;
+    }
+    &:hover {
+      background: rgb(var(--v-theme-code));
+      cursor: pointer;
+      .v-icon {
+        display: block;
+      }
+    }
+    .v-icon {
+      display: none;
+    }
+  }
 }
 </style>

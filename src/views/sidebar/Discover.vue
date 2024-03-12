@@ -31,7 +31,6 @@
       v-for="item in d"
       :title="item.name"
       :value="item.name"
-      :subtitle="item.desc"
       :key="item.key"
       :to="'/app/' + item.key"
     >

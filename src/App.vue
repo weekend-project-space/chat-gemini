@@ -35,6 +35,11 @@ provide("surplusText", surplusText);
 html {
   overflow-y: auto;
 }
+.text-overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .tip {
   opacity: 0.8;
 }

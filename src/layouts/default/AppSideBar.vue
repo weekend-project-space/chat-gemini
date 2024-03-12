@@ -19,13 +19,16 @@
   </template>
   <template v-else>
     <v-navigation-drawer class="drawer" width="130">
-      <!-- <v-list v-bind="props" nav>
-        <v-avatar image="/logo.png"></v-avatar>
-      </v-list>
+      <!-- <v-list nav> -->
+      <div class="mx-auto text-center my-3">
+        <v-avatar size="large" image="/logo.png" loading></v-avatar>
+        <h5 class="mt-3">极速AI</h5>
+      </div>
+      <!-- </v-list> -->
 
-      <v-divider></v-divider> -->
+      <!-- <v-divider></v-divider> -->
 
-      <v-list density="compact" nav>
+      <v-list nav>
         <v-list-item
           v-for="bar in bars"
           :key="bar.icon"

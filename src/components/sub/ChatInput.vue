@@ -1,14 +1,9 @@
 <template>
   <div class="input-warp">
-    <div>
+    <!-- <div>
       <v-menu :close-on-content-click="false">
         <template v-slot:activator="{ props: menu }">
-          <v-btn
-            id="extBtn"
-            :icon="tools ? 'mdi-puzzle-star-outline' : 'mdi-star-outline'"
-            v-bind="menu"
-            variant="text"
-          ></v-btn>
+          <v-btn id="extBtn" v-bind="menu" variant="text"></v-btn>
         </template>
         <v-list density="compact" nav class="extmenu">
           <v-card min-width="300" flat>
@@ -32,7 +27,7 @@
           </v-card>
         </v-list>
       </v-menu>
-    </div>
+    </div> -->
 
     <textarea
       class="textarea"
@@ -43,26 +38,46 @@
     />
     <v-tooltip :text="generating ? '停止生成' : '发送消息'" location="top">
       <template v-slot:activator="{ props }">
-      <v-btn
-        v-bind="props"
-        :icon="generating ? ' mdi-stop-circle' : 'mdi-arrow-up-box'"
-        variant="text"
-        :disabled="!value && !generating"
-        @click="clickBtn"
-      ></v-btn>
+        <v-btn
+          v-bind="props"
+          :icon="generating ? ' mdi-stop-circle' : 'mdi-arrow-up-box'"
+          variant="text"
+          :disabled="!value && !generating"
+          @click="clickBtn"
+        ></v-btn>
       </template>
     </v-tooltip>
   </div>
+  <v-dialog max-width="500" v-model="favable">
+    <v-card>
+      <v-card-title> 收藏</v-card-title>
+      <v-list class="ma-2" nav>
+        <v-card flat>
+          <v-list-item
+            v-for="(item, index) in prompts"
+            :key="index"
+            @click="clickPrompt(item)"
+            :title="item.name"
+            :subtitle="item.prompt"
+          >
+          </v-list-item>
+          <div v-if="prompts.length == 0" class="mx-5 my-2">
+            <small>暂无收藏 </small>
+          </div>
+        </v-card>
+      </v-list>
+    </v-card>
+  </v-dialog>
 </template>
 <script setup>
-import {nextTick, onMounted, ref, watch} from "vue";
+import { nextTick, onMounted, ref, watch } from "vue";
 
 const props = defineProps(["prompts", "generating", "tools"]);
 const emit = defineEmits(["send", "stop", "tochat", "update:tools"]);
 
-
 const inputRef = ref();
 const value = ref("");
+const favable = ref(false);
 
 function quickEnter(e) {
   if (e.keyCode === 13 && !e.shiftKey && !props.generating) {
@@ -90,39 +105,41 @@ function clickPrompt(item) {
     value.value = item.prompt;
     setTimeout(() => {
       if (extShow) {
-        document.getElementById("extBtn").click();
+        favable.value = false;
+        //   document.getElementById("extBtn").click();
         extShow = false;
       }
       inputRef.value.focus();
     }, 100);
   }
 }
-const  height = ref(54);
+const height = ref(54);
 onMounted(() => {
   watch(value, (v) => {
     if (v === "#") {
-      document.getElementById("extBtn").click();
-      setTimeout(() => {
-        document.getElementsByClassName("extmenu")[0].focus();
-      }, 300);
+      // document.getElementById("extBtn").click();
+      // setTimeout(() => {
+      //   document.getElementsByClassName("extmenu")[0].focus();
+      // }, 300);
       extShow = true;
+      favable.value = true;
     }
-    nextTick(()=>{
+    nextTick(() => {
       inputRef.value.style.height = "2rem"; //先重置为auto
       inputRef.value.style.height = inputRef.value.scrollHeight + "px";
       height.value = inputRef.value.scrollHeight + 18;
-    })
+    });
   });
 });
 
-defineExpose({ value, inputRef, height })
+defineExpose({ value, inputRef, height });
 </script>
 <style lang="less" scoped>
 .input-warp {
   box-sizing: border-box;
   bottom: -70px;
   display: grid;
-  grid-template-columns: 36px 1fr 36px;
+  grid-template-columns: 1fr 36px;
   grid-gap: 0.5rem;
   align-items: flex-end;
   background: rgb(var(--v-theme-background));
@@ -133,6 +150,7 @@ defineExpose({ value, inputRef, height })
     0px 1px 1px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
     0px 1px 1px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.12));
   .textarea {
+    padding-inline-start: 0.5rem;
     outline: none;
     display: block;
     height: 36px;
@@ -140,7 +158,6 @@ defineExpose({ value, inputRef, height })
     //max-height: 12rem;
     line-height: 36px;
     resize: none;
-
     overflow: auto;
     &::-webkit-scrollbar {
       width: 8px;
@@ -152,7 +169,7 @@ defineExpose({ value, inputRef, height })
   }
 }
 .v-btn--icon.v-btn--density-default {
-  width: calc(var(--v-btn-height) );
+  width: calc(var(--v-btn-height));
   height: calc(var(--v-btn-height));
 }
 </style>

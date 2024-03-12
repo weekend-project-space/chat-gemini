@@ -27,7 +27,6 @@
         :key="item.id"
         :data-id="item.id"
         :to="'/chats/' + item.id"
-        :subtitle="formatData(item.time)"
       >
         <template #append>
           <div class="actions">
