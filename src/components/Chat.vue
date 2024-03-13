@@ -48,7 +48,10 @@
         />
       </template>
       <div v-if="generating" class="text-align mt-3">
-        <v-btn prepend-icon="mdi-stop-circle-outline" @click="clickBtn"
+        <v-btn
+          prepend-icon="mdi-stop-circle-outline"
+          color="error"
+          @click="clickBtn"
           >停止生成</v-btn
         >
       </div>
@@ -84,8 +87,8 @@ import {
   onMounted,
   ref,
   watch,
-  unref,
   onUnmounted,
+  isProxy,
   toRaw,
 } from "vue";
 import { useRouter } from "vue-router";
@@ -102,7 +105,7 @@ import ChatExplore from "./sub/ChatExplore.vue";
 import ChatInput from "./sub/ChatInput.vue";
 import { createChat } from "@/service/chatService";
 const props = defineProps([
-  "data",
+  "modelValue",
   "chatId",
   "prompts",
   "loading",
@@ -110,12 +113,7 @@ const props = defineProps([
   "explore",
   "loadfun",
 ]);
-const emit = defineEmits([
-  "addItems",
-  "updateItem",
-  "replaceItems",
-  "selectedUserType",
-]);
+const emit = defineEmits(["update:modelValue", "selectedUserType"]);
 const router = useRouter();
 const value = ref("");
 const generating = ref(false);
@@ -142,19 +140,25 @@ const scrollToBottom = () => {
 
 async function updateItem(item, v) {
   item.content.content = toRaw(v);
-  emit("updateItem", clone(item));
+  setTimeout(() => {
+    emit("update:modelValue", clone(cloneData));
+  }, 1000);
+  // emit("updateItem", clone(item));
 }
 
 async function applyEdit(index, next) {
   cloneData.value = cloneData.value.slice(0, index + 1);
   editIndex.value = -1;
-  const lastId = cloneData.value[cloneData.value.length - 1].id;
+  // const lastId = cloneData.value[cloneData.value.length - 1].id;
   next();
   //重新生成
-  await gen();
-  // console.log(cloneData);
-  //替换所有
-  emit("replaceItems", lastId, clone(unref(cloneData)).slice(index));
+  try {
+    await gen();
+    //替换所有
+  } catch (e) {
+    console.error(e);
+  }
+  emit("update:modelValue", clone(cloneData));
 }
 
 let genFuns = [];
@@ -176,13 +180,22 @@ async function send(text) {
   cloneData.value.push(req);
   value.value = "";
   await nextTick(scrollToBottom);
-  const resItem = await gen();
-  emit("addItems", clone([req, resItem]));
+  try {
+    await gen();
+    //替换所有
+  } catch (e) {
+    console.error(e);
+  }
+  setTimeout(() => {
+    const data = clone(cloneData);
+    console.log("update", data);
+    emit("update:modelValue", data);
+  }, 1000);
 }
 
 function initEl() {
   generating.value = false;
-  cloneData.value = props.data;
+  cloneData.value = clone(props.modelValue);
   inputRef.value.inputRef && inputRef.value.inputRef.focus();
   nextTick(() => {
     scrollToBottom();
@@ -199,18 +212,28 @@ function initEl() {
 
 async function regenerate() {
   // 移除最后回答
-  const lastId = cloneData.value[cloneData.value.length - 1].id;
+  // const lastId = cloneData.value[cloneData.value.length - 1].id;
   cloneData.value.pop();
-  let index = cloneData.value.length;
-  //重新生成
-  await gen();
-  //替换所有
-  emit("replaceItems", lastId, clone(unref(cloneData)).slice(index));
+  // let index = cloneData.value.length;
+  try {
+    //重新生成
+    await gen();
+  } catch (e) {
+    console.error(e);
+  }
+  emit("update:modelValue", clone(cloneData));
 }
 
 async function nextgenerate(data, enabledTools) {
-  const resItem = await gen(data, enabledTools);
-  emit("addItems", clone([resItem]));
+  try {
+    await gen(data, enabledTools);
+  } catch (e) {
+    console.error(e);
+  }
+
+  // const resItem = await gen(data, enabledTools);
+  // emit("addItems", clone([resItem]));
+  emit("update:modelValue", clone(cloneData));
 }
 
 async function gen(data, enabledTools) {
@@ -356,7 +379,13 @@ async function toChat(item) {
 }
 
 function clone(o) {
-  return JSON.parse(JSON.stringify(o));
+  if (o.value) {
+    return JSON.parse(
+      JSON.stringify(isProxy(o.value) ? toRaw(o.value) : o.value)
+    );
+  } else {
+    return JSON.parse(JSON.stringify(o));
+  }
 }
 
 let initFun = null;
@@ -372,7 +401,7 @@ onMounted(() => {
     }
   );
   watch(
-    () => props.data,
+    () => props.modelValue,
     () => {
       nextTick(initEl);
     }

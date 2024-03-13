@@ -23,7 +23,12 @@ export async function listChatItem(chatId) {
   return await chatItems.where('chatId').equals(chatId).toArray()
 }
 
-export async function del(chatId) {
+export async function del(id) {
+  return await chatItems.delete(id)
+}
+
+
+export async function delByChatId(chatId) {
   const items = await listChatItem(chatId)
   return await chatItems.bulkDelete(items.map(o => o.id))
 }

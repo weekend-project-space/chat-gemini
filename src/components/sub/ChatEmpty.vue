@@ -12,7 +12,7 @@
         >机器人运行可能会遇到问题，为确保您正常使用，请加入<a
           href="https://zhidayingxiao.cn/to/06g6xX"
           >微信交流群</a
-        >，以便第一时间解决。</small
+        >，以便第一时间解决。ctrl+d收藏网站</small
       >
       <div class="mt-5">
         <v-btn

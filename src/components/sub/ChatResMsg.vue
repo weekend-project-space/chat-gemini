@@ -78,7 +78,7 @@ function copy(text) {
     margin-bottom: 0.3rem;
   }
   .message {
-    overflow: auto;
+    overflow: hidden;
   }
   .message-actions {
     display: flex;

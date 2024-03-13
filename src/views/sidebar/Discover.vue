@@ -27,6 +27,7 @@
     />
   </div>
   <v-list nav>
+    <v-list-item title="全部" to="/app/all"> </v-list-item>
     <v-list-item
       v-for="item in d"
       :title="item.name"
@@ -45,14 +46,16 @@
 <script setup>
 import { discoverList } from "@/api/discover";
 import { computed, nextTick, onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
 import { useDisplay } from "vuetify";
 const data = ref([]);
 const value = ref("");
 const { mobile } = useDisplay();
+const route = useRoute();
 onMounted(async () => {
   data.value = await discoverList();
   nextTick(() => {
-    if (!mobile.value) {
+    if (!mobile.value && route.path == "/app") {
       document
         .querySelector(".v-navigation-drawer:last-of-type .v-list-item")
         .click();

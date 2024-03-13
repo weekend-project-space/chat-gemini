@@ -61,7 +61,7 @@
             :subtitle="item.prompt"
           >
           </v-list-item>
-          <div v-if="prompts.length == 0" class="mx-5 my-2">
+          <div v-if="prompts.length == 0" class="my-2">
             <small>暂无收藏 </small>
           </div>
         </v-card>

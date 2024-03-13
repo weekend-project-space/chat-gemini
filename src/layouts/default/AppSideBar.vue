@@ -96,7 +96,7 @@ const { mobile } = useDisplay();
 const bars = [
   { icon: "mdi-message-outline", name: "对话", value: "/chats" },
 
-  { icon: "mdi-pencil-circle-outline", name: "创作", value: "/app" },
+  { icon: "mdi-pencil-box-outline", name: "创作", value: "/app" },
 
   { icon: "mdi-star-outline", name: "收藏", value: "/prompts" },
 ];

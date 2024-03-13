@@ -90,7 +90,10 @@
       </v-btn>
     </div>
     <div class="message">
-      <h5 for=""><v-icon>mdi-magic-staff</v-icon>生成文案</h5>
+      <div class="mt-2 mb-6">
+        <h5 for=""><v-icon class="mr-3">mdi-magic-staff</v-icon>生成文案</h5>
+      </div>
+
       <template v-if="res">
         <div class="message-warp pa-5 mt-3">
           <div

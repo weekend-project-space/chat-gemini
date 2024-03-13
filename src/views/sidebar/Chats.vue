@@ -88,7 +88,7 @@ async function createChat() {
 
 async function delChat0(id) {
   await delChat(id);
-  if (!mobile.value) {
+  if (!mobile.value && route.params.id == id) {
     newChat0();
   }
 }
