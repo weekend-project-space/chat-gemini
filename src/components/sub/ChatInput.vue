@@ -50,21 +50,22 @@
   </div>
   <v-dialog max-width="500" v-model="favable">
     <v-card>
-      <v-card-title> 收藏</v-card-title>
+      <div class="d-flex justify-space-between align-center pr-3 pt-3">
+        <v-card-title> 收藏 </v-card-title>
+        <v-btn prepend-icon="mdi-plus" to="/prompts/setup">创建</v-btn>
+      </div>
       <v-list class="ma-2" nav>
-        <v-card flat>
-          <v-list-item
-            v-for="(item, index) in prompts"
-            :key="index"
-            @click="clickPrompt(item)"
-            :title="item.name"
-            :subtitle="item.prompt"
-          >
-          </v-list-item>
-          <div v-if="prompts.length == 0" class="my-2">
-            <small>暂无收藏 </small>
-          </div>
-        </v-card>
+        <v-list-item
+          v-for="(item, index) in prompts"
+          :key="index"
+          @click="clickPrompt(item)"
+          :title="item.name"
+          :subtitle="item.prompt"
+        >
+        </v-list-item>
+        <div v-if="prompts.length == 0" class="my-2">
+          <small>暂无收藏 </small>
+        </div>
       </v-list>
     </v-card>
   </v-dialog>

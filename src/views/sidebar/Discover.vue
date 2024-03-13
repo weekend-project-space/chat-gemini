@@ -1,7 +1,7 @@
 <template>
   <div class="mx-3 my-2">
     <div class="d-flex flex header">
-      <v-list-subheader>发现 </v-list-subheader>
+      <v-list-subheader>创作 </v-list-subheader>
       <!-- <v-btn
         prepend-icon=" mdi-github"
         size="small"
