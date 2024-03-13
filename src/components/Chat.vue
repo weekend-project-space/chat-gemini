@@ -48,10 +48,7 @@
         />
       </template>
       <div v-if="generating" class="text-align mt-3">
-        <v-btn
-          prepend-icon="mdi-stop-circle-outline"
-          color="error"
-          @click="clickBtn"
+        <v-btn prepend-icon="mdi-stop-circle-outline" @click="clickBtn"
           >停止生成</v-btn
         >
       </div>
@@ -128,6 +125,9 @@ const clientHeight = ref(window.document.body.clientHeight);
 let controller = new AbortController();
 
 const scrollToBottom = () => {
+  if (scrollIsUp) {
+    return;
+  }
   const domWrapper = chatPanelRef.value;
   const currentScroll = domWrapper.scrollTop; // 已经被卷掉的高度
   const clientHeight = domWrapper.offsetHeight; // 容器高度
@@ -174,12 +174,13 @@ function clickBtn() {
 }
 
 async function send(text) {
+  scrollIsUp = false;
   text = text || value.value;
   text = text.trim();
   const req = { role: "user", content: text, chatId: props.chatId };
   cloneData.value.push(req);
   value.value = "";
-  await nextTick(scrollToBottom);
+  nextTick(scrollToBottom);
   try {
     await gen();
     //替换所有
@@ -237,6 +238,7 @@ async function nextgenerate(data, enabledTools) {
 }
 
 async function gen(data, enabledTools) {
+  scrollIsUp = false;
   regenerateBtn.value = false;
   genFuns = [];
   if (generating.value) {
@@ -389,7 +391,7 @@ function clone(o) {
 }
 
 let initFun = null;
-
+let scrollIsUp = false;
 onMounted(() => {
   watch(
     () => props.chatId,
@@ -414,6 +416,15 @@ onMounted(() => {
   window.addEventListener("resize", () => {
     console.log("resize");
     clientHeight.value = window.innerHeight;
+  });
+  const domWrapper = chatPanelRef.value;
+  let lastScrollTop = 0;
+  domWrapper.addEventListener("scroll", () => {
+    let up = domWrapper.scrollTop < lastScrollTop;
+    if (up) {
+      scrollIsUp = true;
+    }
+    lastScrollTop = domWrapper.scrollTop;
   });
 });
 
