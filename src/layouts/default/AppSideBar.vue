@@ -151,6 +151,9 @@ async function goChat(content) {
   box-shadow: 0px 1px 1px -2px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)),
     0px 1px 1px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
     0px 1px 1px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.12));
+  textarea {
+    width: 100%;
+  }
 }
 </style>
 <style lang="less">
