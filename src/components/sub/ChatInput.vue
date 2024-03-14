@@ -52,7 +52,7 @@
     <v-card>
       <div class="d-flex justify-space-between align-center pr-3 pt-3">
         <v-card-title> 收藏 </v-card-title>
-        <v-btn prepend-icon="mdi-plus" to="/prompts/setup">创建</v-btn>
+        <v-btn prepend-icon="mdi-plus" to="/prompts/setup">新建</v-btn>
       </div>
       <v-list class="ma-2" nav>
         <v-list-item

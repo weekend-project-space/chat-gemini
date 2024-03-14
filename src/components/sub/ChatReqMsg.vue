@@ -8,17 +8,11 @@
     ></v-avatar>
     <div>
       <div class="name">我</div>
-      <textarea
+      <autotextarea
         v-if="editableIndex == index"
         class="textarea"
-        :value="item.content"
-        @input="(event) => changeContent(event.target.value)"
-        ref="textAreaRef"
-        :style="{
-          height: item.content
-            ? textAreaRef && textAreaRef.scrollHeight + 'px'
-            : '2rem',
-        }"
+        :modelValue="item.content"
+        @update:modelValue="(v) => changeContent(v)"
       />
       <div class="textarea0" v-else v-text="item.content"></div>
       <div class="message-actions">
@@ -64,7 +58,6 @@
 import { computed, ref } from "vue";
 const props = defineProps(["modelValue", "index"]);
 const emit = defineEmits(["update:modelValue", "applyEdit"]);
-const textAreaRef = ref();
 const item = computed(() => props.modelValue);
 const editableIndex = ref(-1);
 

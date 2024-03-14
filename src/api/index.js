@@ -72,7 +72,7 @@
 
 export async function* reqGemini(data, signal) {
   // const API_BASE = localStorage.getItem('qaiApi') || 'https://api-gm.xfjy.in/v1beta/models/gemini-pro:streamGenerateContent?key='
-  const API = 'https://zhidayingxiao.cn/v1/completions'
+  const API = 'http://localhost:3390/v1/completions'
 
   const rb = await fetch(API, {
     method: 'POST',

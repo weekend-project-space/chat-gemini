@@ -260,15 +260,16 @@ async function gen(data) {
     }
   } catch (e) {
     console.error(e);
-    const eText = e.toString();
+    let eText = e.toString();
     if (eText.includes("The user aborted a request")) {
-      alert({ text: "取消成功" });
+      eText = "取消成功";
     } else if (eText.includes("API key not valid")) {
-      alert({ text: "点击左下角设置您的key", type: "warn" });
-    } else {
-      alert({ text: "抱歉，请重新试下或换个问法", type: "warn" });
+      eText = "API key不正确";
+    } else if (eText.includes("The model is overloaded")) {
+      eText = "模型过载,不要太快 请重新生成";
     }
-    resItem.content = "抱歉，请重新试下或换个问法";
+    resItem.content = eText;
+    alert({ text: eText, type: "warn" });
     return new Promise((_, rej) => {
       setTimeout(() => {
         generating.value = false;

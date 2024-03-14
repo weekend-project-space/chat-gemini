@@ -284,26 +284,24 @@ async function gen(data, enabledTools) {
       }
     }
   } catch (e) {
-    const eText = e.toString();
-    let errText = eText;
+    let eText = e.toString();
     if (eText.includes("The user aborted a request")) {
-      errText = "取消成功";
-      alert({ text: "取消成功" });
+      eText = "取消成功";
     } else if (
       eText.includes(
         "An internal error has occurred. Please retry or report in"
-      )
+      ) ||
+      eText.includes("The model is overloaded")
     ) {
-      errText = "提问太快了，请稍后重试";
-      alert({ text: "提问太快了，请稍后重试", type: "warn" });
+      eText = "提问太快了，请稍后重试";
     } else if (eText.includes("API key not valid")) {
-      errText = "点击左下角设置您的key";
-      alert({ text: "点击左下角设置您的key", type: "warn" });
+      eText = "点击左下角设置您的key";
     } else {
       // alert({ text: "抱歉，请重新试下或换个问法", type: "warn" });
       regenerateBtn.value = true;
     }
-    resItem.content = errText || eText || "抱歉，请重新试下或换个问法";
+    resItem.content = eText || "抱歉，请重新生成";
+    alert({ text: eText, type: "warn" });
     return new Promise((_, rej) => {
       setTimeout(() => {
         generating.value = false;
