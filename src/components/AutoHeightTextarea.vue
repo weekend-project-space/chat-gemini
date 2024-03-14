@@ -16,7 +16,6 @@ const emit = defineEmits(["update:modelValue"]);
 function update(e) {
   inputRef.value.style.height = "auto";
   inputRef.value.style.height = inputRef.value.scrollHeight + "px";
-  console.log(inputRef.value.scrollHeight);
   emit("update:modelValue", e.target.value);
 }
 onMounted(() => {

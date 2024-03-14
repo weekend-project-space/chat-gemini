@@ -1,6 +1,13 @@
 <template>
   <template v-if="mobile">
     <slot></slot>
+    <div class="quicktext">
+      <autotextarea
+        v-model="value"
+        placeholder="发送消息给极速ai"
+        @keyup.enter="quickEnter"
+      />
+    </div>
     <v-bottom-navigation v-if="route.matched.length < 3" grow>
       <v-btn
         v-for="bar in bars"
@@ -88,10 +95,13 @@
 </template>
 <script setup>
 import { useDisplay } from "vuetify";
-import { useRoute } from "vue-router";
-import { inject } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { inject, ref } from "vue";
+import { createChat } from "@/service/chatService";
 const route = useRoute();
+const router = useRouter();
 const { mobile } = useDisplay();
+const value = ref("");
 
 const bars = [
   { icon: "mdi-message-outline", name: "对话", value: "/chats" },
@@ -102,12 +112,45 @@ const bars = [
 ];
 
 const surplusText = inject("surplusText");
+
+function quickEnter() {
+  goChat(value.value);
+
+  // value.value = "";
+}
+
+async function goChat(content) {
+  sessionStorage.setItem("sendable", "1");
+  const chatId = await createChat([
+    {
+      promptId: "quick" + new Date().getTime(),
+      name: content,
+      role: "user",
+      content,
+    },
+  ]);
+  router.push("/chats/" + chatId);
+}
 </script>
 <style lang="less" scoped>
 .bar-footer {
   position: absolute;
   bottom: 0;
   width: 100%;
+}
+.quicktext {
+  position: fixed;
+  bottom: 56px;
+  width: calc(100% - 1rem);
+  z-index: 100;
+  margin: 0.5rem;
+  background: rgb(var(--v-theme-background));
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  box-shadow: 0px 1px 1px -2px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)),
+    0px 1px 1px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
+    0px 1px 1px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.12));
 }
 </style>
 <style lang="less">

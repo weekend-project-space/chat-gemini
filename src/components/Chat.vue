@@ -158,7 +158,6 @@ async function applyEdit(index, next) {
   } catch (e) {
     console.error(e);
   }
-  emit("update:modelValue", clone(cloneData));
 }
 
 let genFuns = [];
@@ -187,11 +186,6 @@ async function send(text) {
   } catch (e) {
     console.error(e);
   }
-  setTimeout(() => {
-    const data = clone(cloneData);
-    console.log("update", data);
-    emit("update:modelValue", data);
-  }, 1000);
 }
 
 function initEl() {
@@ -222,7 +216,6 @@ async function regenerate() {
   } catch (e) {
     console.error(e);
   }
-  emit("update:modelValue", clone(cloneData));
 }
 
 async function nextgenerate(data, enabledTools) {
@@ -231,10 +224,6 @@ async function nextgenerate(data, enabledTools) {
   } catch (e) {
     console.error(e);
   }
-
-  // const resItem = await gen(data, enabledTools);
-  // emit("addItems", clone([resItem]));
-  emit("update:modelValue", clone(cloneData));
 }
 
 async function gen(data, enabledTools) {
@@ -304,12 +293,16 @@ async function gen(data, enabledTools) {
     alert({ text: eText, type: "warn" });
     return new Promise((_, rej) => {
       setTimeout(() => {
+        emit("update:modelValue", clone(cloneData));
         generating.value = false;
         inputRef.value.inputRef && inputRef.value.inputRef.focus();
       }, 500);
-      rej(errText);
+      rej(eText);
     });
   }
+  nextTick(() => {
+    emit("update:modelValue", clone(cloneData));
+  });
   return new Promise((resolve) => {
     setTimeout(() => {
       setTimeout(() => {
@@ -409,10 +402,15 @@ onMounted(() => {
 
   initFun = setTimeout(() => {
     initEl();
+    setTimeout(() => {
+      if (sessionStorage.getItem("sendable")) {
+        sessionStorage.removeItem("sendable");
+        gen();
+      }
+    }, 100);
   }, 30);
 
   window.addEventListener("resize", () => {
-    console.log("resize");
     clientHeight.value = window.innerHeight;
   });
   const domWrapper = chatPanelRef.value;
