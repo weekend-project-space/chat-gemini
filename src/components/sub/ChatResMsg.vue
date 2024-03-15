@@ -3,15 +3,11 @@
     <v-img src="/logo.png" style="width: 30px; height: 30px"></v-img>
     <div class="chat-item-message">
       <div class="name">极速AI</div>
-      <div
-        class="message"
-        v-html="
-          micromark(
-            item.content +
-              (isLast && generating ? '<span class=generating></span>' : '')
-          )
-        "
-      ></div>
+      <div v-if="generating">
+        <v-skeleton-loader boilerplate type="article"></v-skeleton-loader>
+        <v-skeleton-loader boilerplate type="paragraph"></v-skeleton-loader>
+      </div>
+      <div class="message" v-else v-html="micromark(item.content)"></div>
       <div class="message-actions">
         <div class="actions-warp" v-if="!generating">
           <v-tooltip text="复制" location="bottom">

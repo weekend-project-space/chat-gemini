@@ -93,17 +93,13 @@
       <div class="mt-2 mb-6">
         <h5 for=""><v-icon class="mr-3">mdi-magic-staff</v-icon>生成文案</h5>
       </div>
-
-      <template v-if="res">
+      <div v-if="generating">
+        <v-skeleton-loader boilerplate type="article"></v-skeleton-loader>
+        <v-skeleton-loader boilerplate type="paragraph"></v-skeleton-loader>
+      </div>
+      <template v-else-if="res">
         <div class="message-warp pa-5 mt-3">
-          <div
-            v-html="
-              micromark(
-                res.content +
-                  (generating ? '<span class=generating></span>' : '')
-              )
-            "
-          ></div>
+          <div v-html="micromark(res.content)"></div>
         </div>
         <div class="actions-warp mt-3" v-if="!generating">
           <v-tooltip text="复制" location="bottom">
@@ -114,6 +110,17 @@
                 variant="text"
                 size="small"
                 @click="copy(micromark(res.content).replace(/<[^>]*>/g, ''))"
+              ></v-btn>
+            </template>
+          </v-tooltip>
+          <v-tooltip text="复制成markdown" location="bottom">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                v-bind="props"
+                icon=" mdi-language-markdown-outline"
+                variant="text"
+                size="small"
+                @click="copy(res.content)"
               ></v-btn>
             </template>
           </v-tooltip>
@@ -184,21 +191,6 @@ let genFuns = [];
 
 let controller = new AbortController();
 
-function initEl() {
-  nextTick(() => {
-    scrollToBottom();
-    setTimeout(() => {
-      const buttons = document.querySelectorAll("pre");
-      console.log(buttons);
-      buttons.forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-          copy(e.target.innerText);
-        });
-      });
-    }, 1000);
-  });
-}
-
 function clickBtn() {
   if (generating.value) {
     generating.value = false;
@@ -226,34 +218,20 @@ async function gen(data) {
     alert({ text: "请等回复完后再重试" });
     return;
   }
-  let i = 0;
   generating.value = true;
+
   const reqData = multiTurn(data);
-  const resItem = { role: "model", content: "", chatId: props.chatId };
+
   try {
-    cloneData.value.push(resItem);
     controller = new AbortController();
-    let content = "";
     for await (const line of llm(reqData, controller.signal)) {
       if (line.type == "text") {
-        for (let chat of line.data) {
-          if (generating.value) {
-            i += 20;
-            const g = () => {
-              if (generating.value) {
-                content += chat;
-                resItem.content = content;
-                cloneData.value.splice(
-                  cloneData.value.length - 1,
-                  cloneData.value.length - 1,
-                  Object.assign({}, resItem)
-                );
-                nextTick(scrollToBottom);
-              }
-            };
-            genFuns.push(setTimeout(g, i));
-          }
-        }
+        const resItem = {
+          role: "model",
+          content: line.data,
+          chatId: props.chatId,
+        };
+        cloneData.value.push(resItem);
       } else {
         console.error(line);
       }
@@ -268,7 +246,6 @@ async function gen(data) {
     } else if (eText.includes("The model is overloaded")) {
       eText = "模型过载,不要太快 请重新生成";
     }
-    resItem.content = eText;
     alert({ text: eText, type: "warn" });
     return new Promise((_, rej) => {
       setTimeout(() => {
@@ -283,8 +260,8 @@ async function gen(data) {
       setTimeout(() => {
         generating.value = false;
       }, 500);
-      resolve(resItem);
-    }, i + 300);
+      resolve("");
+    }, 300);
   });
 }
 

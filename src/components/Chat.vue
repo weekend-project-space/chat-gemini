@@ -241,29 +241,11 @@ async function gen(data, enabledTools) {
   try {
     cloneData.value.push(resItem);
     controller = new AbortController();
-    let content = "";
     enabledTools =
       typeof enabledTools == "boolean" ? enabledTools : tools.value;
     for await (const line of llm(reqData, controller.signal, enabledTools)) {
       if (line.type == "text") {
-        for (let chat of line.data) {
-          if (generating.value) {
-            i += 20;
-            const g = () => {
-              if (generating.value) {
-                content += chat;
-                resItem.content = content;
-                cloneData.value.splice(
-                  cloneData.value.length - 1,
-                  cloneData.value.length - 1,
-                  Object.assign({}, resItem)
-                );
-                nextTick(scrollToBottom);
-              }
-            };
-            genFuns.push(setTimeout(g, i));
-          }
-        }
+        resItem.content = line.data;
       } else {
         resItem.role = "functionCall";
         resItem.content = {
@@ -312,6 +294,93 @@ async function gen(data, enabledTools) {
     }, i + 300);
   });
 }
+
+// async function gen(data, enabledTools) {
+//   scrollIsUp = false;
+//   regenerateBtn.value = false;
+//   genFuns = [];
+//   if (generating.value) {
+//     alert({ text: "请等回复完后再重试" });
+//     return;
+//   }
+//   let i = 0;
+//   generating.value = true;
+//   const reqData = multiTurn(data);
+//   const resItem = { role: "model", content: "", chatId: props.chatId };
+//   try {
+//     cloneData.value.push(resItem);
+//     controller = new AbortController();
+//     let content = "";
+//     enabledTools =
+//       typeof enabledTools == "boolean" ? enabledTools : tools.value;
+//     for await (const line of llm(reqData, controller.signal, enabledTools)) {
+//       if (line.type == "text") {
+//         for (let chat of line.data) {
+//           if (generating.value) {
+//             i += 20;
+//             const g = () => {
+//               if (generating.value) {
+//                 content += chat;
+//                 resItem.content = content;
+//                 cloneData.value.splice(
+//                   cloneData.value.length - 1,
+//                   cloneData.value.length - 1,
+//                   Object.assign({}, resItem)
+//                 );
+//                 nextTick(scrollToBottom);
+//               }
+//             };
+//             genFuns.push(setTimeout(g, i));
+//           }
+//         }
+//       } else {
+//         resItem.role = "functionCall";
+//         resItem.content = {
+//           functionCall: line.data,
+//           content: "",
+//         };
+//       }
+//     }
+//   } catch (e) {
+//     let eText = e.toString();
+//     if (eText.includes("The user aborted a request")) {
+//       eText = "取消成功";
+//     } else if (
+//       eText.includes(
+//         "An internal error has occurred. Please retry or report in"
+//       ) ||
+//       eText.includes("The model is overloaded")
+//     ) {
+//       eText = "提问太快了，请稍后重试";
+//     } else if (eText.includes("API key not valid")) {
+//       eText = "点击左下角设置您的key";
+//     } else {
+//       // alert({ text: "抱歉，请重新试下或换个问法", type: "warn" });
+//       regenerateBtn.value = true;
+//     }
+//     resItem.content = eText || "抱歉，请重新生成";
+//     alert({ text: eText, type: "warn" });
+//     return new Promise((_, rej) => {
+//       setTimeout(() => {
+//         emit("update:modelValue", clone(cloneData));
+//         generating.value = false;
+//         inputRef.value.inputRef && inputRef.value.inputRef.focus();
+//       }, 500);
+//       rej(eText);
+//     });
+//   }
+//   nextTick(() => {
+//     emit("update:modelValue", clone(cloneData));
+//   });
+//   return new Promise((resolve) => {
+//     setTimeout(() => {
+//       setTimeout(() => {
+//         generating.value = false;
+//       }, 500);
+//       resolve(resItem);
+//     }, i + 300);
+//   });
+// }
 
 function multiTurn(data) {
   let key = "";
