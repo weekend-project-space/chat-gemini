@@ -93,7 +93,7 @@
       <div class="mt-2 mb-6">
         <h5 for=""><v-icon class="mr-3">mdi-magic-staff</v-icon>生成文案</h5>
       </div>
-      <div v-if="generating">
+      <div v-if="generating" class="opacity">
         <v-skeleton-loader boilerplate type="article"></v-skeleton-loader>
         <v-skeleton-loader boilerplate type="paragraph"></v-skeleton-loader>
       </div>
@@ -201,11 +201,11 @@ function clickBtn() {
   }
 }
 
-async function send(text) {
-  console.log("send", text);
+async function send() {
   cloneData.value = [];
-  text = d.value.inter();
+  let text = d.value.inter();
   text = text.trim();
+  // console.log("send", text);
   const req = { role: "user", content: text, chatId: props.chatId };
   cloneData.value.push(req);
   nextTick(scrollToBottom);
@@ -322,7 +322,7 @@ function copy(text) {
 }
 .grid {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 30% auto;
   grid-gap: 1rem;
 }
 .message-warp {

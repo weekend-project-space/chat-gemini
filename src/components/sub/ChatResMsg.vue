@@ -107,33 +107,4 @@ function copy(text) {
     }
   }
 }
-
-.opacity {
-  animation: opacity 2s linear infinite;
-  -webkit-animation: opacity 2s linear infinite;
-}
-
-@keyframes opacity {
-  0% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.3;
-  }
-}
-
-@-webkit-keyframes opacity {
-  0% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.3;
-  }
-}
 </style>
