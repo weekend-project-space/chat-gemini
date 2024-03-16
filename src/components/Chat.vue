@@ -15,6 +15,7 @@
         <ChatReqContent
           v-if="item.role === 'user'"
           :index="i"
+          ref="inputRefs"
           :modelValue="item"
           @update:modelValue="(v) => (cloneData[i] = v)"
           @apply-edit="applyEdit"
@@ -24,6 +25,7 @@
           :isLast="cloneData.length - 1 === i"
           :generating="generating"
           :value="item"
+          :style="'--chat-requst-height:' + lastReqChatItemHeight + 'px'"
           @regenerate="regenerate"
         />
         <ChatFunContent
@@ -121,6 +123,8 @@ const editIndex = ref(-1);
 const tools = ref(false);
 const regenerateBtn = ref(false);
 const clientHeight = ref(window.document.body.clientHeight);
+const inputRefs = ref([]);
+const lastReqChatItemHeight = ref(0);
 
 let controller = new AbortController();
 
@@ -229,6 +233,13 @@ async function nextgenerate(data, enabledTools) {
 }
 
 async function gen(data, enabledTools) {
+  setTimeout(() => {
+    if (inputRefs.value) {
+      lastReqChatItemHeight.value =
+        inputRefs.value[inputRefs.value.length - 1].height;
+    }
+  }, 100);
+
   scrollIsUp = false;
   regenerateBtn.value = false;
   genFuns = [];

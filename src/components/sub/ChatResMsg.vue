@@ -14,7 +14,7 @@
         <v-skeleton-loader boilerplate type="article"></v-skeleton-loader>
         <v-skeleton-loader boilerplate type="paragraph"></v-skeleton-loader>
       </div>
-      <template v-else>
+      <div :class="isLast ? 'msgwap' : ''" v-else>
         <div class="message" v-html="micromark(item.content)"></div>
         <div class="message-actions">
           <div class="actions-warp" v-if="!generating">
@@ -53,7 +53,7 @@
             </v-tooltip>
           </div>
         </div>
-      </template>
+      </div>
     </div>
   </div>
 </template>
@@ -86,7 +86,10 @@ function copy(text) {
     overflow: hidden;
   }
   .msgloading {
-    min-height: calc(100vh - 56px - 78px - 100px);
+    min-height: calc(100vh - 56px - 78px - 100px - var(--chat-requst-height));
+  }
+  .msgwap {
+    min-height: calc(100vh - 56px - 78px - 50px - var(--chat-requst-height));
   }
   .message-actions {
     display: flex;

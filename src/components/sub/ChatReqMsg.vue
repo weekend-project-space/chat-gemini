@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-item-warp">
+  <div class="chat-item-warp" ref="chatitemRef">
     <!-- ee6A42 -->
     <v-avatar
       color="primary"
@@ -54,11 +54,13 @@
   </div>
 </template>
 <script setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 const props = defineProps(["modelValue", "index"]);
 const emit = defineEmits(["update:modelValue", "applyEdit"]);
 const item = computed(() => props.modelValue);
+const height = ref(0);
 const editableIndex = ref(-1);
+const chatitemRef = ref();
 
 let tempContent = "";
 function edit(content, index) {
@@ -79,8 +81,17 @@ function applyEdit() {
 
 function changeContent(content) {
   item.value.content = content;
+  height.value = chatitemRef.value.clientHeight + 16;
   emit("update:modelValue", item.value);
 }
+
+onMounted(() => {
+  height.value = chatitemRef.value.clientHeight + 16;
+});
+
+defineExpose({
+  height,
+});
 </script>
 <style lang="less" scoped>
 .chat-item-warp {

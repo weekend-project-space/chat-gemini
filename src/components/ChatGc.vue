@@ -303,7 +303,7 @@ function copy(text) {
 </script>
 <style lang="less" scoped>
 .message {
-  background: rgb(255, 255, 255);
+  background: rgb(var(--v-theme-background));
   padding: 1rem;
   border-radius: 1rem;
   border: 1px solid rgb(var(--v-theme-code));
