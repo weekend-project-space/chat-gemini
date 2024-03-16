@@ -34,15 +34,14 @@ export function interpreter(instrs) {
   const data = ref(_data)
 
   function rest() {
-    _data = {}
     for (let instr of instrs) {
-      _data[instr.name] = instr.type == 'radio' || instr.type == 'select' ? instr.value[0] : undefined
+      if (instr.type != 'instr') {
+        data.value[instr.name] = instr.type == 'radio' || instr.type == 'select' ? instr.value[0] : undefined
+      }
     }
-    data.value = _data
   }
 
   function inter() {
-    console.log(instrs)
     const instr = instrs[instrs.length - 1]
     if (instr.type == 'instr') {
       return render(instr.value, data.value)
@@ -109,6 +108,7 @@ function getFunInfo(exp, env) {
     let end = exp.indexOf("}")
     let key = exp.substring(index + 2, end).trim()
     const v = env[key];
+    key = 'args' + index
     values.push(v)
     params.push(key)
     exp = exp.substring(0, index) + (v ? '$$[' + key + '$$]' : '') + exp.substring(end + 1)

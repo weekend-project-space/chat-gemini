@@ -78,16 +78,22 @@
           item.value
         }}</component>
       </template>
-
-      <v-btn
-        block
-        :icon="generating ? 'mdi-stop-circle-outline' : 'mdi-send-outline'"
-        rounded="lg"
-        :disabled="!d.hasAllValue"
-        color="primary"
-        @click="clickBtn"
-      >
-      </v-btn>
+      <div class="d-flex justify-space-between">
+        <v-btn prepend-icon="mdi-delete-outline" rounded="lg" @click="d.rest()"
+          >清空输入
+        </v-btn>
+        <v-btn
+          :prepend-icon="
+            generating ? 'mdi-stop-circle-outline' : 'mdi-send-outline'
+          "
+          rounded="lg"
+          :disabled="!d.hasAllValue"
+          color="primary"
+          @click="clickBtn"
+        >
+          {{ generating ? "终止创作" : "开始创作" }}
+        </v-btn>
+      </div>
     </div>
     <div class="message">
       <div class="mt-2 mb-6">
@@ -241,7 +247,7 @@ async function gen(data) {
     console.error(e);
     let eText = e.toString();
     if (eText.includes("The user aborted a request")) {
-      eText = "取消成功";
+      eText = "终止创作成功";
     } else if (eText.includes("API key not valid")) {
       eText = "API key不正确";
     } else if (eText.includes("The model is overloaded")) {
