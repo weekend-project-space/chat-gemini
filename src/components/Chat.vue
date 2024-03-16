@@ -35,6 +35,7 @@
           :loadfun="loadfun"
           :modelValue="item.content.content"
           :funcall="item.content.functionCall"
+          :style="'--chat-requst-height:' + lastReqChatItemHeight + 'px'"
           @update:modelValue="(v) => updateItem(item, v)"
           @regenerate="regenerate"
           @nextgenerate="nextgenerate"

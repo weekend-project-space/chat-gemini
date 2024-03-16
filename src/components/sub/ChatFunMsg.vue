@@ -45,49 +45,51 @@
           </v-card-text>
         </v-card>
       </v-expand-transition>
-      <div class="message" ref="messageRef"></div>
-      <div class="message-actions">
-        <div class="actions-warp" v-if="!generating">
-          <v-tooltip text="复制" location="bottom">
-            <template v-slot:activator="{ props }">
-              <v-btn
-                v-bind="props"
-                icon="mdi-content-copy"
-                variant="text"
-                size="small"
-                @click="
-                  copy(
-                    micromark(modelValue.content || modelValue).replace(
-                      /<[^>]*>/g,
-                      ''
+      <div :class="isLast ? 'msgwap' : ''">
+        <div class="message" ref="messageRef"></div>
+        <div class="message-actions">
+          <div class="actions-warp" v-if="!generating">
+            <v-tooltip text="复制" location="bottom">
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  icon="mdi-content-copy"
+                  variant="text"
+                  size="small"
+                  @click="
+                    copy(
+                      micromark(modelValue.content || modelValue).replace(
+                        /<[^>]*>/g,
+                        ''
+                      )
                     )
-                  )
-                "
-              ></v-btn>
-            </template>
-          </v-tooltip>
-          <v-tooltip text="复制成markdown" location="bottom">
-            <template v-slot:activator="{ props }">
-              <v-btn
-                v-bind="props"
-                icon=" mdi-language-markdown-outline"
-                variant="text"
-                size="small"
-                @click="copy(modelValue.content || modelValue)"
-              ></v-btn>
-            </template>
-          </v-tooltip>
-          <v-tooltip text="重新生成" location="bottom" v-if="isLast">
-            <template v-slot:activator="{ props }">
-              <v-btn
-                v-bind="props"
-                icon=" mdi-replay"
-                variant="text"
-                size="small"
-                @click="emit('regenerate')"
-              ></v-btn>
-            </template>
-          </v-tooltip>
+                  "
+                ></v-btn>
+              </template>
+            </v-tooltip>
+            <v-tooltip text="复制成markdown" location="bottom">
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  icon=" mdi-language-markdown-outline"
+                  variant="text"
+                  size="small"
+                  @click="copy(modelValue.content || modelValue)"
+                ></v-btn>
+              </template>
+            </v-tooltip>
+            <v-tooltip text="重新生成" location="bottom" v-if="isLast">
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  icon=" mdi-replay"
+                  variant="text"
+                  size="small"
+                  @click="emit('regenerate')"
+                ></v-btn>
+              </template>
+            </v-tooltip>
+          </div>
         </div>
       </div>
     </div>
@@ -95,16 +97,7 @@
 </template>
 
 <script setup>
-import {
-  computed,
-  h,
-  render,
-  ref,
-  onMounted,
-  isReactive,
-  toRaw,
-  nextTick,
-} from "vue";
+import { computed, h, render, ref, onMounted, isReactive, toRaw } from "vue";
 import { copy as copy0 } from "@/utils/copySupport";
 import { loadfun as loadfun0 } from "@/service/toolService";
 import micromark from "@/service/micromark";
@@ -260,12 +253,14 @@ onMounted(() => {
     font-weight: 600;
     margin-bottom: 0.3rem;
   }
-
+  .msgwap {
+    min-height: calc(100vh - 56px - 78px - 50px - var(--chat-requst-height));
+  }
   .message-actions {
     display: flex;
     justify-content: flex-start;
     min-height: 28px;
-     margin-top: 0.5rem;
+    margin-top: 0.5rem;
   }
   .actions {
     // margin: 0 auto;
