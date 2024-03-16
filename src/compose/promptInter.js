@@ -20,7 +20,6 @@ export function interpreter(instrs) {
   const components = [];
   // init
   for (let instr of instrs) {
-
     if (instr.type != 'instr') {
       _data[instr.name] = instr.type == 'radio' || instr.type == 'select' ? instr.value[0] : undefined
       components.push({
@@ -43,6 +42,7 @@ export function interpreter(instrs) {
   }
 
   function inter() {
+    console.log(instrs)
     const instr = instrs[instrs.length - 1]
     if (instr.type == 'instr') {
       return render(instr.value, data.value)
@@ -90,17 +90,20 @@ export function interpreter(instrs) {
 
 
 function render(exp0, env) {
+  console.log(exp0, env)
   const {
     exp,
     params,
     values
   } = getFunInfo(exp0, env)
+  console.log(exp, params, values)
   return new Function(...params, `return \`${exp}\``)(...values)
 }
 
 function getFunInfo(exp, env) {
   let params = []
   let values = []
+  // trimed = exp.trim()
   while (exp.indexOf('${') > -1) {
     let index = exp.indexOf('${')
     let end = exp.indexOf("}")

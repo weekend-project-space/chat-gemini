@@ -39,8 +39,9 @@ const identifyCurlyBraces = (input) => {
   if (!input) {
     return []
   }
-  // 使用正则表达式识别()中的内容
-  const regex = /\((.+?)\)/g;
+  // 使用正则表达式识别()中的内容 包含换行符
+  // const regex = /\((.+?)\)/g;
+  const regex = /\(([\s\S]+?)\)/g;
 
   // 匹配所有符合正则表达式的子字符串
   const matches = input.match(regex);
