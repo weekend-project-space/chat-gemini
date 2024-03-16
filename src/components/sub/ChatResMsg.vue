@@ -3,7 +3,7 @@
     <v-img src="/logo.png" style="width: 30px; height: 30px"></v-img>
     <div class="chat-item-message">
       <div class="name">极速AI</div>
-      <div v-if="generating">
+      <div v-if="generating && isLast">
         <v-skeleton-loader boilerplate type="article"></v-skeleton-loader>
         <v-skeleton-loader boilerplate type="paragraph"></v-skeleton-loader>
       </div>
