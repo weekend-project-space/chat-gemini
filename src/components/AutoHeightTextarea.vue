@@ -1,27 +1,28 @@
 <template>
-  <textarea
+  <div
+    :contenteditable="contenteditable"
     v-bind="$attrs"
-    :value="modelValue"
     @input="update"
+    @paste="handlePaste"
     ref="inputRef"
     class="textarea"
     rows="1"
+    v-text="modelValue"
   />
 </template>
 <script setup>
-import { onMounted, ref } from "vue";
-defineProps(["modelValue"]);
+import { ref } from "vue";
+defineProps(["modelValue", "contenteditable"]);
 const inputRef = ref();
 const emit = defineEmits(["update:modelValue"]);
 function update(e) {
-  inputRef.value.style.height = "auto";
-  inputRef.value.style.height = inputRef.value.scrollHeight + "px";
-  emit("update:modelValue", e.target.value);
+  emit("update:modelValue", e.target.innerText);
 }
-onMounted(() => {
-  inputRef.value.style.height = "auto";
-  inputRef.value.style.height = inputRef.value.scrollHeight + "px";
-});
+function handlePaste(e) {
+  e.preventDefault();
+  let text = e.clipboardData.getData("text/plain"); // 拿到纯文本
+  emit("update:modelValue", text);
+}
 </script>
 <style lang="less" scoped>
 .textarea {
@@ -30,12 +31,19 @@ onMounted(() => {
   resize: none;
   overflow-y: auto;
   overflow-x: hidden;
+  word-wrap: break-word;
+  white-space: pre-wrap;
   &::-webkit-scrollbar {
     width: 8px;
     height: 20px;
   }
   &::-webkit-scrollbar-thumb {
     background: rgba(var(--v-theme-on-background), 0.3);
+  }
+  &[placeholder]:empty:before {
+    /*empty & before 两个伪类*/
+    content: attr(placeholder); /*attr 函数*/
+    color: #555;
   }
 }
 </style>

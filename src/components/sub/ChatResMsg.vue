@@ -1,50 +1,59 @@
 <template>
   <div class="chat-item-warp">
-    <v-img src="/logo.png" style="width: 30px; height: 30px"></v-img>
+    <v-img
+      :class="generating && isLast ? 'opacity' : ''"
+      src="/logo.png"
+      style="width: 30px; height: 30px"
+    ></v-img>
     <div class="chat-item-message">
-      <div class="name">极速AI</div>
-      <div v-if="generating && isLast">
+      <div :class="generating && isLast ? 'opacity' : ''" class="name">
+        极速AI
+      </div>
+      <!-- -->
+      <div v-if="generating && isLast" class="msgloading opacity">
         <v-skeleton-loader boilerplate type="article"></v-skeleton-loader>
         <v-skeleton-loader boilerplate type="paragraph"></v-skeleton-loader>
       </div>
-      <div class="message" v-else v-html="micromark(item.content)"></div>
-      <div class="message-actions">
-        <div class="actions-warp" v-if="!generating">
-          <v-tooltip text="复制" location="bottom">
-            <template v-slot:activator="{ props }">
-              <v-btn
-                v-bind="props"
-                icon="mdi-content-copy"
-                variant="text"
-                size="small"
-                @click="copy(micromark(item.content).replace(/<[^>]*>/g, ''))"
-              ></v-btn>
-            </template>
-          </v-tooltip>
-          <v-tooltip text="复制成markdown" location="bottom">
-            <template v-slot:activator="{ props }">
-              <v-btn
-                v-bind="props"
-                icon=" mdi-language-markdown-outline"
-                variant="text"
-                size="small"
-                @click="copy(item.content)"
-              ></v-btn>
-            </template>
-          </v-tooltip>
-          <v-tooltip text="重新生成" location="bottom" v-if="isLast">
-            <template v-slot:activator="{ props }">
-              <v-btn
-                v-bind="props"
-                icon=" mdi-replay"
-                variant="text"
-                size="small"
-                @click="emit('regenerate', '')"
-              ></v-btn>
-            </template>
-          </v-tooltip>
+      <template v-else>
+        <div class="message" v-html="micromark(item.content)"></div>
+        <div class="message-actions">
+          <div class="actions-warp" v-if="!generating">
+            <v-tooltip text="复制" location="bottom">
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  icon="mdi-content-copy"
+                  variant="text"
+                  size="small"
+                  @click="copy(micromark(item.content).replace(/<[^>]*>/g, ''))"
+                ></v-btn>
+              </template>
+            </v-tooltip>
+            <v-tooltip text="复制成markdown" location="bottom">
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  icon=" mdi-language-markdown-outline"
+                  variant="text"
+                  size="small"
+                  @click="copy(item.content)"
+                ></v-btn>
+              </template>
+            </v-tooltip>
+            <v-tooltip text="重新生成" location="bottom" v-if="isLast">
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  icon=" mdi-replay"
+                  variant="text"
+                  size="small"
+                  @click="emit('regenerate', '')"
+                ></v-btn>
+              </template>
+            </v-tooltip>
+          </div>
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -76,6 +85,9 @@ function copy(text) {
   .message {
     overflow: hidden;
   }
+  .msgloading {
+    min-height: calc(100vh - 56px - 78px - 100px);
+  }
   .message-actions {
     display: flex;
     justify-content: flex-start;
@@ -93,6 +105,35 @@ function copy(text) {
     .v-btn {
       margin-right: 0.5rem;
     }
+  }
+}
+
+.opacity {
+  animation: opacity 2s linear infinite;
+  -webkit-animation: opacity 2s linear infinite;
+}
+
+@keyframes opacity {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+@-webkit-keyframes opacity {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.3;
   }
 }
 </style>

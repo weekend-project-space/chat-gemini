@@ -9,12 +9,11 @@
     <div>
       <div class="name">我</div>
       <autotextarea
-        v-if="editableIndex == index"
+        :contenteditable="editableIndex == index"
         class="textarea"
         :modelValue="item.content"
         @update:modelValue="(v) => changeContent(v)"
       />
-      <div class="textarea0" v-else v-text="item.content"></div>
       <div class="message-actions">
         <div class="actions" v-if="editableIndex == index">
           <v-btn size="small" color="primary" @click="applyEdit()">
@@ -113,7 +112,7 @@ function changeContent(content) {
     outline: none;
     overflow-y: hidden;
     line-height: 2rem;
-    height: 2rem;
+    // height: 2rem;
   }
 
   .actions {

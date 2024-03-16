@@ -47,12 +47,12 @@
           @click="(item) => goChat(item, router)"
         />
       </template>
-      <div v-if="generating" class="text-align mt-3">
+      <div v-if="generating" class="text-align my-3">
         <v-btn prepend-icon="mdi-stop-circle-outline" @click="clickBtn"
           >停止生成</v-btn
         >
       </div>
-      <div v-else-if="regenerateBtn" class="text-align mt-3">
+      <div v-else-if="regenerateBtn" class="text-align my-3">
         <v-btn prepend-icon="mdi-replay" color="primary" @click="regenerate"
           >重新生成</v-btn
         >
@@ -188,12 +188,14 @@ async function send(text) {
   }
 }
 
-function initEl() {
+function initEl(disalbeScroll) {
   generating.value = false;
   cloneData.value = clone(props.modelValue);
   inputRef.value.inputRef && inputRef.value.inputRef.focus();
   nextTick(() => {
-    scrollToBottom();
+    if (!disalbeScroll) {
+      scrollToBottom();
+    }
     setTimeout(() => {
       const buttons = document.querySelectorAll("pre");
       buttons.forEach((btn) => {
@@ -240,6 +242,7 @@ async function gen(data, enabledTools) {
   const resItem = { role: "model", content: "", chatId: props.chatId };
   try {
     cloneData.value.push(resItem);
+    nextTick(scrollToBottom);
     controller = new AbortController();
     enabledTools =
       typeof enabledTools == "boolean" ? enabledTools : tools.value;
@@ -465,7 +468,7 @@ onMounted(() => {
   watch(
     () => props.modelValue,
     () => {
-      nextTick(initEl);
+      nextTick(() => initEl(true));
     }
   );
 

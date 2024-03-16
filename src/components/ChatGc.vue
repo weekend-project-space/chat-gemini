@@ -202,6 +202,7 @@ function clickBtn() {
 }
 
 async function send(text) {
+  console.log("send", text);
   cloneData.value = [];
   text = d.value.inter();
   text = text.trim();

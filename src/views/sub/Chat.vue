@@ -131,12 +131,13 @@ async function replaceItems(items0, chatId) {
       JSON.stringify(items0[i].content)
     ) {
       updateIndex = i;
+      break;
     }
   }
   if (updateIndex == -1) {
     return;
   }
-  console.log("updateIndex", updateIndex, items.value, items0);
+  // console.log("updateIndex", updateIndex, items.value, items0);
   // 删除之后的数据
 
   for (let i = updateIndex; i < len0; i++) {
