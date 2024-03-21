@@ -7,6 +7,13 @@
         placeholder="发送消息给极速ai"
         @keyup.enter="quickEnter"
       />
+      <v-btn
+        :disabled="value.length == 0"
+        size="sm"
+        icon="mdi-arrow-up-box"
+        variant="text"
+        @click="quickEnter"
+      ></v-btn>
     </div>
     <v-bottom-navigation v-if="route.matched.length < 3" grow>
       <v-btn
@@ -114,7 +121,10 @@ const bars = [
 const surplusText = inject("surplusText");
 
 function quickEnter() {
-  goChat(value.value);
+  const text = value.value;
+  const content =
+    text.lastIndexOf("\n") === text.length - 1 ? text.slice(0, -1) : text;
+  goChat(content);
 
   // value.value = "";
 }
@@ -140,6 +150,9 @@ async function goChat(content) {
 }
 .quicktext {
   position: fixed;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: flex-end;
   bottom: 56px;
   width: calc(100% - 1rem);
   z-index: 100;

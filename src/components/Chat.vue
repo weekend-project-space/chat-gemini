@@ -197,10 +197,16 @@ function initEl(disalbeScroll) {
   generating.value = false;
   cloneData.value = clone(props.modelValue);
   inputRef.value.inputRef && inputRef.value.inputRef.focus();
-  nextTick(() => {
+  setTimeout(() => {
+    if (inputRefs.value && inputRefs.value.length) {
+      lastReqChatItemHeight.value =
+        inputRefs.value[inputRefs.value.length - 1].height;
+    }
     if (!disalbeScroll) {
       scrollToBottom();
     }
+  }, 10);
+  nextTick(() => {
     setTimeout(() => {
       const buttons = document.querySelectorAll("pre");
       buttons.forEach((btn) => {
@@ -258,7 +264,12 @@ async function gen(data, enabledTools) {
     controller = new AbortController();
     enabledTools =
       typeof enabledTools == "boolean" ? enabledTools : tools.value;
-    for await (const line of llm(reqData, controller.signal, enabledTools)) {
+    for await (const line of llm(
+      reqData,
+      controller.signal,
+      enabledTools
+      // "openai"
+    )) {
       if (line.type == "text") {
         resItem.content = line.data;
       } else {

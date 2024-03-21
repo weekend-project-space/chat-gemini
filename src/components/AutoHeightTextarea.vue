@@ -12,7 +12,13 @@
 </template>
 <script setup>
 import { ref } from "vue";
-defineProps(["modelValue", "contenteditable"]);
+defineProps({
+  modelValue: String,
+  contenteditable: {
+    type: Boolean,
+    default: () => true,
+  },
+});
 const inputRef = ref();
 const emit = defineEmits(["update:modelValue"]);
 function update(e) {
