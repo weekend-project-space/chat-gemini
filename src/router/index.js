@@ -63,6 +63,8 @@ router.beforeEach(async (to, from, next) => {
       const key = await getKey()
       localStorage.setItem('qaiKey', key)
       setTimeout(() => {
+        const sendEvent = new Event("llmEnd")
+        document.dispatchEvent(sendEvent)
         next()
       }, 30);
     } else {
