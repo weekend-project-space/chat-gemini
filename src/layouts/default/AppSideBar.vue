@@ -34,7 +34,7 @@
   <template v-else>
     <v-navigation-drawer class="drawer" width="130">
       <!-- <v-list nav> -->
-      <div class="mx-auto text-center my-3">
+      <div v-if="domain.includes('jisu')" class="mx-auto text-center my-3">
         <v-avatar size="large" image="/logo.png" loading></v-avatar>
         <h5 class="mt-3">极速AI</h5>
       </div>
@@ -119,6 +119,8 @@ const bars = [
 ];
 
 const surplusText = inject("surplusText");
+
+const domain = window.location.host;
 
 function quickEnter() {
   const text = value.value;
