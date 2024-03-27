@@ -32,7 +32,7 @@
 }
 .empty {
   text-align: center;
-  margin-top: 30vh;
+  margin-top: 23vh;
   .bold {
     font-weight: 500;
     font-size: 1.5rem;
