@@ -4,6 +4,10 @@ import {
   createWebHistory
 } from 'vue-router'
 
+import {
+  getKey
+} from '@/api/surplus'
+
 const routes = [{
   path: '',
   component: () => import('@/layouts/default/Default.vue'),
@@ -52,9 +56,18 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
+
   if (to.path !== '/setup' && !localStorage.getItem('qaiKey')) {
-    next('/setup')
+    if (window.location.hostname.includes('local')) {
+      const key = await getKey()
+      localStorage.setItem('qaiKey', key)
+      setTimeout(() => {
+        next()
+      }, 30);
+    } else {
+      next('/setup')
+    }
   } else {
     next()
   }

@@ -73,11 +73,11 @@
       v-model:tools="tools"
     />
     <div class="text-center tip">
-      <small
+      <!-- <small
         >如发现站点功能异常，<a href="https://zhidayingxiao.cn/to/06g6xX"
           >加微信群</a
         >。极速ai可能会犯错误。请考虑核实重要信息。
-      </small>
+      </small> -->
     </div>
   </div>
 </template>

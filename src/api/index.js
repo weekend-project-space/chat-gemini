@@ -1,3 +1,7 @@
+import {
+  BASE_URL
+} from './const'
+
 export async function req(api, data, signal, config) {
   return await (await fetch(api, {
     method: 'POST',
@@ -10,7 +14,7 @@ export async function req(api, data, signal, config) {
 
 export async function* reqGemini(data, signal) {
   // const API_BASE = localStorage.getItem('qaiApi') || 'https://api-gm.xfjy.in/v1beta/models/gemini-pro:streamGenerateContent?key='
-  const API = 'https://zhidayingxiao.cn/v1/completions'
+  const API = BASE_URL + '/v1/completions'
 
   const rb = await fetch(API, {
     method: 'POST',

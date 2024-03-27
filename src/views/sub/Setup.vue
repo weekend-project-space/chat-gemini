@@ -34,6 +34,7 @@ import { useRouter } from "vue-router";
 import confirm from "@/compose/useConfirm";
 const router = useRouter();
 const qaiKey = ref(localStorage.getItem("qaiKey"));
+
 // const geminiApi = ref(
 //   localStorage.getItem("geminiApi") ||
 //     "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key="
