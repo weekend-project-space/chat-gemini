@@ -48,16 +48,16 @@ const emit = defineEmits(["update:modelValue", "click"]);
   }
   36% {
     opacity: 1;
-    bottom: 1rem;
+    bottom: 0;
   }
   100% {
-    bottom: 1rem;
+    bottom: 0;
   }
 }
 .explore-warp {
   position: sticky;
-  margin-top: 30vh;
-  bottom: 0;
+  margin-top: 36vh;
+  bottom: 0rem;
   padding-bottom: 1rem;
   animation: up 3s;
   background-color: rgb(var(--v-theme-background));
