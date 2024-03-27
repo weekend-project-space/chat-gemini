@@ -59,7 +59,7 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
 
   if (to.path !== '/setup' && !localStorage.getItem('qaiKey')) {
-    if (window.location.hostname.includes('local')) {
+    if (!window.location.hostname.includes('jisu')) {
       const key = await getKey()
       localStorage.setItem('qaiKey', key)
       setTimeout(() => {
