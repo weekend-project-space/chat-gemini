@@ -1,5 +1,5 @@
 <template>
-  <div class="px-5 pt-3 sticky d-flex">
+  <div class="px-3 pt-3 sticky d-flex">
     <!-- <v-switch
       color="primary"
       hide-details=""
