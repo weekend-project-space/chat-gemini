@@ -60,7 +60,7 @@ const defaultChatText = "新对话";
 const route = useRoute();
 const router = useRouter();
 const { mobile } = useDisplay();
-const texts = { app: "应用", chat: "对话" };
+const texts = { app: "创作", chat: "对话" };
 const chatGroupList = computed(() => {
   return (
     chats.value &&
