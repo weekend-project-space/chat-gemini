@@ -32,17 +32,17 @@
     </v-bottom-navigation>
   </template>
   <template v-else>
-    <v-navigation-drawer class="drawer" width="130">
+    <v-navigation-drawer class="drawer" width="58">
       <!-- <v-list nav> -->
-      <div v-if="domain.includes('jisu')" class="mx-auto text-center my-3">
-        <v-avatar size="large" image="/logo.png" loading></v-avatar>
-        <h5 class="mt-3">极速AI</h5>
+      <div v-if="domain.includes('lo')" class="mx-auto text-center my-3">
+        <v-avatar size="small" image="/logo.png" loading></v-avatar>
+        <!-- <h5 class="mt-7">极速AI</h5> -->
       </div>
       <!-- </v-list> -->
 
       <!-- <v-divider></v-divider> -->
 
-      <v-list nav>
+      <v-list density="compact" nav>
         <v-list-item
           v-for="bar in bars"
           :key="bar.icon"
@@ -56,17 +56,13 @@
         <v-divider></v-divider>
 
         <v-list density="compact" nav>
-          <div class="d-flex justify-space-between align-center mb-1 mt-2">
-            <p class="font-sm" v-text="surplusText"></p>
+          <div class="text-center align-center mb-1">
             <v-dialog max-width="500">
               <template v-slot:activator="{ props: activatorProps }">
-                <v-btn
-                  color="primary"
-                  size="small"
-                  v-bind="activatorProps"
-                  text="充值"
-                  variant="text"
-                ></v-btn>
+                <div v-bind="activatorProps">
+                  <p class="font-sm mb-2" v-text="surplusText"></p>
+                  <a class="font-sm">充值</a>
+                </div>
               </template>
 
               <template v-slot:default>

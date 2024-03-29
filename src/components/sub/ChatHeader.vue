@@ -1,6 +1,6 @@
 <template>
-  <div class="px-5 sticky d-flex justify-start align-center">
-    <v-switch
+  <div class="px-5 pt-3 sticky d-flex">
+    <!-- <v-switch
       color="primary"
       hide-details=""
       :model-value="modelValue"
@@ -10,16 +10,25 @@
         <v-tooltip text="支持联网，生成思维导图，天气查询" location="bottom">
           <template v-slot:activator="{ props }">
             <div v-bind="props">
-              <v-icon
-                :color="modelValue ? 'primary' : ''"
-                icon=" mdi-puzzle-outline"
-              ></v-icon>
-              <span class="mx-2">联网插件</span>
+              
             </div>
           </template>
         </v-tooltip>
       </template>
-    </v-switch>
+    </v-switch> -->
+    <v-tooltip text="支持联网，生成思维导图，天气查询" location="bottom">
+      <template v-slot:activator="{ props }">
+        <v-btn
+          variant="text"
+          v-bind="props"
+          class="d-flex align-center"
+          @click="() => emit('update:modelValue', !modelValue)"
+        >
+          <v-icon icon=" mdi-puzzle-outline"></v-icon>
+          <span class="mx-2">联网插件:{{ modelValue ? "开启" : "关闭" }}</span>
+        </v-btn>
+      </template>
+    </v-tooltip>
   </div>
 </template>
 <script setup>
