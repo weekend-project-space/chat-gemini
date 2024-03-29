@@ -56,7 +56,7 @@ const emit = defineEmits(["update:modelValue", "click"]);
 }
 .explore-warp {
   position: sticky;
-  margin-top: 30vh;
+  margin-top: 36vh;
   bottom: 0;
   padding-bottom: 1rem;
   animation: up 3s;
