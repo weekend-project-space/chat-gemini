@@ -56,7 +56,7 @@
         <v-divider></v-divider>
 
         <v-list nav>
-          <div class="text-center align-center my-2">
+          <div class="text-center align-center my-1">
             <v-dialog max-width="500">
               <template v-slot:activator="{ props: activatorProps }">
                 <div

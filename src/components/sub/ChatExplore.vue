@@ -1,5 +1,5 @@
 <template>
-  <div class="explore-warp">
+  <div class="explore-warp px-1">
     <v-chip-group
       @update:modelValue="(v) => emit('update:modelValue', v)"
       column
@@ -56,9 +56,8 @@ const emit = defineEmits(["update:modelValue", "click"]);
 }
 .explore-warp {
   position: sticky;
-  margin-top: 36vh;
-  bottom: 0;
-  padding-bottom: 1rem;
+  margin-top: 42vh;
+  bottom: 1rem;
   animation: up 3s;
   background-color: rgb(var(--v-theme-background));
   z-index: 10;

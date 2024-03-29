@@ -14,14 +14,14 @@
           >微信交流群</a
         >，以便第一时间解决。ctrl+d收藏网站</small
       >
-      <!-- <div class="mt-5">
+      <div class="mt-5">
         <v-btn
           color="primary"
           prepend-icon="mdi-wechat"
           href="https://zhidayingxiao.cn/to/06g6xX"
           >点击👆进微信交流群
         </v-btn>
-      </div> -->
+      </div>
     </div>
   </div>
 </template>
@@ -32,7 +32,7 @@
 }
 .empty {
   text-align: center;
-  margin-top: 23vh;
+  margin-top: 21vh;
   .bold {
     font-weight: 500;
     font-size: 1.5rem;
