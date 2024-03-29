@@ -5,7 +5,7 @@ export const db = new Dexie('chatdb');
 db.version(1).stores({
   prompts: '++id, &name, prompt', // Primary key and indexed props
   chatItems: '++id, chatId, role, content, time',
-  chats: '++id, name, time, &promptId',
+  chats: '++id, name, time, &promptId, type',
   tools: '&id, meta, functions'
 });
 

@@ -20,25 +20,30 @@
   </div>
   <div class="list">
     <v-list nav>
-      <v-list-item
-        v-for="item in chatList"
-        :title="item.name"
-        :value="item.id"
-        :key="item.id"
-        :data-id="item.id"
-        :to="'/chats/' + item.id"
-      >
-        <template #append>
-          <div class="actions">
-            <v-btn
-              size="small"
-              variant="text"
-              icon="mdi-delete-outline"
-              @click.prevent="delChat0(item.id)"
-            ></v-btn>
-          </div>
-        </template>
-      </v-list-item>
+      <template v-for="group in chatGroupList" :key="group.name">
+        <v-list-subheader
+          >{{ group.name }} ({{ group.data.length }})</v-list-subheader
+        >
+        <v-list-item
+          v-for="item in group.data"
+          :title="item.name"
+          :value="item.id"
+          :key="item.id"
+          :data-id="item.id"
+          :to="'/chats/' + item.id"
+        >
+          <template #append>
+            <div class="actions">
+              <v-btn
+                size="small"
+                variant="text"
+                icon="mdi-delete-outline"
+                @click.prevent="delChat0(item.id)"
+              ></v-btn>
+            </div>
+          </template>
+        </v-list-item>
+      </template>
     </v-list>
   </div>
 </template>
@@ -55,9 +60,26 @@ const defaultChatText = "新对话";
 const route = useRoute();
 const router = useRouter();
 const { mobile } = useDisplay();
-const chatList = computed(
-  () => chats.value && chats.value.filter((o) => o.name != defaultChatText)
-);
+const texts = { app: "应用", chat: "对话" };
+const chatGroupList = computed(() => {
+  return (
+    chats.value &&
+    chats.value
+      .filter((o) => o.name != defaultChatText)
+      .reduce((arr, item) => {
+        const a = arr.filter((a) => a.name == texts[item.type]);
+        if (a.length > 0) {
+          a[0].data.push(item);
+        } else {
+          arr.push({
+            name: texts[item.type],
+            data: [item],
+          });
+        }
+        return arr;
+      }, [])
+  );
+});
 async function goChat() {
   if (route.query.promptid) {
     const chatId = (await getByPromptId(Number.parseInt(route.query.promptid)))

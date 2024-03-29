@@ -23,7 +23,8 @@ export async function createChat(chatItems) {
     const id = await chatReposiotry.save({
       promptId: chatItem.promptId,
       name: chatItem.name,
-      time: new Date().getTime()
+      time: new Date().getTime(),
+      type: chatItem.content.includes('${') ? 'app' : 'chat'
     })
     chatItems.forEach(item => {
       item.chatId = id
