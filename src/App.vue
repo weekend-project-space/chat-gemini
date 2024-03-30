@@ -26,6 +26,7 @@ provide("surplusText", surplusText);
 
 :root {
   --v-warp-widht: 760px;
+  --v-sidebar-background: #f9f9f9;
 }
 .v-card--variant-elevated,
 .v-card--variant-flat {
@@ -53,12 +54,19 @@ html {
   // position: relative;
   padding: 0 1rem;
 }
+.warp-lg {
+  margin: 0 auto;
+  max-width: 1260px;
+  // position: relative;
+  padding: 0 1rem;
+}
 .warp .v-theme--light,
 .warp .v-theme--dark {
   --v-theme-surface: var(--v-theme-background);
 }
 #app .v-navigation-drawer--left {
   border-right-width: 0;
+  background-color: var(--v-sidebar-background);
 }
 // chat begin
 .chat-item-warp {

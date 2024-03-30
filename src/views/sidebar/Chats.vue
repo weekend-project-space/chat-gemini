@@ -30,16 +30,53 @@
           :value="item.id"
           :key="item.id"
           :data-id="item.id"
+          :id="'menu-' + item.id"
           :to="'/chats/' + item.id"
         >
           <template #append>
-            <div class="actions">
-              <v-btn
+            <div
+              class="actions"
+              :class="{ 'action-active': item.id == actionActiveId }"
+            >
+              <!-- <v-btn
                 size="small"
                 variant="text"
                 icon="mdi-delete-outline"
                 @click.prevent="delChat0(item.id)"
-              ></v-btn>
+              ></v-btn> -->
+              <!-- <v-btn
+                size="small"
+                variant="text"
+                icon="mdi-dots-horizontal"
+              ></v-btn> -->
+
+              <v-menu>
+                <template v-slot:activator="{ props }">
+                  <v-btn
+                    @click.prevent="changeActionActiveId(item.id)"
+                    v-bind="props"
+                    size="small"
+                    variant="text"
+                    icon="mdi-dots-horizontal"
+                  ></v-btn>
+                </template>
+                <v-list density="compact" nav>
+                  <!-- <v-list-item @click="upChat(item)">
+                    <v-list-item-title
+                      ><v-icon size="small" class="mr-3"
+                        >mdi-arrow-collapse-up</v-icon
+                      >置顶对话</v-list-item-title
+                    >
+                  </v-list-item> -->
+                  <v-list-item @click="delChat0(item.id)">
+                    <v-list-item-title>
+                      <v-icon size="small" class="mr-3"
+                        >mdi-delete-outline</v-icon
+                      >删除对话</v-list-item-title
+                    >
+                  </v-list-item>
+                </v-list>
+              </v-menu>
             </div>
           </template>
         </v-list-item>
@@ -52,7 +89,7 @@ import { useList } from "@/compose/useQuery";
 import { listAll, getByPromptId } from "@/repo/chatRepository";
 import { delChat, newChat } from "@/service/chatService";
 import { useRoute, useRouter } from "vue-router";
-import { computed, onMounted, watch } from "vue";
+import { computed, onMounted, watch, ref } from "vue";
 import { useDisplay } from "vuetify";
 import { format } from "@/utils/dateUtils";
 const { value, data: chats } = useList(listAll);
@@ -60,7 +97,20 @@ const defaultChatText = "新对话";
 const route = useRoute();
 const router = useRouter();
 const { mobile } = useDisplay();
-const texts = { app: "创作", chat: "对话" };
+
+const actionActiveId = ref(0);
+
+function changeActionActiveId(id) {
+  setTimeout(() => {
+    actionActiveId.value = id;
+  }, 300);
+}
+
+function upChat(item) {
+  item.type = "aup";
+}
+
+const texts = { app: "创作", chat: "对话", aup: "置顶" };
 const chatGroupList = computed(() => {
   return (
     chats.value &&
@@ -83,9 +133,11 @@ const chatGroupList = computed(() => {
         }
         return arr;
       }, [])
+      .sort()
   );
 });
 async function goChat() {
+  actionActiveId.value = 0;
   if (route.query.promptid) {
     const chatId = (await getByPromptId(Number.parseInt(route.query.promptid)))
       .id;
@@ -141,6 +193,14 @@ small {
     display: none;
   }
   .v-list-item:hover {
+    .actions {
+      display: block;
+    }
+  }
+  .action-active {
+    display: block;
+  }
+  .v-list-item--active {
     .actions {
       display: block;
     }

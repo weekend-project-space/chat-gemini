@@ -48,7 +48,8 @@
       </template>
     </v-tooltip>
   </div>
-  <v-dialog max-width="500" v-model="favable">
+  <!-- <v-dialog max-width="500" v-model="favable"> -->
+  <v-dialog v-model="favable" max-width="500">
     <v-card>
       <div class="d-flex justify-space-between align-center pr-3 pt-3">
         <v-card-title> 收藏 </v-card-title>

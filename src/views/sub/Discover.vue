@@ -1,5 +1,5 @@
 <template>
-  <div class="warp my-5">
+  <div class="my-5 warp-lg">
     <!-- <v-card flat>
       <v-list density="compact" nav>
         <div class="mb-3">
@@ -194,7 +194,7 @@ async function goChat(item) {
 }
 .explore-list {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   grid-gap: 0.8rem;
   > * {
     font-size: 0.8rem;
@@ -204,6 +204,7 @@ async function goChat(item) {
     border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
     padding: 0.5rem 1rem;
     border-radius: 0.8rem;
+    min-height: 95px;
     p {
       margin-bottom: 0.3rem;
     }
