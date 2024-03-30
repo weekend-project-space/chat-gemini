@@ -103,7 +103,7 @@ const actionActiveId = ref(0);
 function changeActionActiveId(id) {
   setTimeout(() => {
     actionActiveId.value = id;
-  }, 300);
+  }, 10);
 }
 
 function upChat(item) {
