@@ -67,7 +67,12 @@ const chatGroupList = computed(() => {
     chats.value
       .filter((o) => o.name != defaultChatText)
       .reduce((arr, item) => {
-        const a = arr.filter((a) => a.name == texts[item.type]);
+        const a = arr
+          .map((o) => {
+            o.type = o.type ? o.type : "app";
+            return o;
+          })
+          .filter((a) => a.name == texts[item.type]);
         if (a.length > 0) {
           a[0].data.push(item);
         } else {
