@@ -1,5 +1,5 @@
 <template>
-  <div class="pa-5" :class="mobile ? 'grid-sm pl-5 ' : 'grid pl-9 '">
+  <div class="pa-5" :class="mobile ? 'grid-sm px-3 ' : 'grid pl-9 '">
     <div class="message">
       <div class="d-flex align-center justify-space-between mb-3">
         <div class="d-flex align-center">
@@ -324,6 +324,7 @@ function copy(text) {
   grid-gap: 1rem;
   .message {
     min-height: 0;
+    padding: 0.6rem;
   }
 }
 .grid {
