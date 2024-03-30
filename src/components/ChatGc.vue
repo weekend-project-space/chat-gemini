@@ -306,7 +306,7 @@ function copy(text) {
   background: rgb(var(--v-theme-background));
   padding: 1rem;
   border-radius: 1rem;
-  border: 1px solid rgb(var(--v-theme-code));
+  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
   min-height: calc(100vh - 2.5rem);
   .actions-warp {
     .v-btn--icon.v-btn--density-default {
