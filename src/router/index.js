@@ -57,20 +57,22 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
+  next()
 
-  if (to.path !== '/setup' && !localStorage.getItem('qaiKey')) {
-    if (!window.location.hostname.includes('jisu')) {
-      const key = await getKey()
-      localStorage.setItem('qaiKey', key)
-      setTimeout(() => {
-        next()
-      }, 30);
-    } else {
-      next('/setup')
-    }
-  } else {
-    next()
-  }
+  // if (to.path !== '/setup' && !localStorage.getItem('qaiKey')) {
+  //   // if (!window.location.hostname.includes('jisu')) {
+  //   //   const key = await getKey()
+  //   //   localStorage.setItem('qaiKey', key)
+  //   //   setTimeout(() => {
+  //   //     next()
+  //   //   }, 30);
+  //   // } else {
+  //   //   next('/setup')
+  //   // }
+  //   next('/setup')
+  // } else {
+  //   next()
+  // }
 })
 
 export default router
