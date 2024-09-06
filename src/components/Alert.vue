@@ -11,10 +11,10 @@ defineProps(["text", "type"]);
     top: 0;
   }
   3% {
-    top: 5vh;
+    top: 10vh;
   }
   100% {
-    top: 5vh;
+    top: 10vh;
   }
 }
 .alert {

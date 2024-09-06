@@ -279,16 +279,7 @@ async function gen(data) {
 }
 
 function multiTurn() {
-  return {
-    contents: cloneData.value.map((o) => ({
-      role: o.role,
-      parts: [
-        {
-          text: o.content,
-        },
-      ],
-    })),
-  };
+  return cloneData.value.map((o) => ({ role: o.role, content: o.content }));
 }
 
 async function goChat() {

@@ -70,12 +70,14 @@
 //   signal
 // } = controller;
 
-export async function* reqGemini(data, signal) {
-  const API_BASE = localStorage.getItem('geminiApi') || 'https://api-gm.xfjy.in/v1beta/models/gemini-pro:streamGenerateContent?key='
-  const API = API_BASE + (localStorage.getItem('geminiKey') || 'AIzaSyDp2ZFINm52zyxLE0-Z4GXVd-_oycmwJOc')
-  const rb = await fetch(API, {
+export async function* reqChat(messages, signal) {
+
+  const rb = await fetch('https://ai.01234.fun/v1/chat/completions', {
     method: 'POST',
-    body: JSON.stringify(data),
+    body: JSON.stringify({
+      model: 'gpt-4o-mini',
+      messages
+    }),
     signal
   }).then((response) => response.body);
   const reader = rb.getReader();
