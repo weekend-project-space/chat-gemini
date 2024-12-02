@@ -104,9 +104,9 @@ export async function* llm(data, signal = controller.signal, enabledTools = fals
       }
     }
   } else if (type == 'openai') {
-    const path = localStorage.getItem('openai-host') || 'https://ai.01234.fun'
-    const key = localStorage.getItem('openai-key') || 'sk-3VK7mzraI3j08xFf81283a38Ab434a5cAe910b009448C37f'
-    let d = (await req(path + '/v1/chat/completions', gptReq(data, model, enabledTools), signal, {
+    const path = localStorage.getItem('openai-host') || 'https://zhidayingxiao.cn'
+    const key = localStorage.getItem('openai-key') || localStorage.getItem('qaiKey')
+    let d = (await req(path + '/v1/chat/completions', gptReq(data, model, false), signal, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + key
@@ -192,6 +192,6 @@ function gptReq(data, model, enabledTools) {
   return {
     model,
     messages,
-    functions
+    functions: functions.length > 0 ? functions : undefined
   }
 }
