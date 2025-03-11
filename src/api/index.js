@@ -12,6 +12,18 @@ export async function req(api, data, signal, config) {
 }
 
 
+export async function getModels() {
+  const API = BASE_URL + '/v1/models'
+  return await (await fetch(API, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('qaiKey') || ''
+    }
+  })).json();
+}
+
+
 export async function* reqGemini(data, signal) {
   // const API_BASE = localStorage.getItem('qaiApi') || 'https://api-gm.xfjy.in/v1beta/models/gemini-pro:streamGenerateContent?key='
   const API = BASE_URL + '/v1/completions'

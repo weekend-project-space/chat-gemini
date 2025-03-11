@@ -8,7 +8,7 @@
     ref="chatPanelRef"
     v-show="clientHeight - 26 - (inputRef ? inputRef.height : 54) > 0"
   >
-    <ChatHeader v-model="tools" />
+    <ChatHeader v-model="model" />
 
     <div class="warp">
       <template v-for="(item, i) in cloneData" :key="chatId + '@' + item.id">
@@ -122,6 +122,7 @@ const chatPanelRef = ref();
 const cloneData = ref([]);
 const editIndex = ref(-1);
 const tools = ref(false);
+const model = ref("gpt-4o-mini");
 const regenerateBtn = ref(false);
 const clientHeight = ref(window.document.body.clientHeight);
 const inputRefs = ref([]);
@@ -267,8 +268,9 @@ async function gen(data, enabledTools) {
     for await (const line of llm(
       reqData,
       controller.signal,
-      enabledTools
-      // "openai"
+      enabledTools,
+      "openai",
+      model.value
     )) {
       if (line.type == "text") {
         resItem.content = line.data;

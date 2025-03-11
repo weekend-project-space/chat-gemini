@@ -1,6 +1,7 @@
 import {
   reqGemini,
-  req
+  req,
+  getModels
 } from '@/api'
 
 const controller = new AbortController();
@@ -121,6 +122,10 @@ export async function* llm(data, signal = controller.signal, enabledTools = fals
   document.dispatchEvent(sendEvent)
 }
 
+
+export async function listModel() {
+  return (await getModels()).data.map(o => o.id).filter(id => id.includes('gpt-4o-mini') || id.includes('deepseek-'))
+}
 
 function gptReq(data, model, enabledTools) {
   console.log(data)
