@@ -1,25 +1,19 @@
 <template>
-  <div class="chat-item-warp">
+  <div class="chat-item-warp" ref="chatitemRef">
+    <!-- ee6A42 -->
     <v-avatar
-      color="#ee6A42"
+      color="primary"
       size="small"
       icon="mdi-account-circle-outline"
     ></v-avatar>
     <div>
       <div class="name">我</div>
-      <textarea
-        v-if="editableIndex == index"
+      <autotextarea
+        :contenteditable="editableIndex == index"
         class="textarea"
-        :value="item.content"
-        @input="(event) => changeContent(event.target.value)"
-        ref="textAreaRef"
-        :style="{
-          height: item.content
-            ? textAreaRef && textAreaRef.scrollHeight + 'px'
-            : '2rem',
-        }"
+        :modelValue="item.content"
+        @update:modelValue="(v) => changeContent(v)"
       />
-      <div class="textarea0" v-else v-text="item.content"></div>
       <div class="message-actions">
         <div class="actions" v-if="editableIndex == index">
           <v-btn size="small" color="primary" @click="applyEdit()">
@@ -60,12 +54,13 @@
   </div>
 </template>
 <script setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 const props = defineProps(["modelValue", "index"]);
 const emit = defineEmits(["update:modelValue", "applyEdit"]);
-const textAreaRef = ref();
 const item = computed(() => props.modelValue);
+const height = ref(0);
 const editableIndex = ref(-1);
+const chatitemRef = ref();
 
 let tempContent = "";
 function edit(content, index) {
@@ -86,8 +81,17 @@ function applyEdit() {
 
 function changeContent(content) {
   item.value.content = content;
+  height.value = chatitemRef.value.clientHeight + 16;
   emit("update:modelValue", item.value);
 }
+
+onMounted(() => {
+  height.value = chatitemRef.value.clientHeight + 16;
+});
+
+defineExpose({
+  height,
+});
 </script>
 <style lang="less" scoped>
 .chat-item-warp {
@@ -104,11 +108,13 @@ function changeContent(content) {
     display: flex;
     justify-content: flex-start;
     min-height: 28px;
-    // margin-top: 0.5rem;
+    margin-top: 0.5rem;
   }
   .textarea0 {
-    width: 100%;
+    //width: calc(100% - 1rem);
     line-height: 2rem;
+    word-wrap: break-word;
+    white-space: pre-wrap;
   }
   .textarea {
     display: block;
@@ -117,7 +123,7 @@ function changeContent(content) {
     outline: none;
     overflow-y: hidden;
     line-height: 2rem;
-    height: 2rem;
+    // height: 2rem;
   }
 
   .actions {

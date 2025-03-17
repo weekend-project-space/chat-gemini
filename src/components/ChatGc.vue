@@ -1,123 +1,154 @@
 <template>
-  <div class="warp">
-    <div class="d-flex align-center">
-      <h2 class="my-5" v-text="name"></h2>
-
-      <v-tooltip text="新建收藏" location="bottom">
-        <template v-slot:activator="{ props }">
-          <v-btn
-            v-bind="props"
-            icon="mdi-star-outline"
-            variant="text"
-            size="small"
-            :to="'/prompts/setup?prompt=' + prompt + '&name=' + name"
-            class="mx-3"
-          ></v-btn>
-        </template>
-      </v-tooltip>
-      <v-tooltip text="分享" location="bottom">
-        <template v-slot:activator="{ props }">
-          <v-btn
-            v-bind="props"
-            icon="mdi-share-outline"
-            variant="text"
-            size="small"
-            @click="share"
-          ></v-btn>
-        </template>
-      </v-tooltip>
-    </div>
-    <template v-for="item in d.components">
-      <v-text-field
-        :key="item.name + 'input'"
-        v-if="item.type == 'input'"
-        :label="item.name"
-        v-model="d.data[item.name]"
-      ></v-text-field>
-      <v-textarea
-        :key="item.name + 'textarea'"
-        v-else-if="item.type == 'textarea'"
-        :label="item.name"
-        v-model="d.data[item.name]"
-      ></v-textarea>
-      <v-text-field
-        :key="item.name + 'number'"
-        v-else-if="item.type == 'number'"
-        :label="item.name"
-        type="number"
-        v-model="d.data[item.name]"
-      ></v-text-field>
-      <v-select
-        :key="item.name + 'select'"
-        v-else-if="item.type == 'select'"
-        :label="item.name"
-        :items="item.value"
-        v-model="d.data[item.name]"
-      ></v-select>
-      <v-radio-group
-        :key="item.name + 'radio'"
-        v-else-if="item.type == 'radio'"
-        :label="item.name"
-        v-model="d.data[item.name]"
-      >
-        <v-radio
-          v-for="v in item.value"
-          :key="v"
-          :label="v"
-          :value="v"
-        ></v-radio>
-      </v-radio-group>
-      <component v-else :key="item.name + 'comp'" :is="item.type">{{
-        item.value
-      }}</component>
-    </template>
-
-    <v-btn
-      block
-      :icon="generating ? 'mdi-stop-circle-outline' : 'mdi-send-outline'"
-      rounded="lg"
-      :disabled="!d.hasAllValue"
-      color="primary"
-      @click="clickBtn"
-    >
-    </v-btn>
-    <div class="message my-5" v-if="res">
-      <div
-        v-html="
-          micromark(
-            res.content + (generating ? '<span class=generating></span>' : '')
-          )
-        "
-      ></div>
-      <div class="actions-warp mt-3" v-if="!generating">
-        <v-tooltip text="复制" location="bottom">
-          <template v-slot:activator="{ props }">
-            <v-btn
-              v-bind="props"
-              icon="mdi-content-copy"
-              variant="text"
-              size="small"
-              @click="copy(micromark(res.content).replace(/<[^>]*>/g, ''))"
-            ></v-btn>
-          </template>
-        </v-tooltip>
-        <v-tooltip text="开始对话" location="bottom">
-          <template v-slot:activator="{ props }">
-            <v-btn
-              v-bind="props"
-              icon="mdi-message-outline"
-              variant="text"
-              size="small"
-              @click="goChat"
-            ></v-btn>
-          </template>
-        </v-tooltip>
+  <div class="pa-5" :class="mobile ? 'grid-sm px-3 ' : 'grid pl-9 '">
+    <div class="message">
+      <div class="d-flex align-center justify-space-between mb-3">
+        <div class="d-flex align-center">
+          <v-avatar color="primary" size="small" class="mr-2">
+            {{ name.substring(0, 1) }}
+          </v-avatar>
+          <h5 v-text="name"></h5>
+        </div>
+        <div>
+          <v-tooltip text="新建收藏" location="bottom">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                v-bind="props"
+                icon="mdi-star-outline"
+                variant="text"
+                size="small"
+                :to="'/prompts/setup?prompt=' + prompt + '&name=' + name"
+                class="mx-3"
+              ></v-btn>
+            </template>
+          </v-tooltip>
+          <v-tooltip text="分享" location="bottom">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                v-bind="props"
+                icon="mdi-share-outline"
+                variant="text"
+                size="small"
+                @click="share"
+              ></v-btn>
+            </template>
+          </v-tooltip>
+        </div>
       </div>
+      <template v-for="item in d.components">
+        <v-text-field
+          :key="item.name + 'input'"
+          v-if="item.type == 'input'"
+          :label="item.name"
+          v-model="d.data[item.name]"
+        ></v-text-field>
+        <v-textarea
+          :key="item.name + 'textarea'"
+          v-else-if="item.type == 'textarea'"
+          :label="item.name"
+          v-model="d.data[item.name]"
+        ></v-textarea>
+        <v-text-field
+          :key="item.name + 'number'"
+          v-else-if="item.type == 'number'"
+          :label="item.name"
+          type="number"
+          v-model="d.data[item.name]"
+        ></v-text-field>
+        <v-select
+          :key="item.name + 'select'"
+          v-else-if="item.type == 'select'"
+          :label="item.name"
+          :items="item.value"
+          v-model="d.data[item.name]"
+        ></v-select>
+        <v-radio-group
+          :key="item.name + 'radio'"
+          v-else-if="item.type == 'radio'"
+          :label="item.name"
+          v-model="d.data[item.name]"
+        >
+          <v-radio
+            v-for="v in item.value"
+            :key="v"
+            :label="v"
+            :value="v"
+          ></v-radio>
+        </v-radio-group>
+        <component v-else :key="item.name + 'comp'" :is="item.type">{{
+          item.value
+        }}</component>
+      </template>
+      <div class="d-flex justify-space-between">
+        <v-btn prepend-icon="mdi-delete-outline" rounded="lg" @click="d.rest()"
+          >清空输入
+        </v-btn>
+        <v-btn
+          :prepend-icon="
+            generating ? 'mdi-stop-circle-outline' : 'mdi-send-outline'
+          "
+          rounded="lg"
+          :disabled="!d.hasAllValue"
+          color="primary"
+          @click="clickBtn"
+        >
+          {{ generating ? "终止创作" : "开始创作" }}
+        </v-btn>
+      </div>
+    </div>
+    <div class="message">
+      <div class="mt-2 mb-6">
+        <h5 for=""><v-icon class="mr-3">mdi-magic-staff</v-icon>生成文案</h5>
+      </div>
+      <div v-if="generating" class="opacity">
+        <v-skeleton-loader boilerplate type="article"></v-skeleton-loader>
+        <v-skeleton-loader boilerplate type="paragraph"></v-skeleton-loader>
+      </div>
+      <template v-else-if="res">
+        <div class="message-warp pa-5 mt-3">
+          <div v-html="micromark(res.content)"></div>
+        </div>
+        <div class="actions-warp mt-3" v-if="!generating">
+          <v-tooltip text="复制" location="bottom">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                v-bind="props"
+                icon="mdi-content-copy"
+                variant="text"
+                size="small"
+                @click="copy(micromark(res.content).replace(/<[^>]*>/g, ''))"
+              ></v-btn>
+            </template>
+          </v-tooltip>
+          <v-tooltip text="复制成markdown" location="bottom">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                v-bind="props"
+                icon=" mdi-language-markdown-outline"
+                variant="text"
+                size="small"
+                @click="copy(res.content)"
+              ></v-btn>
+            </template>
+          </v-tooltip>
+          <v-tooltip text="开始对话" location="bottom">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                v-bind="props"
+                icon="mdi-message-outline"
+                variant="text"
+                size="small"
+                @click="goChat"
+              ></v-btn>
+            </template>
+          </v-tooltip>
+        </div>
+      </template>
     </div>
   </div>
 </template>
 <script setup>
 import { ref, nextTick, computed, watch } from "vue";
+import { useDisplay } from "vuetify";
 import { useInter } from "@/compose/promptInter";
 import { llm } from "@/service/llmAdapter";
 import { copy as copy0 } from "@/utils/copySupport";
@@ -131,6 +162,7 @@ const router = useRouter();
 const d = useInter(props);
 const generating = ref(false);
 const cloneData = ref([]);
+const { mobile } = useDisplay();
 const res = computed(() =>
   cloneData.value.length > 1 ? cloneData.value[1] : ""
 );
@@ -165,21 +197,6 @@ let genFuns = [];
 
 let controller = new AbortController();
 
-function initEl() {
-  nextTick(() => {
-    scrollToBottom();
-    setTimeout(() => {
-      const buttons = document.querySelectorAll("pre");
-      console.log(buttons);
-      buttons.forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-          copy(e.target.innerText);
-        });
-      });
-    }, 1000);
-  });
-}
-
 function clickBtn() {
   if (generating.value) {
     generating.value = false;
@@ -190,10 +207,11 @@ function clickBtn() {
   }
 }
 
-async function send(text) {
+async function send() {
   cloneData.value = [];
-  text = d.value.inter();
+  let text = d.value.inter();
   text = text.trim();
+  // console.log("send", text);
   const req = { role: "user", content: text, chatId: props.chatId };
   cloneData.value.push(req);
   nextTick(scrollToBottom);
@@ -207,49 +225,35 @@ async function gen(data) {
     alert({ text: "请等回复完后再重试" });
     return;
   }
-  let i = 0;
   generating.value = true;
+
   const reqData = multiTurn(data);
-  const resItem = { role: "model", content: "", chatId: props.chatId };
+
   try {
-    cloneData.value.push(resItem);
     controller = new AbortController();
-    let content = "";
     for await (const line of llm(reqData, controller.signal)) {
       if (line.type == "text") {
-        for (let chat of line.data) {
-          if (generating.value) {
-            i += 20;
-            const g = () => {
-              if (generating.value) {
-                content += chat;
-                resItem.content = content;
-                cloneData.value.splice(
-                  cloneData.value.length - 1,
-                  cloneData.value.length - 1,
-                  Object.assign({}, resItem)
-                );
-                nextTick(scrollToBottom);
-              }
-            };
-            genFuns.push(setTimeout(g, i));
-          }
-        }
+        const resItem = {
+          role: "model",
+          content: line.data,
+          chatId: props.chatId,
+        };
+        cloneData.value.push(resItem);
       } else {
         console.error(line);
       }
     }
   } catch (e) {
     console.error(e);
-    const eText = e.toString();
+    let eText = e.toString();
     if (eText.includes("The user aborted a request")) {
-      alert({ text: "取消成功" });
+      eText = "终止创作成功";
     } else if (eText.includes("API key not valid")) {
-      alert({ text: "点击左下角设置您的key", type: "warn" });
-    } else {
-      alert({ text: "抱歉，请重新试下或换个问法", type: "warn" });
+      eText = "API key不正确";
+    } else if (eText.includes("The model is overloaded")) {
+      eText = "模型过载,不要太快 请重新生成";
     }
-    resItem.content = "抱歉，请重新试下或换个问法";
+    alert({ text: eText, type: "warn" });
     return new Promise((_, rej) => {
       setTimeout(() => {
         generating.value = false;
@@ -263,8 +267,8 @@ async function gen(data) {
       setTimeout(() => {
         generating.value = false;
       }, 500);
-      resolve(resItem);
-    }, i + 300);
+      resolve("");
+    }, 300);
   });
 }
 
@@ -299,10 +303,11 @@ function copy(text) {
 </script>
 <style lang="less" scoped>
 .message {
-  background: rgba(var(--v-theme-code), 0.5);
+  background: rgb(var(--v-theme-background));
   padding: 1rem;
   border-radius: 1rem;
-  border: 1px solid rgb(var(--v-theme-code));
+  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  min-height: calc(100vh - 2.5rem);
   .actions-warp {
     .v-btn--icon.v-btn--density-default {
       width: calc(var(--v-btn-height));
@@ -313,75 +318,31 @@ function copy(text) {
     }
   }
 }
-</style>
-<style lang="less">
-.message ol,
-.message ul {
-  margin-inline-start: 1rem;
-}
-.message {
-  img,
-  * {
-    max-width: 100%;
-    overflow-y: auto;
+.grid-sm {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 1rem;
+  .message {
+    min-height: 0;
+    padding: 0.6rem;
   }
 }
-.message pre {
-  position: relative;
-  max-width: calc(var(--v-warp-widht) - 32px - 1rem);
-  overflow: auto;
-  background: rgba(var(--v-theme-on-code), 0.8);
-  color: rgb(var(--v-theme-code));
-  padding: 1rem;
+.grid {
+  display: grid;
+  grid-template-columns: 30% auto;
+  grid-gap: 1rem;
+}
+.message-warp {
+  background: #f9f9f9;
   border-radius: 0.5rem;
-  pointer-events: none;
-  &::before {
-    position: absolute;
-    content: "复制";
-    background: rgba(var(--v-theme-on-code), 0.8);
-    top: 0rem;
-    right: 0rem;
-    padding: 0.3rem 1rem;
-    border-top-right-radius: 0.5rem;
-    border-bottom-left-radius: 0.5rem;
-    pointer-events: all;
-  }
-  code {
-    max-width: calc(var(--v-warp-widht) - 32px - 1rem);
-  }
 }
-@keyframes scale {
-  0% {
-    transform: scale(1);
-  }
-  25% {
-    transform: scale(0.9);
-  }
-  50% {
-    transform: scale(0.6);
-  }
-  75% {
-    transform: scale(0.9);
-  }
-  100% {
-    transform: scale(1);
-  }
+</style>
+<style>
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 20px;
 }
-.generating {
-  background: rgba(
-    var(--v-theme-on-background),
-    var(--v-high-emphasis-opacity)
-  );
-  display: inline-block;
-  margin: 0 0.5rem;
-  width: 16px;
-  height: 16px;
-  border-radius: 8px;
-  animation-name: scale; // 动画名称
-  animation-direction: alternate; // 动画在奇数次（1、3、5...）正向播放，在偶数次（2、4、6...）反向播放。
-  animation-timing-function: linear;
-  animation-delay: 0s; // 动画延迟时间
-  animation-iteration-count: infinite; //  动画播放次数，infinite：一直播放
-  animation-duration: 1s; // 动画完成时间
+*::-webkit-scrollbar-thumb {
+  background: rgba(var(--v-theme-on-background), 0.3);
 }
 </style>

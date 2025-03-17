@@ -4,6 +4,10 @@ import {
   createWebHistory
 } from 'vue-router'
 
+import {
+  getKey
+} from '@/api/surplus'
+
 const routes = [{
   path: '',
   component: () => import('@/layouts/default/Default.vue'),
@@ -28,21 +32,22 @@ const routes = [{
       component: () => import('@/views/sub/Prompts.vue')
     }, ]
   }, {
-    path: 'discover',
+    path: 'app',
     component: () => import('@/views/Discover.vue'),
     children: [{
       path: ':id',
       component: () => import('@/views/sub/Discover.vue')
     }]
   }, {
-    path: 'settings',
+    path: 'setup',
     component: () => import('@/views/Settings.vue'),
     children: [{
-        path: '',
-        component: () => import('@/views/sub/Setting.vue')
-      }
-
-    ]
+      path: '',
+      component: () => import('@/views/sub/Setup.vue')
+    }, ]
+  }, {
+    path: 'user',
+    component: () => import('@/views/sub/User.vue')
   }]
 }]
 
@@ -51,6 +56,23 @@ const router = createRouter({
   routes,
 })
 
+router.beforeEach(async (to, from, next) => {
+  next()
 
+  // if (to.path !== '/setup' && !localStorage.getItem('qaiKey')) {
+  //   // if (!window.location.hostname.includes('jisu')) {
+  //   //   const key = await getKey()
+  //   //   localStorage.setItem('qaiKey', key)
+  //   //   setTimeout(() => {
+  //   //     next()
+  //   //   }, 30);
+  //   // } else {
+  //   //   next('/setup')
+  //   // }
+  //   next('/setup')
+  // } else {
+  //   next()
+  // }
+})
 
 export default router

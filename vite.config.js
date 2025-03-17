@@ -36,9 +36,9 @@ export default defineConfig({
       },
       includeAssets: ['favicon.ico'],
       manifest: {
-        name: 'Eywa',
-        short_name: 'Eywa',
-        description: 'Eywa',
+        name: '极速ai',
+        short_name: '极速ai',
+        description: '极速ai',
         theme_color: '#ffffff',
         icons: [{
           src: 'logo.png',

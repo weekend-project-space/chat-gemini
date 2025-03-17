@@ -3,10 +3,19 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue";
-onMounted(() => {
+import { onMounted, provide, ref } from "vue";
+import { getSurplus } from "@/api/surplus.js";
+const surplusText = ref("");
+onMounted(async () => {
   document.body.removeChild(document.getElementById("loading"));
+  document.addEventListener("llmEnd", async () => {
+    surplusText.value = await getSurplus();
+  });
+  if (localStorage.getItem("qaiKey")) {
+    surplusText.value = await getSurplus();
+  }
 });
+provide("surplusText", surplusText);
 </script>
 <style lang="less">
 .warp-sm {
@@ -17,6 +26,7 @@ onMounted(() => {
 
 :root {
   --v-warp-widht: 760px;
+  --v-sidebar-background: #f9f9f9;
 }
 .v-card--variant-elevated,
 .v-card--variant-flat {
@@ -25,6 +35,11 @@ onMounted(() => {
 
 html {
   overflow-y: auto;
+}
+.text-overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .tip {
   opacity: 0.8;
@@ -39,12 +54,19 @@ html {
   // position: relative;
   padding: 0 1rem;
 }
+.warp-lg {
+  margin: 0 auto;
+  max-width: 1260px;
+  // position: relative;
+  padding: 0 1rem;
+}
 .warp .v-theme--light,
 .warp .v-theme--dark {
   --v-theme-surface: var(--v-theme-background);
 }
 #app .v-navigation-drawer--left {
   border-right-width: 0;
+  background-color: var(--v-sidebar-background);
 }
 // chat begin
 .chat-item-warp {
@@ -121,9 +143,37 @@ html {
 }
 .message {
   img,
-  * {
+  pre,
+  code {
     max-width: 100%;
     overflow-y: auto;
+  }
+  /* CSS Table Style */
+  ul li {
+    list-style: none;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+  }
+
+  th,
+  td {
+    border: 1px solid rgb(var(--v-theme-surface));
+    padding: 0.5rem;
+  }
+  tr:nth-child(even) {
+    background-color: rgb(var(--v-theme-surface));
+  }
+  th {
+    background-color: rgba(var(--v-theme-on-code), 0.1);
+    text-align: center;
+  }
+
+  td {
+    text-align: center;
   }
 }
 .message ol,
@@ -132,7 +182,6 @@ html {
 }
 .message pre {
   position: relative;
-  max-width: calc(var(--v-warp-widht) - 32px - 1rem);
   overflow: auto;
   background: rgba(var(--v-theme-on-code), 0.8);
   color: rgb(var(--v-theme-code));
@@ -143,19 +192,50 @@ html {
     position: absolute;
     content: "复制";
     background: rgba(var(--v-theme-on-code), 0.8);
-    top: 0rem;
-    right: 0rem;
+    top: 0;
+    right: 0;
     padding: 0.3rem 1rem;
     border-top-right-radius: 0.5rem;
     border-bottom-left-radius: 0.5rem;
     pointer-events: all;
   }
   code {
-    max-width: calc(var(--v-warp-widht) - 32px - 1rem);
     .generating {
       display: none;
     }
   }
 }
 //chat end
+.font-sm {
+  font-size: 0.85rem;
+}
+
+.opacity {
+  animation: opacity 2s linear infinite;
+  -webkit-animation: opacity 2s linear infinite;
+}
+
+@keyframes opacity {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+@-webkit-keyframes opacity {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
 </style>

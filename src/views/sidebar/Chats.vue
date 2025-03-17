@@ -20,26 +20,67 @@
   </div>
   <div class="list">
     <v-list nav>
-      <v-list-item
-        v-for="item in chatList"
-        :title="item.name"
-        :value="item.id"
-        :key="item.id"
-        :data-id="item.id"
-        :to="'/chats/' + item.id"
-        :subtitle="formatData(item.time)"
-      >
-        <template #append>
-          <div class="actions">
-            <v-btn
-              size="small"
-              variant="text"
-              icon="mdi-delete-outline"
-              @click.prevent="delChat0(item.id)"
-            ></v-btn>
-          </div>
-        </template>
-      </v-list-item>
+      <template v-for="group in chatGroupList" :key="group.name">
+        <v-list-subheader
+          >{{ group.name }} ({{ group.data.length }})</v-list-subheader
+        >
+        <v-list-item
+          v-for="item in group.data"
+          :title="item.name"
+          :value="item.id"
+          :key="item.id"
+          :data-id="item.id"
+          :id="'menu-' + item.id"
+          :to="'/chats/' + item.id"
+        >
+          <template #append>
+            <div
+              class="actions"
+              :class="{ 'action-active': item.id == actionActiveId }"
+            >
+              <!-- <v-btn
+                size="small"
+                variant="text"
+                icon="mdi-delete-outline"
+                @click.prevent="delChat0(item.id)"
+              ></v-btn> -->
+              <!-- <v-btn
+                size="small"
+                variant="text"
+                icon="mdi-dots-horizontal"
+              ></v-btn> -->
+
+              <v-menu>
+                <template v-slot:activator="{ props }">
+                  <v-btn
+                    @click.prevent="changeActionActiveId(item.id)"
+                    v-bind="props"
+                    size="small"
+                    variant="text"
+                    icon="mdi-dots-horizontal"
+                  ></v-btn>
+                </template>
+                <v-list density="compact" nav>
+                  <!-- <v-list-item @click="upChat(item)">
+                    <v-list-item-title
+                      ><v-icon size="small" class="mr-3"
+                        >mdi-arrow-collapse-up</v-icon
+                      >置顶对话</v-list-item-title
+                    >
+                  </v-list-item> -->
+                  <v-list-item @click="delChat0(item.id)">
+                    <v-list-item-title>
+                      <v-icon size="small" class="mr-3"
+                        >mdi-delete-outline</v-icon
+                      >删除对话</v-list-item-title
+                    >
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </div>
+          </template>
+        </v-list-item>
+      </template>
     </v-list>
   </div>
 </template>
@@ -48,7 +89,7 @@ import { useList } from "@/compose/useQuery";
 import { listAll, getByPromptId } from "@/repo/chatRepository";
 import { delChat, newChat } from "@/service/chatService";
 import { useRoute, useRouter } from "vue-router";
-import { computed, onMounted, watch } from "vue";
+import { computed, onMounted, watch, ref } from "vue";
 import { useDisplay } from "vuetify";
 import { format } from "@/utils/dateUtils";
 const { value, data: chats } = useList(listAll);
@@ -56,10 +97,47 @@ const defaultChatText = "新对话";
 const route = useRoute();
 const router = useRouter();
 const { mobile } = useDisplay();
-const chatList = computed(
-  () => chats.value && chats.value.filter((o) => o.name != defaultChatText)
-);
+
+const actionActiveId = ref(0);
+
+function changeActionActiveId(id) {
+  setTimeout(() => {
+    actionActiveId.value = id;
+  }, 10);
+}
+
+function upChat(item) {
+  item.type = "aup";
+}
+
+const texts = { app: "创作", chat: "对话", aup: "置顶" };
+const chatGroupList = computed(() => {
+  return (
+    chats.value &&
+    chats.value
+      .filter((o) => o.name != defaultChatText)
+      .reduce((arr, item) => {
+        const a = arr
+          .map((o) => {
+            o.type = o.type ? o.type : "app";
+            return o;
+          })
+          .filter((a) => a.name == texts[item.type]);
+        if (a.length > 0) {
+          a[0].data.push(item);
+        } else {
+          arr.push({
+            name: texts[item.type],
+            data: [item],
+          });
+        }
+        return arr;
+      }, [])
+      .sort()
+  );
+});
 async function goChat() {
+  actionActiveId.value = 0;
   if (route.query.promptid) {
     const chatId = (await getByPromptId(Number.parseInt(route.query.promptid)))
       .id;
@@ -89,7 +167,7 @@ async function createChat() {
 
 async function delChat0(id) {
   await delChat(id);
-  if (!mobile.value) {
+  if (!mobile.value && route.params.id == id) {
     newChat0();
   }
 }
@@ -115,6 +193,14 @@ small {
     display: none;
   }
   .v-list-item:hover {
+    .actions {
+      display: block;
+    }
+  }
+  .action-active {
+    display: block;
+  }
+  .v-list-item--active {
     .actions {
       display: block;
     }

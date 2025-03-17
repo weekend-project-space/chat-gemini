@@ -1,7 +1,6 @@
 import {
   ref,
-  watch,
-  computed
+  watch
 } from 'vue'
 import {
   flatPrompt2Instr
@@ -21,7 +20,6 @@ export function interpreter(instrs) {
   const components = [];
   // init
   for (let instr of instrs) {
-
     if (instr.type != 'instr') {
       _data[instr.name] = instr.type == 'radio' || instr.type == 'select' ? instr.value[0] : undefined
       components.push({
@@ -36,17 +34,17 @@ export function interpreter(instrs) {
   const data = ref(_data)
 
   function rest() {
-    _data = {}
     for (let instr of instrs) {
-      _data[instr.name] = instr.type == 'radio' || instr.type == 'select' ? instr.value[0] : undefined
+      if (instr.type != 'instr') {
+        data.value[instr.name] = instr.type == 'radio' || instr.type == 'select' ? instr.value[0] : undefined
+      }
     }
-    data.value = _data
   }
 
   function inter() {
     const instr = instrs[instrs.length - 1]
     if (instr.type == 'instr') {
-      return replace(instr.value, data.value)
+      return render(instr.value, data.value)
     } else {
       throw "instr value error"
     }
@@ -74,16 +72,50 @@ export function interpreter(instrs) {
     hasAllValue
   }
 }
+// function render(key...){return `${key}`}
 
 // 将${a}变成取变量
-function replace(exp, env) {
-  let index = exp.indexOf('${')
-  let end = exp.indexOf("}")
-  if (index > -1 && end > 0) {
-    let key = exp.substring(index + 2, end)
+// function replace(exp, env) {
+//   let index = exp.indexOf('${')
+//   let end = exp.indexOf("}")
+//   if (index > -1 && end > 0) {
+//     let key = exp.substring(index + 2, end)
+//     const v = env[key.trim()];
+//     return replace(exp.substring(0, index) + (v ? v : '') + exp.substring(end + 1), env)
+//   } else {
+//     return exp
+//   }
+// }
+
+
+function render(exp0, env) {
+  console.log(exp0, env)
+  const {
+    exp,
+    params,
+    values
+  } = getFunInfo(exp0, env)
+  console.log(exp, params, values)
+  return new Function(...params, `return \`${exp}\``)(...values)
+}
+
+function getFunInfo(exp, env) {
+  let params = []
+  let values = []
+  // trimed = exp.trim()
+  while (exp.indexOf('${') > -1) {
+    let index = exp.indexOf('${')
+    let end = exp.indexOf("}")
+    let key = exp.substring(index + 2, end).trim()
     const v = env[key];
-    return replace(exp.substring(0, index) + (v ? v : '') + exp.substring(end + 1), env)
-  } else {
-    return exp
+    key = 'args' + index
+    values.push(v)
+    params.push(key)
+    exp = exp.substring(0, index) + (v ? '$$[' + key + '$$]' : '') + exp.substring(end + 1)
+  }
+  return {
+    params,
+    values,
+    exp: exp.replaceAll('$$[', '${').replaceAll('$$]', '}')
   }
 }

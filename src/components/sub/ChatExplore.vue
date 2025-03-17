@@ -1,5 +1,5 @@
 <template>
-  <div class="explore-warp">
+  <div class="explore-warp px-1">
     <v-chip-group
       @update:modelValue="(v) => emit('update:modelValue', v)"
       column
@@ -26,7 +26,7 @@
           <small>{{ item.desc }}</small>
         </div>
         <div class="icon">
-          <v-icon size="sm">mdi-apple-keyboard-caps</v-icon>
+          <v-icon>mdi-fountain-pen-tip</v-icon>
         </div>
       </div>
     </div>
@@ -55,10 +55,12 @@ const emit = defineEmits(["update:modelValue", "click"]);
   }
 }
 .explore-warp {
-  position: absolute;
+  position: sticky;
+  margin-top: 42vh;
   bottom: 1rem;
   animation: up 3s;
-  max-width: calc(var(--v-warp-widht) - 2rem);
+  background-color: rgb(var(--v-theme-background));
+  z-index: 10;
 }
 .explore-list {
   display: grid;

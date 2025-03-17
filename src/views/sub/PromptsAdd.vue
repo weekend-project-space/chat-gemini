@@ -5,8 +5,8 @@
         index > -1 ? "编辑收藏" : "新建收藏"
       }}</v-card-title>
       <v-card-text>
-        <v-text-field label="简称" v-model="item.name"></v-text-field>
-        <v-textarea label="提示词" v-model="item.prompt"></v-textarea>
+        <v-text-field label="指令标题" v-model="item.name"></v-text-field>
+        <v-textarea label="指令内容" v-model="item.prompt"></v-textarea>
       </v-card-text>
       <v-btn
         class="mx-4"

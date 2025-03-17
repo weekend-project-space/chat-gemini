@@ -27,6 +27,11 @@
         :key="item.name"
         :to="'/prompts/' + item.id"
       >
+        <template v-slot:prepend>
+          <v-avatar color="primary" size="small">
+            {{ item.name.substring(0, 1) }}
+          </v-avatar>
+        </template>
         <template #append>
           <div class="actions">
             <v-btn

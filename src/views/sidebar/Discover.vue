@@ -1,7 +1,7 @@
 <template>
   <div class="mx-3 my-2">
     <div class="d-flex flex header">
-      <v-list-subheader>发现 </v-list-subheader>
+      <v-list-subheader>创作 </v-list-subheader>
       <!-- <v-btn
         prepend-icon=" mdi-github"
         size="small"
@@ -14,7 +14,7 @@
         prepend-icon="mdi-wechat"
         size="small"
         color="primary"
-        href="https://zhidayingxiao.cn/to/06g6y3"
+        href="https://zhidayingxiao.cn/to/06g6xX"
       >
         微信客服
       </v-btn>
@@ -27,24 +27,40 @@
     />
   </div>
   <v-list nav>
+    <v-list-item title="全部" to="/app/all"> </v-list-item>
     <v-list-item
       v-for="item in d"
       :title="item.name"
       :value="item.name"
-      :subtitle="item.desc"
       :key="item.key"
-      :to="'/discover/' + item.key"
+      :to="'/app/' + item.key"
     >
+      <!-- <template v-slot:prepend>
+        <v-avatar color="primary" size="small">
+          {{ item.name.substring(0, 1) }}
+        </v-avatar>
+      </template> -->
     </v-list-item>
   </v-list>
 </template>
 <script setup>
 import { discoverList } from "@/api/discover";
-import { computed, onMounted, ref } from "vue";
+import { computed, nextTick, onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
+import { useDisplay } from "vuetify";
 const data = ref([]);
 const value = ref("");
+const { mobile } = useDisplay();
+const route = useRoute();
 onMounted(async () => {
   data.value = await discoverList();
+  nextTick(() => {
+    if (!mobile.value && route.path == "/app") {
+      document
+        .querySelector(".v-navigation-drawer:last-of-type .v-list-item")
+        .click();
+    }
+  });
 });
 const d = computed(() =>
   data.value.filter(

@@ -1,105 +1,4 @@
 [{
-    "key": "x-social",
-    "name": "社交媒体",
-    "desc": "社交媒体",
-    "url": "/0.json",
-    "act": "name",
-    "prompt": "desc",
-    "hint": true
-}, {
-    "key": "commons",
-    "name": "常用功能",
-    "desc": "常用功能",
-    "url": "/x-prompts.json"
-}, {
-    "key": "x-lunwen",
-    "name": "论文工具",
-    "desc": "论文工具",
-    "url": "/1.json",
-    "act": "name",
-    "prompt": "desc",
-    "hint": true
-}, {
-    "key": "x-other",
-    "name": "应用",
-    "desc": "应用",
-    "url": "/2.json",
-    "act": "name",
-    "prompt": "desc",
-    "hint": true
-}, {
-    "key": "x-base",
-    "name": "实用工具",
-    "desc": "实用工具",
-    "url": "/3.json",
-    "act": "name",
-    "prompt": "desc",
-    "hint": true
-}, {
-    "key": "x-star",
-    "name": "占星问卜",
-    "desc": "占星问卜",
-    "url": "/4.json",
-    "act": "name",
-    "prompt": "desc",
-    "hint": true
-}, {
-    "key": "x-health",
-    "name": "医疗健康",
-    "desc": "医疗健康",
-    "url": "/5.json",
-    "act": "name",
-    "prompt": "desc",
-    "hint": true
-}, {
-    "key": "x-stu-copilot",
-    "name": "学习辅导",
-    "desc": "学习辅导",
-    "url": "/6.json",
-    "act": "name",
-    "prompt": "desc",
-    "hint": true
-}, {
-    "key": "x-game",
-    "name": "休闲娱乐",
-    "desc": "休闲娱乐",
-    "url": "/7.json",
-    "act": "name",
-    "prompt": "desc",
-    "hint": true
-}, {
-    "key": "x-app-use",
-    "name": "软件使用",
-    "desc": "软件使用",
-    "url": "/8.json",
-    "act": "name",
-    "prompt": "desc",
-    "hint": true
-}, {
-    "key": "x-baike",
-    "name": "百科",
-    "desc": "百科",
-    "url": "/9.json",
-    "act": "name",
-    "prompt": "desc",
-    "hint": true
-}, {
-    "key": "x-wenshu",
-    "name": "商业文书",
-    "desc": "撰写商业文书",
-    "url": "/10.json",
-    "act": "name",
-    "prompt": "desc",
-    "hint": true
-}, {
-    "key": "x-code-copilot",
-    "name": "编码助手",
-    "desc": "编码助手",
-    "url": "/11.json",
-    "act": "name",
-    "prompt": "desc",
-    "hint": true
-}, {
     "key": "x-doc-copilot",
     "name": "文章写作",
     "desc": "助力文章写作",
@@ -128,6 +27,107 @@
     "name": "工作助手",
     "desc": "工作助手",
     "url": "/15.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-other",
+    "name": "应用",
+    "desc": "应用",
+    "url": "/2.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-base",
+    "name": "实用工具",
+    "desc": "实用工具",
+    "url": "/3.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-stu-copilot",
+    "name": "学习辅导",
+    "desc": "学习辅导",
+    "url": "/6.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-code-copilot",
+    "name": "编码助手",
+    "desc": "编码助手",
+    "url": "/11.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-game",
+    "name": "休闲娱乐",
+    "desc": "休闲娱乐",
+    "url": "/7.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-app-use",
+    "name": "软件使用",
+    "desc": "软件使用",
+    "url": "/8.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "commons",
+    "name": "常用功能",
+    "desc": "常用功能",
+    "url": "/x-prompts.json"
+}, {
+    "key": "x-lunwen",
+    "name": "论文工具",
+    "desc": "论文工具",
+    "url": "/1.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-social",
+    "name": "社交媒体",
+    "desc": "社交媒体",
+    "url": "/0.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-star",
+    "name": "占星问卜",
+    "desc": "占星问卜",
+    "url": "/4.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-health",
+    "name": "医疗健康",
+    "desc": "医疗健康",
+    "url": "/5.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-baike",
+    "name": "百科",
+    "desc": "百科",
+    "url": "/9.json",
+    "act": "name",
+    "prompt": "desc",
+    "hint": true
+}, {
+    "key": "x-wenshu",
+    "name": "商业文书",
+    "desc": "撰写商业文书",
+    "url": "/10.json",
     "act": "name",
     "prompt": "desc",
     "hint": true

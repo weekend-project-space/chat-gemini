@@ -35,6 +35,7 @@ defineProps(["text", "type", "confirm", "cancel", "confirmText", "cancelText"]);
 }
 .confrim {
   position: fixed;
+  z-index: 100;
   top: 30vh;
   left: 50%;
   min-width: 300px;

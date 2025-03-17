@@ -25,7 +25,14 @@
     </v-card-title>
     <v-card-subtitle>
       <div class="line">
-        <textarea
+        <!-- <textarea
+          class="ml-3 editor textarea"
+          type="text"
+          data-id="prompt"
+          :disabled="!editable.prompt"
+          v-model="contact.prompt"
+        /> -->
+        <autotextarea
           class="ml-3 editor textarea"
           type="text"
           data-id="prompt"
